@@ -1,73 +1,98 @@
-# Welcome to your Lovable project
+# Talent Nexus - SmartRecruit
 
-## Project info
+**Talent Nexus** (SmartRecruit) is an AI-powered recruitment ecosystem designed to bridge the gap between Recruiters and Candidates. It leverages advanced semantic analysis to automate resume scoring, providing an efficient "ATS Score" and ranking candidates against Job Descriptions (JDs) to reduce manual screening time.
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+## 🚀 Project Overview
 
-## How can I edit this code?
+The platform connects two main actors:
+- **Candidates**: Can upload CVs, view their "ATS Score", and apply to jobs with optimized profiles.
+- **Recruiters**: Can post jobs, manage pipelines, and use AI to match JDs with the best candidates automatically.
 
-There are several ways of editing your application.
+## ✨ Key Features
 
-**Use Lovable**
+### For Candidates
+- **CV Management**: Upload and manage multiple versions of your CV (PDF/DOCX).
+- **AI Analysis**: Get instant feedback on your resume with an ATS Score (0-100) and optimization suggestions.
+- **Job Board**: Browse and search for jobs with advanced filters (Location, Skills, Type).
+- **Smart Apply**: Compare your CV against a specific Job Description before applying to see your match percentage.
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+### For Recruiters
+- **Job Management**: Create, publish, and manage job listings.
+- **Candidate Pipeline**: Visual Kanban/List view of applicants through different stages (Pending -> Interview -> Offered).
+- **AI Matching Engine**: Automatically rank applicants based on Semantic Analysis (Cosine Similarity between JD and CV).
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🛠 Technology Stack
 
-**Use your preferred IDE**
+### Frontend (This Repository)
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS, Shadcn UI, Lucide React
+- **State Management**: React Query (TanStack Query)
+- **Routing**: React Router DOM
+- **Forms**: React Hook Form + Zod
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Backend & AI Services (Context)
+- **Core API**: Java Spring Boot
+- **AI Service**: Python (FastAPI)
+- **Database**: PostgreSQL / MySQL
+- **Storage**: AWS S3
+- **NLP/AI**: PyMuPDF, Underthesea (Vietnamese NLP), Sentence-BERT
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## 📂 Project Structure
 
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/     # Reusable UI components
+│   ├── layout/     # Header, Footer, etc.
+│   ├── jobs/       # Job-related components (Cards, Lists)
+│   └── ui/         # Shadcn UI primitives
+├── pages/          # Page components (Routes)
+│   ├── candidate/  # Candidate-specific dashboards
+│   ├── recruiter/  # Recruiter-specific dashboards
+│   ├── Jobs.tsx    # Job listing page
+│   └── JobDetail.tsx # Job detail & Application page
+├── contexts/       # React Context providers (Auth, etc.)
+├── hooks/          # Custom React hooks
+├── lib/            # Utilities
+├── types/          # TypeScript interface definitions
+└── data/           # Mock data for prototyping
 ```
 
-**Edit a file directly in GitHub**
+## 🏁 Getting Started
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Prerequisites
+- Node.js (v18 or higher recommended)
+- npm or bun
 
-**Use GitHub Codespaces**
+### Installation
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd talent-nexus
+   ```
 
-## What technologies are used for this project?
+2. **Install dependencies**
+   ```bash
+   npm install
+   # or
+   bun install
+   ```
 
-This project is built with:
+3. **Start the development server**
+   ```bash
+   npm run dev
+   # or
+   bun dev
+   ```
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+4. **Open your browser**
+   Navigate to `http://localhost:8080` (or the port shown in your terminal).
 
-## How can I deploy this project?
+## 📝 Business Rules & Logic
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+For a detailed breakdown of the business rules, user roles, and system logic, please refer to [BUSINESS-RULE.MD](./BUSINESS-RULE.MD).
 
-## Can I connect a custom domain to my Lovable project?
+## 📄 License
 
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+This project is for educational purposes as part of the University Semester Project.
