@@ -1,30 +1,6 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
 import Header from '@/components/layout/Header';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { useAuth } from '@/contexts/AuthContext';
-import { mockJobs, mockApplications, mockCVs } from '@/data/mockData';
-import JobCard from '@/components/jobs/JobCard';
-import {
-  FileText,
-  Upload,
-  Briefcase,
-  TrendingUp,
-  Clock,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
-  Search,
-  Plus,
-  Eye,
-  Trash2,
-  Download,
-  Sparkles
-} from 'lucide-react';
-import { formatDistanceToNow, format } from 'date-fns';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -35,6 +11,29 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Progress } from '@/components/ui/progress';
+import { useAuth } from '@/contexts/AuthContext';
+import { mockApplications, mockCVs, mockJobs } from '@/data/mockData';
+import { formatDistanceToNow } from 'date-fns';
+import {
+  AlertCircle,
+  Briefcase,
+  CheckCircle,
+  Clock,
+  Download,
+  Eye,
+  FileText,
+  Plus,
+  Search,
+  Sparkles,
+  Trash2,
+  TrendingUp,
+  Upload,
+  XCircle
+} from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 const CandidateDashboard = () => {
   const { user } = useAuth();
@@ -112,7 +111,7 @@ const CandidateDashboard = () => {
   return (
     <div className="min-h-screen bg-muted/30">
       <Header />
-      
+
       <main className="container py-8">
         {/* Welcome Section */}
         <div className="mb-8">
@@ -213,6 +212,11 @@ const CandidateDashboard = () => {
                         <Button variant="ghost" size="icon" className="text-destructive">
                           <Trash2 className="h-4 w-4" />
                         </Button>
+                        <Link to={`/candidate/cv-check/${cv.id}`}>
+                          <Button variant="ghost" size="icon" className="text-accent hover:bg-accent/10">
+                            <Sparkles className="h-4 w-4" />
+                          </Button>
+                        </Link>
                       </div>
                     </div>
                   ))}

@@ -87,7 +87,7 @@ src/
    ```
 
 4. **Open your browser**
-   Navigate to `http://localhost:8080` (or the port shown in your terminal).
+   Navigate to `http://localhost:3000` (or the port shown in your terminal).
 
 ## 📝 Business Rules & Logic
 

@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
+import CVAnalysis from "./pages/candidate/CVAnalysis";
 import CandidateDashboard from "./pages/candidate/Dashboard";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
 
@@ -27,6 +28,7 @@ const App = () => (
             <Route path="/jobs" element={<Jobs />} />
             <Route path="/jobs/:id" element={<JobDetail />} />
             <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
+            <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
             <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
