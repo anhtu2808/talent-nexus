@@ -54,15 +54,15 @@ const generateMockAnalysis = (job: Job): MatchItem[] => {
       cvValue: hasSkill ? skill : hasPartial ? 'SQL' : undefined,
       jdValue: skill,
       reason: hasSkill 
-        ? `Bạn có ${skill} trong CV - phù hợp yêu cầu JD` 
+        ? `Your CV includes ${skill} - matches JD requirement` 
         : hasPartial 
-          ? `Bạn có SQL nhưng JD yêu cầu cụ thể ${skill}`
-          : `JD yêu cầu ${skill} nhưng không tìm thấy trong CV`,
+          ? `You have SQL but JD specifically requires ${skill}`
+          : `JD requires ${skill} but not found in your CV`,
       suggestion: hasSkill 
         ? undefined 
         : hasPartial 
-          ? `Thêm kinh nghiệm cụ thể với ${skill} vào CV`
-          : `Bổ sung kỹ năng ${skill} hoặc các dự án liên quan`,
+          ? `Add specific experience with ${skill} to your CV`
+          : `Add ${skill} skill or related projects to your CV`,
       importance: 'required',
     });
   });
@@ -70,25 +70,25 @@ const generateMockAnalysis = (job: Job): MatchItem[] => {
   // Experience analysis
   items.push({
     category: 'experience',
-    name: 'Số năm kinh nghiệm',
+    name: 'Years of Experience',
     status: 'match',
     cvValue: '5+ years',
     jdValue: '3+ years',
-    reason: 'CV thể hiện 5+ năm kinh nghiệm, vượt yêu cầu 3+ năm của JD',
+    reason: 'Your CV shows 5+ years of experience, exceeding the 3+ years requirement',
     importance: 'required',
   });
 
   items.push({
     category: 'experience',
-    name: 'Kinh nghiệm lĩnh vực',
+    name: 'Industry Experience',
     status: job.company.includes('FinTech') ? 'missing' : 'partial',
     cvValue: 'E-commerce, Tech startup',
     jdValue: job.company.includes('FinTech') ? 'Banking/Fintech' : 'Tech industry',
     reason: job.company.includes('FinTech') 
-      ? 'JD ưu tiên ứng viên có kinh nghiệm Banking/Fintech, CV chưa thể hiện'
-      : 'Kinh nghiệm startup tech phù hợp một phần với yêu cầu',
+      ? 'JD prefers candidates with Banking/Fintech experience, not shown in CV'
+      : 'Tech startup experience partially matches the requirement',
     suggestion: job.company.includes('FinTech') 
-      ? 'Highlight bất kỳ dự án nào liên quan đến payment, transaction processing'
+      ? 'Highlight any projects related to payment or transaction processing'
       : undefined,
     importance: 'preferred',
   });
@@ -96,11 +96,11 @@ const generateMockAnalysis = (job: Job): MatchItem[] => {
   // Education
   items.push({
     category: 'education',
-    name: 'Bằng cấp',
+    name: 'Degree',
     status: 'match',
     cvValue: 'Bachelor of Computer Science - FPT University',
     jdValue: 'Bachelor degree in CS or related field',
-    reason: 'Bằng Cử nhân CNTT phù hợp với yêu cầu',
+    reason: 'Your CS Bachelor degree matches the requirement',
     importance: 'required',
   });
 
@@ -128,9 +128,9 @@ const generateMockAnalysis = (job: Job): MatchItem[] => {
         cvValue: kw.cvText,
         jdValue: req,
         reason: kw.has 
-          ? `CV có đề cập "${kw.cvText}" phù hợp với yêu cầu`
-          : `Yêu cầu "${foundKeyword}" không được tìm thấy trong CV`,
-        suggestion: kw.has ? undefined : `Thêm kinh nghiệm liên quan đến ${foundKeyword} vào CV`,
+          ? `CV mentions "${kw.cvText}" matching the requirement`
+          : `Requirement "${foundKeyword}" not found in CV`,
+        suggestion: kw.has ? undefined : `Add experience related to ${foundKeyword} in your CV`,
         importance: 'required',
       });
     }
@@ -169,10 +169,10 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
 
   const getCategoryLabel = (cat: string) => {
     switch (cat) {
-      case 'skill': return 'Kỹ năng kỹ thuật';
-      case 'experience': return 'Kinh nghiệm làm việc';
-      case 'education': return 'Học vấn';
-      case 'keyword': return 'Từ khóa quan trọng';
+      case 'skill': return 'Technical Skills';
+      case 'experience': return 'Work Experience';
+      case 'education': return 'Education';
+      case 'keyword': return 'Key Requirements';
       default: return cat;
     }
   };
@@ -188,7 +188,7 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
   };
 
   return (
-    <div className="flex flex-col h-full max-h-[80vh]">
+    <div className="flex flex-col h-full max-h-[85vh]">
       {/* Header with Score */}
       <div className="flex-shrink-0 p-6 bg-gradient-to-r from-primary/5 to-accent/5 border-b border-border">
         <div className="flex items-center gap-6">
@@ -231,24 +231,24 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
           
           <div className="flex-1">
             <h2 className="text-xl font-bold mb-2">
-              {matchScore >= 80 ? "Phù hợp xuất sắc!" : matchScore >= 60 ? "Phù hợp tốt" : "Cần cải thiện"}
+              {matchScore >= 80 ? "Excellent Match!" : matchScore >= 60 ? "Good Match" : "Needs Improvement"}
             </h2>
             <p className="text-muted-foreground text-sm mb-4">
-              CV của bạn {matchScore >= 80 ? "rất phù hợp" : matchScore >= 60 ? "khá phù hợp" : "cần bổ sung thêm"} với vị trí {job.title}
+              Your CV {matchScore >= 80 ? "strongly matches" : matchScore >= 60 ? "matches well with" : "needs more alignment with"} the {job.title} position
             </p>
             
             <div className="flex gap-4 text-sm">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-green-500" />
-                <span><strong>{stats.matched}</strong> Phù hợp</span>
+                <span><strong>{stats.matched}</strong> Matched</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-amber-500" />
-                <span><strong>{stats.partial}</strong> Một phần</span>
+                <span><strong>{stats.partial}</strong> Partial</span>
               </div>
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 rounded-full bg-red-500" />
-                <span><strong>{stats.missing}</strong> Thiếu</span>
+                <span><strong>{stats.missing}</strong> Missing</span>
               </div>
             </div>
           </div>
@@ -286,7 +286,7 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
                     <div className="text-left">
                       <h3 className="font-semibold">{getCategoryLabel(category)}</h3>
                       <p className="text-xs text-muted-foreground">
-                        {categoryStats.matched}/{categoryStats.total} mục phù hợp
+                        {categoryStats.matched}/{categoryStats.total} items matched
                       </p>
                     </div>
                   </div>
@@ -346,24 +346,24 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
                                   "border-muted-foreground/30 text-muted-foreground"
                                 )}
                               >
-                                {item.importance === 'required' ? 'Bắt buộc' : 
-                                 item.importance === 'preferred' ? 'Ưu tiên' : 'Có thì tốt'}
+                                {item.importance === 'required' ? 'Required' : 
+                                 item.importance === 'preferred' ? 'Preferred' : 'Nice to have'}
                               </Badge>
                             </div>
 
                             {/* Comparison */}
                             <div className="grid grid-cols-2 gap-4 mt-3 mb-3">
                               <div className="p-3 rounded-lg bg-muted/50 border border-border">
-                                <p className="text-xs text-muted-foreground mb-1 font-medium">📄 Trong CV của bạn</p>
+                                <p className="text-xs text-muted-foreground mb-1 font-medium">📄 In Your CV</p>
                                 <p className={cn(
                                   "text-sm",
                                   item.cvValue ? "text-foreground" : "text-muted-foreground italic"
                                 )}>
-                                  {item.cvValue || "Không tìm thấy"}
+                                  {item.cvValue || "Not found"}
                                 </p>
                               </div>
                               <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
-                                <p className="text-xs text-primary mb-1 font-medium">📋 JD yêu cầu</p>
+                                <p className="text-xs text-primary mb-1 font-medium">📋 JD Requires</p>
                                 <p className="text-sm text-foreground">{item.jdValue}</p>
                               </div>
                             </div>
@@ -381,9 +381,9 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
                                 "text-red-700"
                               )}>
                                 <strong>
-                                  {item.status === 'match' ? '✓ Phù hợp: ' : 
-                                   item.status === 'partial' ? '⚠ Một phần: ' : 
-                                   '✗ Thiếu: '}
+                                  {item.status === 'match' ? '✓ Match: ' : 
+                                   item.status === 'partial' ? '⚠ Partial: ' : 
+                                   '✗ Missing: '}
                                 </strong>
                                 {item.reason}
                               </p>
@@ -394,7 +394,7 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
                               <div className="mt-3 p-3 rounded-lg bg-blue-50 border border-blue-200 flex items-start gap-2">
                                 <Lightbulb className="h-4 w-4 text-blue-600 flex-shrink-0 mt-0.5" />
                                 <div>
-                                  <p className="text-xs font-medium text-blue-700 mb-1">Gợi ý cải thiện</p>
+                                  <p className="text-xs font-medium text-blue-700 mb-1">Improvement Suggestion</p>
                                   <p className="text-sm text-blue-600">{item.suggestion}</p>
                                 </div>
                               </div>
@@ -416,14 +416,14 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
       <div className="flex-shrink-0 p-6 bg-muted/30 flex items-center justify-between gap-4">
         <div className="text-sm text-muted-foreground">
           <Lightbulb className="h-4 w-4 inline mr-1" />
-          Cải thiện {stats.missing + stats.partial} mục để tăng tỷ lệ phù hợp
+          Improve {stats.missing + stats.partial} items to increase your match rate
         </div>
         <div className="flex gap-3">
           <Button variant="outline" onClick={onClose}>
-            Đóng
+            Close
           </Button>
           <Button variant="accent" onClick={onApply}>
-            Tiếp tục ứng tuyển
+            Continue to Apply
           </Button>
         </div>
       </div>

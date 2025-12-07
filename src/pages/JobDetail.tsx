@@ -210,7 +210,7 @@ const JobDetail = () => {
                   </DialogTrigger>
                   <DialogContent className={cn(
                     "overflow-hidden p-0",
-                    showDetailedAnalysis ? "max-w-4xl" : "max-w-2xl"
+                    showDetailedAnalysis ? "max-w-5xl" : "max-w-3xl"
                   )}>
                     {showDetailedAnalysis && matchScore !== null ? (
                       <CVMatchAnalysis 
@@ -219,8 +219,8 @@ const JobDetail = () => {
                         onClose={() => setIsDialogOpen(false)}
                         onApply={() => {
                           toast({
-                            title: "Đã gửi ứng tuyển",
-                            description: `Bạn đã ứng tuyển thành công vị trí ${job.title}`,
+                            title: "Application Submitted",
+                            description: `You have successfully applied for ${job.title}`,
                           });
                           setIsDialogOpen(false);
                           resetState();
@@ -229,9 +229,9 @@ const JobDetail = () => {
                     ) : (
                       <>
                         <DialogHeader className="p-6 pb-0">
-                          <DialogTitle>So sánh CV với Job Description</DialogTitle>
+                          <DialogTitle>Compare CV with Job Description</DialogTitle>
                           <DialogDescription>
-                            Chọn CV để xem mức độ phù hợp với vị trí này.
+                            Select a CV to see how well you match this position.
                           </DialogDescription>
                         </DialogHeader>
 
@@ -239,8 +239,8 @@ const JobDetail = () => {
                           {isAnalyzing && (
                             <div className="flex flex-col items-center justify-center py-12">
                               <Loader2 className="h-12 w-12 text-accent animate-spin mb-4" />
-                              <p className="text-lg font-medium">Đang phân tích CV...</p>
-                              <p className="text-sm text-muted-foreground">So sánh kỹ năng và kinh nghiệm với JD</p>
+                              <p className="text-lg font-medium">Analyzing your CV...</p>
+                              <p className="text-sm text-muted-foreground">Comparing skills and experience with JD</p>
                             </div>
                           )}
 
@@ -250,9 +250,9 @@ const JobDetail = () => {
                               {userCVs.length > 0 && (
                                 <div className="space-y-3">
                                   <label className="text-sm font-medium text-foreground">
-                                    Chọn CV của bạn
+                                    Select from your resumes
                                   </label>
-                                  <div className="grid grid-cols-1 gap-3">
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2">
                                     {userCVs.map((cv) => (
                                       <div
                                         key={cv.id}
@@ -263,24 +263,24 @@ const JobDetail = () => {
                                         )}
                                       >
                                         {/* Left Preview Image mock */}
-                                        <div className="w-16 h-20 bg-background rounded border border-border flex items-center justify-center mr-4 shadow-sm shrink-0">
-                                          <FileText className="h-8 w-8 text-muted-foreground/50" />
+                                        <div className="w-14 h-18 bg-background rounded border border-border flex items-center justify-center mr-3 shadow-sm shrink-0">
+                                          <FileText className="h-6 w-6 text-muted-foreground/50" />
                                         </div>
 
                                         <div className="flex-1 min-w-0">
-                                          <p className="font-medium truncate">{cv.fileName}</p>
+                                          <p className="font-medium truncate text-sm">{cv.fileName}</p>
                                           <p className="text-xs text-muted-foreground">
                                             Uploaded {formatDistanceToNow(cv.uploadedAt)} ago
                                           </p>
                                           {cv.atsScore && (
-                                            <Badge variant="secondary" className="mt-2 text-xs">
+                                            <Badge variant="secondary" className="mt-1 text-xs">
                                               ATS Score: {cv.atsScore}
                                             </Badge>
                                           )}
                                         </div>
 
                                         {selectedCV === cv.id && (
-                                          <div className="absolute top-3 right-3 text-accent">
+                                          <div className="absolute top-2 right-2 text-accent">
                                             <CheckCircle className="h-5 w-5" />
                                           </div>
                                         )}
@@ -294,7 +294,7 @@ const JobDetail = () => {
                               <div className="space-y-3">
                                 <div className="flex items-center gap-3">
                                   <span className={cn("h-px flex-1 bg-border", userCVs.length > 0 ? "" : "hidden")} />
-                                  <span className={cn("text-xs text-muted-foreground font-medium uppercase", userCVs.length > 0 ? "" : "hidden")}>Hoặc</span>
+                                  <span className={cn("text-xs text-muted-foreground font-medium uppercase", userCVs.length > 0 ? "" : "hidden")}>Or</span>
                                   <span className={cn("h-px flex-1 bg-border", userCVs.length > 0 ? "" : "hidden")} />
                                 </div>
 
@@ -318,10 +318,10 @@ const JobDetail = () => {
                                     <Upload className="h-8 w-8 text-muted-foreground mb-2" />
                                   )}
                                   <p className="font-medium">
-                                    {isUploading ? "Đang tải lên..." : "Tải CV mới"}
+                                    {isUploading ? "Uploading..." : "Upload a new CV"}
                                   </p>
                                   <p className="text-sm text-muted-foreground mt-1">
-                                    PDF hoặc DOCX tối đa 5MB
+                                    PDF or DOCX up to 5MB
                                   </p>
                                 </div>
                               </div>
@@ -331,13 +331,13 @@ const JobDetail = () => {
 
                         {!isAnalyzing && (
                           <DialogFooter className="p-6 pt-0">
-                            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Hủy</Button>
+                            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
                             <Button
                               variant="accent"
                               disabled={!selectedCV}
                               onClick={handleCheckMatch}
                             >
-                              Phân tích CV
+                              Analyze Match
                             </Button>
                           </DialogFooter>
                         )}
