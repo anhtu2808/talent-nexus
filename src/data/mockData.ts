@@ -211,6 +211,96 @@ export const mockCVs: CV[] = [
       ],
       summary: 'Experienced frontend developer with 5+ years of experience in React ecosystem'
     }
+  },
+  {
+    id: 'cv2',
+    candidateId: 'c1',
+    fileName: 'senior_fullstack_2024.pdf',
+    fileUrl: '/uploads/cv2.pdf',
+    uploadedAt: new Date('2024-02-10'),
+    atsScore: 78,
+    parsedData: {
+      name: 'Nguyen Van A',
+      email: 'nguyenvana@email.com',
+      phone: '0901234567',
+      skills: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker'],
+      experience: [
+        {
+          title: 'Full Stack Developer',
+          company: 'FinTech Corp',
+          duration: '2020 - Present',
+          description: 'Built scalable microservices for banking platform'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Computer Science',
+          institution: 'FPT University',
+          year: '2019'
+        }
+      ],
+      summary: 'Full stack developer with expertise in Java and React'
+    }
+  },
+  {
+    id: 'cv3',
+    candidateId: 'c1',
+    fileName: 'backend_developer_cv.pdf',
+    fileUrl: '/uploads/cv3.pdf',
+    uploadedAt: new Date('2024-03-05'),
+    atsScore: 92,
+    parsedData: {
+      name: 'Nguyen Van A',
+      email: 'nguyenvana@email.com',
+      phone: '0901234567',
+      skills: ['Python', 'Django', 'FastAPI', 'AWS', 'Kubernetes'],
+      experience: [
+        {
+          title: 'Backend Engineer',
+          company: 'AI Startup',
+          duration: '2022 - Present',
+          description: 'Developed AI-powered APIs and microservices'
+        }
+      ],
+      education: [
+        {
+          degree: 'Master of Computer Science',
+          institution: 'HCMUT',
+          year: '2022'
+        }
+      ],
+      summary: 'Backend specialist with AI/ML integration experience'
+    }
+  },
+  {
+    id: 'cv4',
+    candidateId: 'c1',
+    fileName: 'devops_engineer_resume.docx',
+    fileUrl: '/uploads/cv4.docx',
+    uploadedAt: new Date('2024-01-28'),
+    atsScore: 70,
+    parsedData: {
+      name: 'Nguyen Van A',
+      email: 'nguyenvana@email.com',
+      phone: '0901234567',
+      skills: ['AWS', 'Terraform', 'Docker', 'Kubernetes', 'CI/CD'],
+      experience: [
+        {
+          title: 'DevOps Engineer',
+          company: 'CloudScale Inc',
+          duration: '2021 - Present',
+          description: 'Managed cloud infrastructure and CI/CD pipelines'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of IT',
+          institution: 'UIT',
+          year: '2020'
+        }
+      ],
+      summary: 'DevOps engineer with strong cloud and automation skills'
+    }
   }
 ];
 
