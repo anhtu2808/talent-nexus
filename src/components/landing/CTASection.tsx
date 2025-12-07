@@ -1,6 +1,6 @@
-import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ArrowRight, Upload, Briefcase } from 'lucide-react';
+import { ArrowRight, Briefcase, Upload } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const CTASection = () => {
   return (
@@ -51,7 +51,7 @@ const CTASection = () => {
                 <Briefcase className="h-7 w-7 text-primary" />
               </div>
               <h3 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-                For Employers
+                For Recruiters
               </h3>
               <p className="text-muted-foreground mb-6">
                 Post jobs and find top talent using AI-powered candidate matching. Streamline your hiring process with smart analytics.

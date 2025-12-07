@@ -1,6 +1,6 @@
-import { Link, useNavigate } from 'react-router-dom';
+import NotificationDropdown from '@/components/notifications/NotificationDropdown';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,10 +8,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Briefcase, User, LogOut, LayoutDashboard, ChevronDown, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
+import { Briefcase, ChevronDown, LayoutDashboard, LogOut, Menu, User, X } from 'lucide-react';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -57,6 +58,7 @@ const Header = () => {
 
         {/* Desktop Auth Section */}
         <div className="hidden md:flex items-center gap-4">
+          <NotificationDropdown />
           {isAuthenticated && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -95,8 +97,8 @@ const Header = () => {
             </DropdownMenu>
           ) : (
             <>
-              <Link to="/auth?mode=employer" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                For Employers
+              <Link to="/auth?mode=login&role=recruiter" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+                For Recruiters
               </Link>
               <Button variant="ghost" onClick={() => navigate('/auth?mode=login')}>
                 Sign In

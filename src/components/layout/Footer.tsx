@@ -1,5 +1,5 @@
+import { Briefcase, Facebook, Linkedin, Mail, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { Briefcase, Facebook, Linkedin, Twitter, Mail } from 'lucide-react';
 
 const Footer = () => {
   return (
@@ -64,7 +64,7 @@ const Footer = () => {
 
           {/* For Employers */}
           <div>
-            <h4 className="font-semibold mb-4">For Employers</h4>
+            <h4 className="font-semibold mb-4">For Recruiters</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/post-job" className="text-sm text-primary-foreground/70 hover:text-accent transition-colors">

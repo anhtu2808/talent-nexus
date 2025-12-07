@@ -1,10 +1,10 @@
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import HeroSection from '@/components/landing/HeroSection';
-import FeaturesSection from '@/components/landing/FeaturesSection';
-import TopEmployers from '@/components/landing/TopEmployers';
-import FeaturedJobs from '@/components/landing/FeaturedJobs';
 import CTASection from '@/components/landing/CTASection';
+import FeaturedJobs from '@/components/landing/FeaturedJobs';
+import FeaturesSection from '@/components/landing/FeaturesSection';
+import HeroSection from '@/components/landing/HeroSection';
+import TopCompanies from '@/components/landing/TopCompanies';
+import Footer from '@/components/layout/Footer';
+import Header from '@/components/layout/Header';
 
 const Index = () => {
   return (
@@ -12,7 +12,7 @@ const Index = () => {
       <Header />
       <main className="flex-1">
         <HeroSection />
-        <TopEmployers />
+        <TopCompanies />
         <FeaturedJobs />
         <FeaturesSection />
         <CTASection />

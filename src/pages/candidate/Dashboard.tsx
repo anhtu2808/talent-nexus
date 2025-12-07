@@ -240,54 +240,42 @@ const CandidateDashboard = () => {
                   <div className="p-2 rounded-lg bg-accent/10">
                     <Briefcase className="h-5 w-5 text-accent" />
                   </div>
-                  <h2 className="text-lg font-semibold">Application Status</h2>
+                  <h2 className="text-lg font-semibold">Recent Applications</h2>
                 </div>
-                <Link to="/jobs">
+                <Link to="/candidate/applications">
                   <Button variant="outline" size="sm">
-                    <Search className="h-4 w-4 mr-2" />
-                    Find Jobs
+                    View All
                   </Button>
                 </Link>
               </div>
 
-              {userApplications.length > 0 ? (
-                <div className="space-y-4">
-                  {userApplications.map((app) => {
-                    const job = mockJobs.find(j => j.id === app.jobId);
-                    const statusConfig = getStatusConfig(app.status);
-                    const StatusIcon = statusConfig.icon;
+              {userApplications.slice(0, 3).map((app) => {
+                const job = mockJobs.find(j => j.id === app.jobId);
+                const statusConfig = getStatusConfig(app.status);
+                const StatusIcon = statusConfig.icon;
 
-                    return job ? (
-                      <div key={app.id} className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg">
-                        <img
-                          src={job.companyLogo}
-                          alt={job.company}
-                          className="w-12 h-12 rounded-lg"
-                        />
-                        <div className="flex-1 min-w-0">
-                          <Link to={`/jobs/${job.id}`} className="font-medium text-foreground hover:text-accent truncate block">
-                            {job.title}
-                          </Link>
-                          <p className="text-sm text-muted-foreground">{job.company}</p>
-                          <p className="text-xs text-muted-foreground">
-                            Applied {formatDistanceToNow(app.appliedAt, { addSuffix: true })}
-                          </p>
-                        </div>
-                        {app.matchScore && (
-                          <div className="text-center hidden sm:block">
-                            <div className="text-lg font-bold text-accent">{app.matchScore}%</div>
-                            <p className="text-xs text-muted-foreground">Match</p>
-                          </div>
-                        )}
-                        <Badge className={statusConfig.color}>
-                          <StatusIcon className="h-3 w-3 mr-1" />
-                          {statusConfig.label}
-                        </Badge>
-                      </div>
-                    ) : null;
-                  })}
-                </div>
-              ) : (
+                return job ? (
+                  <div key={app.id} className="flex items-center gap-4 p-4 mb-4 bg-muted/50 rounded-lg last:mb-0">
+                    <img
+                      src={job.companyLogo}
+                      alt={job.company}
+                      className="w-12 h-12 rounded-lg"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <Link to={`/candidate/applications`} className="font-medium text-foreground hover:text-accent truncate block">
+                        {job.title}
+                      </Link>
+                      <p className="text-sm text-muted-foreground">{job.company}</p>
+                    </div>
+                    <Badge className={statusConfig.color}>
+                      <StatusIcon className="h-3 w-3 mr-1" />
+                      {statusConfig.label}
+                    </Badge>
+                  </div>
+                ) : null;
+              })}
+
+              {userApplications.length === 0 && (
                 <div className="text-center py-8">
                   <Briefcase className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-muted-foreground mb-4">No applications yet</p>
