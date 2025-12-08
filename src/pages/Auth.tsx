@@ -1,12 +1,12 @@
-import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams, Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/types';
-import { Briefcase, User, Mail, Lock, Eye, EyeOff, ArrowLeft, Loader2 } from 'lucide-react';
+import { ArrowLeft, Briefcase, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const Auth = () => {
@@ -33,10 +33,11 @@ const Auth = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!loginData.email || !loginData.password) {
-      toast.error('Please fill in all fields');
-      return;
-    }
+    // Validation removed for testing
+    // if (!loginData.email || !loginData.password) {
+    //   toast.error('Please fill in all fields');
+    //   return;
+    // }
     try {
       await login(loginData.email, loginData.password, selectedRole);
       toast.success('Welcome back!');
@@ -47,18 +48,19 @@ const Auth = () => {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!registerData.name || !registerData.email || !registerData.password) {
-      toast.error('Please fill in all fields');
-      return;
-    }
-    if (registerData.password !== registerData.confirmPassword) {
-      toast.error('Passwords do not match');
-      return;
-    }
-    if (registerData.password.length < 6) {
-      toast.error('Password must be at least 6 characters');
-      return;
-    }
+    // Validation removed for testing
+    // if (!registerData.name || !registerData.email || !registerData.password) {
+    //   toast.error('Please fill in all fields');
+    //   return;
+    // }
+    // if (registerData.password !== registerData.confirmPassword) {
+    //   toast.error('Passwords do not match');
+    //   return;
+    // }
+    // if (registerData.password.length < 6) {
+    //   toast.error('Password must be at least 6 characters');
+    //   return;
+    // }
     try {
       await register(registerData.email, registerData.password, registerData.name, selectedRole);
       toast.success('Account created successfully!');
@@ -85,8 +87,8 @@ const Auth = () => {
             </span>
           </Link>
           <h1 className="text-4xl font-bold text-primary-foreground mb-4">
-            {selectedRole === 'candidate' 
-              ? 'Land Your Dream Job' 
+            {selectedRole === 'candidate'
+              ? 'Land Your Dream Job'
               : 'Find Top Talent Faster'}
           </h1>
           <p className="text-xl text-primary-foreground/70 max-w-md">
@@ -126,22 +128,20 @@ const Auth = () => {
               <div className="grid grid-cols-2 gap-3">
                 <button
                   onClick={() => setSelectedRole('candidate')}
-                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${
-                    selectedRole === 'candidate'
+                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'candidate'
                       ? 'border-accent bg-accent/10 text-accent'
                       : 'border-border hover:border-accent/50'
-                  }`}
+                    }`}
                 >
                   <User className="h-5 w-5" />
                   <span className="font-medium">Candidate</span>
                 </button>
                 <button
                   onClick={() => setSelectedRole('recruiter')}
-                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${
-                    selectedRole === 'recruiter'
+                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'recruiter'
                       ? 'border-accent bg-accent/10 text-accent'
                       : 'border-border hover:border-accent/50'
-                  }`}
+                    }`}
                 >
                   <Briefcase className="h-5 w-5" />
                   <span className="font-medium">Recruiter</span>

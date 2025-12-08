@@ -7,11 +7,11 @@ const employers = [
   },
   {
     name: 'Viettel Group',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Viettel_logo_2021.svg/1200px-Viettel_logo_2021.svg.png'
+    logo: 'https://yourway.viettel.vn/images/og-image.png'
   },
   {
     name: 'VNG Corporation',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/VNG_Corporation_logo.png/1200px-VNG_Corporation_logo.png'
+    logo: 'https://mondialbrand.com/wp-content/uploads/2024/02/vng_corporation-logo_brandlogos.net_ysr15.png'
   },
   {
     name: 'MoMo',
@@ -23,7 +23,7 @@ const employers = [
   },
   {
     name: 'Vingroup',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/Logo_Vingroup_2018.png/1200px-Logo_Vingroup_2018.png'
+    logo: 'https://upload.wikimedia.org/wikipedia/vi/thumb/9/98/Vingroup_logo.svg/2560px-Vingroup_logo.svg.png'
   },
   {
     name: 'Shopee Vietnam',
