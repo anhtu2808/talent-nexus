@@ -1,4 +1,4 @@
-import { Job, Application, CV, User } from '@/types';
+import { Job, Application, CV, CandidateProfile, ApplicationNote } from '@/types';
 
 export const mockJobs: Job[] = [
   {
@@ -22,7 +22,9 @@ export const mockJobs: Job[] = [
     deadline: new Date('2024-02-28'),
     recruiterId: 'r1',
     applicantCount: 45,
-    isActive: true
+    isActive: true,
+    views: 1250,
+    clickToApply: 145
   },
   {
     id: '2',
@@ -44,7 +46,9 @@ export const mockJobs: Job[] = [
     postedAt: new Date('2024-01-18'),
     recruiterId: 'r2',
     applicantCount: 32,
-    isActive: true
+    isActive: true,
+    views: 890,
+    clickToApply: 98
   },
   {
     id: '3',
@@ -66,7 +70,9 @@ export const mockJobs: Job[] = [
     postedAt: new Date('2024-01-20'),
     recruiterId: 'r1',
     applicantCount: 28,
-    isActive: true
+    isActive: true,
+    views: 756,
+    clickToApply: 67
   },
   {
     id: '4',
@@ -88,7 +94,9 @@ export const mockJobs: Job[] = [
     postedAt: new Date('2024-01-22'),
     recruiterId: 'r2',
     applicantCount: 19,
-    isActive: true
+    isActive: true,
+    views: 623,
+    clickToApply: 52
   },
   {
     id: '5',
@@ -110,7 +118,9 @@ export const mockJobs: Job[] = [
     postedAt: new Date('2024-01-25'),
     recruiterId: 'r1',
     applicantCount: 56,
-    isActive: true
+    isActive: true,
+    views: 1100,
+    clickToApply: 120
   },
   {
     id: '6',
@@ -132,46 +142,317 @@ export const mockJobs: Job[] = [
     postedAt: new Date('2024-01-28'),
     recruiterId: 'r2',
     applicantCount: 23,
-    isActive: true
+    isActive: true,
+    views: 445,
+    clickToApply: 38
   }
 ];
 
+// Extended candidate profiles with more details for filtering
+export const mockCandidateProfiles: CandidateProfile[] = [
+  {
+    id: 'c1',
+    email: 'nguyenvana@email.com',
+    name: 'Nguyen Van A',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=NV&background=0F2238&color=fff',
+    createdAt: new Date('2024-01-10'),
+    phone: '0901234567',
+    location: 'Ho Chi Minh City',
+    expectedSalary: '$3,000 - $4,000',
+    yearsOfExperience: 5,
+    skills: ['React', 'TypeScript', 'Node.js', 'Python', 'AWS'],
+    languages: [
+      { language: 'English', level: 'Fluent' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  },
+  {
+    id: 'c2',
+    email: 'tranb@email.com',
+    name: 'Tran Thi B',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=TT&background=38B65F&color=fff',
+    createdAt: new Date('2024-01-12'),
+    phone: '0912345678',
+    location: 'Ha Noi',
+    expectedSalary: '$2,500 - $3,500',
+    yearsOfExperience: 4,
+    skills: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker'],
+    languages: [
+      { language: 'English', level: 'Professional' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  },
+  {
+    id: 'c3',
+    email: 'lec@email.com',
+    name: 'Le Van C',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=LV&background=6366f1&color=fff',
+    createdAt: new Date('2024-01-14'),
+    phone: '0923456789',
+    location: 'Da Nang',
+    expectedSalary: '$4,000 - $5,500',
+    yearsOfExperience: 7,
+    skills: ['Python', 'TensorFlow', 'PyTorch', 'NLP', 'AWS'],
+    languages: [
+      { language: 'English', level: 'Fluent' },
+      { language: 'Japanese', level: 'Intermediate' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  },
+  {
+    id: 'c4',
+    email: 'phamd@email.com',
+    name: 'Pham Thi D',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=PD&background=f59e0b&color=fff',
+    createdAt: new Date('2024-01-16'),
+    phone: '0934567890',
+    location: 'Ho Chi Minh City',
+    expectedSalary: '$2,000 - $2,500',
+    yearsOfExperience: 2,
+    skills: ['React', 'JavaScript', 'CSS', 'HTML', 'Node.js'],
+    languages: [
+      { language: 'English', level: 'Intermediate' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  },
+  {
+    id: 'c5',
+    email: 'hoange@email.com',
+    name: 'Hoang Van E',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=HE&background=ec4899&color=fff',
+    createdAt: new Date('2024-01-18'),
+    phone: '0945678901',
+    location: 'Ha Noi',
+    expectedSalary: '$3,500 - $4,500',
+    yearsOfExperience: 6,
+    skills: ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'Python'],
+    languages: [
+      { language: 'English', level: 'Fluent' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: false
+  },
+  {
+    id: 'c6',
+    email: 'vuf@email.com',
+    name: 'Vu Thi F',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=VF&background=14b8a6&color=fff',
+    createdAt: new Date('2024-01-20'),
+    phone: '0956789012',
+    location: 'Remote',
+    expectedSalary: '$2,800 - $3,500',
+    yearsOfExperience: 3,
+    skills: ['Java', 'Spring Boot', 'Microservices', 'Kafka', 'Redis'],
+    languages: [
+      { language: 'English', level: 'Professional' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  },
+  {
+    id: 'c7',
+    email: 'dingg@email.com',
+    name: 'Dinh Van G',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=DG&background=8b5cf6&color=fff',
+    createdAt: new Date('2024-01-22'),
+    phone: '0967890123',
+    location: 'Ho Chi Minh City',
+    expectedSalary: '$1,500 - $2,000',
+    yearsOfExperience: 1,
+    skills: ['React', 'JavaScript', 'TypeScript', 'Tailwind'],
+    languages: [
+      { language: 'English', level: 'Intermediate' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  },
+  {
+    id: 'c8',
+    email: 'buh@email.com',
+    name: 'Bu Thi H',
+    role: 'candidate',
+    avatar: 'https://ui-avatars.com/api/?name=BH&background=ef4444&color=fff',
+    createdAt: new Date('2024-01-24'),
+    phone: '0978901234',
+    location: 'Da Nang',
+    expectedSalary: '$3,000 - $4,000',
+    yearsOfExperience: 5,
+    skills: ['Selenium', 'Cypress', 'JavaScript', 'API Testing', 'Jest'],
+    languages: [
+      { language: 'English', level: 'Fluent' },
+      { language: 'Vietnamese', level: 'Native' }
+    ],
+    openToWork: true
+  }
+];
+
+// For backward compatibility
+export const mockCandidates = mockCandidateProfiles;
+
+// Extended applications with notes
 export const mockApplications: Application[] = [
   {
     id: 'a1',
     jobId: '1',
     candidateId: 'c1',
     cvId: 'cv1',
-    status: 'reviewing',
+    status: 'viewed',
     appliedAt: new Date('2024-01-20'),
-    matchScore: 85
+    matchScore: 85,
+    viewedAt: new Date('2024-01-21'),
+    notes: [
+      {
+        id: 'n1',
+        applicationId: 'a1',
+        authorId: 'r1',
+        authorName: 'HR Manager',
+        content: 'Strong React experience, matches most requirements. Schedule for technical interview.',
+        createdAt: new Date('2024-01-21')
+      }
+    ]
   },
   {
     id: 'a2',
-    jobId: '2',
-    candidateId: 'c1',
-    cvId: 'cv1',
-    status: 'shortlisted',
-    appliedAt: new Date('2024-01-22'),
-    matchScore: 92
+    jobId: '1',
+    candidateId: 'c2',
+    cvId: 'cv2',
+    status: 'interviewing',
+    appliedAt: new Date('2024-01-18'),
+    matchScore: 88,
+    viewedAt: new Date('2024-01-19'),
+    contactedAt: new Date('2024-01-20'),
+    interviewDate: new Date('2024-02-01'),
+    notes: [
+      {
+        id: 'n2',
+        applicationId: 'a2',
+        authorId: 'r1',
+        authorName: 'HR Manager',
+        content: 'Excellent technical skills. Passed phone screening.',
+        createdAt: new Date('2024-01-20')
+      },
+      {
+        id: 'n3',
+        applicationId: 'a2',
+        authorId: 'r1',
+        authorName: 'Tech Lead',
+        content: 'Scheduled for technical round on Feb 1st.',
+        createdAt: new Date('2024-01-22')
+      }
+    ]
   },
   {
     id: 'a3',
-    jobId: '3',
-    candidateId: 'c1',
-    cvId: 'cv1',
-    status: 'pending',
+    jobId: '1',
+    candidateId: 'c3',
+    cvId: 'cv3',
+    status: 'new',
     appliedAt: new Date('2024-01-25'),
-    matchScore: 78
+    matchScore: 92
   },
   {
     id: 'a4',
     jobId: '1',
+    candidateId: 'c4',
+    cvId: 'cv4',
+    status: 'new',
+    appliedAt: new Date('2024-01-26'),
+    matchScore: 65
+  },
+  {
+    id: 'a5',
+    jobId: '1',
+    candidateId: 'c5',
+    cvId: 'cv5',
+    status: 'contacted',
+    appliedAt: new Date('2024-01-22'),
+    matchScore: 78,
+    viewedAt: new Date('2024-01-23'),
+    contactedAt: new Date('2024-01-24'),
+    notes: [
+      {
+        id: 'n4',
+        applicationId: 'a5',
+        authorId: 'r1',
+        authorName: 'HR Manager',
+        content: 'Good DevOps background, but we need stronger frontend skills. Pending discussion.',
+        createdAt: new Date('2024-01-24')
+      }
+    ]
+  },
+  {
+    id: 'a6',
+    jobId: '1',
+    candidateId: 'c6',
+    cvId: 'cv6',
+    status: 'rejected',
+    appliedAt: new Date('2024-01-19'),
+    matchScore: 45,
+    viewedAt: new Date('2024-01-20'),
+    rejectionReason: 'Insufficient experience with React ecosystem'
+  },
+  {
+    id: 'a7',
+    jobId: '1',
+    candidateId: 'c7',
+    cvId: 'cv7',
+    status: 'new',
+    appliedAt: new Date('2024-01-27'),
+    matchScore: 72
+  },
+  {
+    id: 'a8',
+    jobId: '1',
+    candidateId: 'c8',
+    cvId: 'cv8',
+    status: 'offered',
+    appliedAt: new Date('2024-01-15'),
+    matchScore: 90,
+    viewedAt: new Date('2024-01-16'),
+    contactedAt: new Date('2024-01-17'),
+    interviewDate: new Date('2024-01-25'),
+    notes: [
+      {
+        id: 'n5',
+        applicationId: 'a8',
+        authorId: 'r1',
+        authorName: 'HR Manager',
+        content: 'Outstanding performance in all rounds. Extended offer.',
+        createdAt: new Date('2024-01-28')
+      }
+    ]
+  },
+  {
+    id: 'a9',
+    jobId: '2',
     candidateId: 'c2',
     cvId: 'cv2',
-    status: 'interview',
-    appliedAt: new Date('2024-01-18'),
-    matchScore: 88
+    status: 'new',
+    appliedAt: new Date('2024-01-22'),
+    matchScore: 92
+  },
+  {
+    id: 'a10',
+    jobId: '3',
+    candidateId: 'c3',
+    cvId: 'cv3',
+    status: 'interviewing',
+    appliedAt: new Date('2024-01-25'),
+    matchScore: 95,
+    viewedAt: new Date('2024-01-26'),
+    contactedAt: new Date('2024-01-27'),
+    interviewDate: new Date('2024-02-05')
   }
 ];
 
@@ -214,15 +495,15 @@ export const mockCVs: CV[] = [
   },
   {
     id: 'cv2',
-    candidateId: 'c1',
-    fileName: 'senior_fullstack_2024.pdf',
+    candidateId: 'c2',
+    fileName: 'tran_thi_b_cv.pdf',
     fileUrl: '/uploads/cv2.pdf',
     uploadedAt: new Date('2024-02-10'),
-    atsScore: 78,
+    atsScore: 88,
     parsedData: {
-      name: 'Nguyen Van A',
-      email: 'nguyenvana@email.com',
-      phone: '0901234567',
+      name: 'Tran Thi B',
+      email: 'tranb@email.com',
+      phone: '0912345678',
       skills: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker'],
       experience: [
         {
@@ -235,8 +516,8 @@ export const mockCVs: CV[] = [
       education: [
         {
           degree: 'Bachelor of Computer Science',
-          institution: 'FPT University',
-          year: '2019'
+          institution: 'HUST',
+          year: '2020'
         }
       ],
       summary: 'Full stack developer with expertise in Java and React'
@@ -244,90 +525,201 @@ export const mockCVs: CV[] = [
   },
   {
     id: 'cv3',
-    candidateId: 'c1',
-    fileName: 'backend_developer_cv.pdf',
+    candidateId: 'c3',
+    fileName: 'le_van_c_resume.pdf',
     fileUrl: '/uploads/cv3.pdf',
     uploadedAt: new Date('2024-03-05'),
     atsScore: 92,
     parsedData: {
-      name: 'Nguyen Van A',
-      email: 'nguyenvana@email.com',
-      phone: '0901234567',
-      skills: ['Python', 'Django', 'FastAPI', 'AWS', 'Kubernetes'],
+      name: 'Le Van C',
+      email: 'lec@email.com',
+      phone: '0923456789',
+      skills: ['Python', 'TensorFlow', 'PyTorch', 'NLP', 'AWS'],
       experience: [
         {
-          title: 'Backend Engineer',
+          title: 'Senior ML Engineer',
           company: 'AI Startup',
-          duration: '2022 - Present',
-          description: 'Developed AI-powered APIs and microservices'
+          duration: '2019 - Present',
+          description: 'Developed AI-powered APIs and recommendation systems'
+        },
+        {
+          title: 'Data Scientist',
+          company: 'BigData Inc',
+          duration: '2017 - 2019',
+          description: 'Built NLP models for sentiment analysis'
         }
       ],
       education: [
         {
           degree: 'Master of Computer Science',
           institution: 'HCMUT',
-          year: '2022'
+          year: '2017'
         }
       ],
-      summary: 'Backend specialist with AI/ML integration experience'
+      summary: 'ML specialist with 7+ years experience in AI/ML'
     }
   },
   {
     id: 'cv4',
-    candidateId: 'c1',
-    fileName: 'devops_engineer_resume.docx',
-    fileUrl: '/uploads/cv4.docx',
+    candidateId: 'c4',
+    fileName: 'pham_thi_d_cv.pdf',
+    fileUrl: '/uploads/cv4.pdf',
     uploadedAt: new Date('2024-01-28'),
     atsScore: 70,
     parsedData: {
-      name: 'Nguyen Van A',
-      email: 'nguyenvana@email.com',
-      phone: '0901234567',
-      skills: ['AWS', 'Terraform', 'Docker', 'Kubernetes', 'CI/CD'],
+      name: 'Pham Thi D',
+      email: 'phamd@email.com',
+      phone: '0934567890',
+      skills: ['React', 'JavaScript', 'CSS', 'HTML', 'Node.js'],
       experience: [
         {
-          title: 'DevOps Engineer',
-          company: 'CloudScale Inc',
-          duration: '2021 - Present',
-          description: 'Managed cloud infrastructure and CI/CD pipelines'
+          title: 'Junior Frontend Developer',
+          company: 'Web Agency',
+          duration: '2022 - Present',
+          description: 'Developed responsive websites for clients'
         }
       ],
       education: [
         {
           degree: 'Bachelor of IT',
           institution: 'UIT',
-          year: '2020'
+          year: '2022'
+        }
+      ],
+      summary: 'Junior developer eager to learn and grow'
+    }
+  },
+  {
+    id: 'cv5',
+    candidateId: 'c5',
+    fileName: 'hoang_van_e_resume.pdf',
+    fileUrl: '/uploads/cv5.pdf',
+    uploadedAt: new Date('2024-01-30'),
+    atsScore: 82,
+    parsedData: {
+      name: 'Hoang Van E',
+      email: 'hoange@email.com',
+      phone: '0945678901',
+      skills: ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'Python'],
+      experience: [
+        {
+          title: 'Senior DevOps Engineer',
+          company: 'CloudScale Inc',
+          duration: '2020 - Present',
+          description: 'Managed cloud infrastructure and CI/CD pipelines'
+        },
+        {
+          title: 'DevOps Engineer',
+          company: 'TechOps',
+          duration: '2018 - 2020',
+          description: 'Implemented containerization strategies'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Computer Science',
+          institution: 'PTIT',
+          year: '2018'
         }
       ],
       summary: 'DevOps engineer with strong cloud and automation skills'
     }
-  }
-];
-
-export const mockCandidates: User[] = [
-  {
-    id: 'c1',
-    email: 'nguyenvana@email.com',
-    name: 'Nguyen Van A',
-    role: 'candidate',
-    avatar: 'https://ui-avatars.com/api/?name=NV&background=0F2238&color=fff',
-    createdAt: new Date('2024-01-10')
   },
   {
-    id: 'c2',
-    email: 'tranb@email.com',
-    name: 'Tran Thi B',
-    role: 'candidate',
-    avatar: 'https://ui-avatars.com/api/?name=TT&background=38B65F&color=fff',
-    createdAt: new Date('2024-01-12')
+    id: 'cv6',
+    candidateId: 'c6',
+    fileName: 'vu_thi_f_cv.pdf',
+    fileUrl: '/uploads/cv6.pdf',
+    uploadedAt: new Date('2024-02-01'),
+    atsScore: 75,
+    parsedData: {
+      name: 'Vu Thi F',
+      email: 'vuf@email.com',
+      phone: '0956789012',
+      skills: ['Java', 'Spring Boot', 'Microservices', 'Kafka', 'Redis'],
+      experience: [
+        {
+          title: 'Backend Developer',
+          company: 'Enterprise Solutions',
+          duration: '2021 - Present',
+          description: 'Built microservices for enterprise clients'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Software Engineering',
+          institution: 'HCMUT',
+          year: '2021'
+        }
+      ],
+      summary: 'Backend developer specializing in microservices'
+    }
   },
   {
-    id: 'c3',
-    email: 'lec@email.com',
-    name: 'Le Van C',
-    role: 'candidate',
-    avatar: 'https://ui-avatars.com/api/?name=LV&background=6366f1&color=fff',
-    createdAt: new Date('2024-01-14')
+    id: 'cv7',
+    candidateId: 'c7',
+    fileName: 'dinh_van_g_resume.pdf',
+    fileUrl: '/uploads/cv7.pdf',
+    uploadedAt: new Date('2024-02-05'),
+    atsScore: 65,
+    parsedData: {
+      name: 'Dinh Van G',
+      email: 'dingg@email.com',
+      phone: '0967890123',
+      skills: ['React', 'JavaScript', 'TypeScript', 'Tailwind'],
+      experience: [
+        {
+          title: 'Frontend Developer Intern',
+          company: 'Startup ABC',
+          duration: '2023 - Present',
+          description: 'Assisted in building web applications'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of IT',
+          institution: 'FPT University',
+          year: '2023'
+        }
+      ],
+      summary: 'Fresh graduate with passion for frontend development'
+    }
+  },
+  {
+    id: 'cv8',
+    candidateId: 'c8',
+    fileName: 'bu_thi_h_cv.pdf',
+    fileUrl: '/uploads/cv8.pdf',
+    uploadedAt: new Date('2024-02-08'),
+    atsScore: 88,
+    parsedData: {
+      name: 'Bu Thi H',
+      email: 'buh@email.com',
+      phone: '0978901234',
+      skills: ['Selenium', 'Cypress', 'JavaScript', 'API Testing', 'Jest'],
+      experience: [
+        {
+          title: 'Senior QA Engineer',
+          company: 'Quality First Ltd',
+          duration: '2020 - Present',
+          description: 'Led automation testing initiatives'
+        },
+        {
+          title: 'QA Engineer',
+          company: 'TestCorp',
+          duration: '2018 - 2020',
+          description: 'Developed automated test suites'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Computer Science',
+          institution: 'Da Nang University',
+          year: '2018'
+        }
+      ],
+      summary: 'QA specialist with 5+ years of automation experience'
+    }
   }
 ];
 
@@ -345,4 +737,16 @@ export const jobTypes = [
   { value: 'part-time', label: 'Part-time' },
   { value: 'contract', label: 'Contract' },
   { value: 'remote', label: 'Remote' }
+];
+
+export const experienceLevels = [
+  { value: 'all', label: 'All Levels' },
+  { value: '0-1', label: '0-1 years' },
+  { value: '1-3', label: '1-3 years' },
+  { value: '3-5', label: '3-5 years' },
+  { value: '5+', label: '5+ years' }
+];
+
+export const languageLevels = [
+  'Basic', 'Intermediate', 'Professional', 'Fluent', 'Native'
 ];

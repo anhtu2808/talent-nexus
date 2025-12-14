@@ -64,7 +64,7 @@ const ApplicationDetail = () => {
       color: 'text-blue-500'
     },
     // Add more based on status...
-    ...(application.status !== 'pending' ? [{
+    ...(application.status !== 'new' ? [{
       id: 3,
       type: 'status_change',
       title: 'Status Updated to Reviewing',

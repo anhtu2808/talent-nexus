@@ -1,5 +1,7 @@
 export type UserRole = 'candidate' | 'recruiter' | 'admin';
 
+export type ApplicationStatus = 'new' | 'viewed' | 'contacted' | 'interviewing' | 'offered' | 'hired' | 'rejected';
+
 export interface User {
   id: string;
   email: string;
@@ -7,6 +9,16 @@ export interface User {
   role: UserRole;
   avatar?: string;
   createdAt: Date;
+}
+
+export interface CandidateProfile extends User {
+  phone?: string;
+  location?: string;
+  expectedSalary?: string;
+  yearsOfExperience?: number;
+  skills?: string[];
+  languages?: { language: string; level: string }[];
+  openToWork?: boolean;
 }
 
 export interface Job {
@@ -25,6 +37,17 @@ export interface Job {
   recruiterId: string;
   applicantCount: number;
   isActive: boolean;
+  views?: number;
+  clickToApply?: number;
+}
+
+export interface ApplicationNote {
+  id: string;
+  applicationId: string;
+  authorId: string;
+  authorName: string;
+  content: string;
+  createdAt: Date;
 }
 
 export interface Application {
@@ -32,10 +55,14 @@ export interface Application {
   jobId: string;
   candidateId: string;
   cvId: string;
-  status: 'pending' | 'reviewing' | 'shortlisted' | 'interview' | 'offered' | 'rejected';
+  status: ApplicationStatus;
   appliedAt: Date;
   matchScore?: number;
-  notes?: string;
+  notes?: ApplicationNote[];
+  viewedAt?: Date;
+  contactedAt?: Date;
+  interviewDate?: Date;
+  rejectionReason?: string;
 }
 
 export interface CV {
@@ -76,3 +103,14 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
 }
+
+// Pipeline stage configuration
+export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: string }[] = [
+  { key: 'new', label: 'New', color: 'bg-blue-500' },
+  { key: 'viewed', label: 'Viewed', color: 'bg-gray-500' },
+  { key: 'contacted', label: 'Contacted', color: 'bg-purple-500' },
+  { key: 'interviewing', label: 'Interviewing', color: 'bg-amber-500' },
+  { key: 'offered', label: 'Offered', color: 'bg-green-500' },
+  { key: 'hired', label: 'Hired', color: 'bg-emerald-600' },
+  { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
+];

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
@@ -7,21 +7,22 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
-import { mockJobs, mockApplications, mockCandidates } from '@/data/mockData';
+import { mockJobs, mockApplications, mockCandidateProfiles, mockCVs } from '@/data/mockData';
+import { Application, ApplicationStatus, CV } from '@/types';
+import KanbanBoard from '@/components/recruiter/KanbanBoard';
+import ApplicantCard from '@/components/recruiter/ApplicantCard';
+import ApplicantFilters, { FilterState } from '@/components/recruiter/ApplicantFilters';
 import {
   Briefcase,
   Users,
   TrendingUp,
   Eye,
   Plus,
-  MoreVertical,
   Clock,
   CheckCircle,
-  XCircle,
-  Search,
-  FileText,
-  Star,
-  ChevronRight
+  LayoutGrid,
+  List,
+  FileText
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
@@ -34,12 +35,6 @@ import {
   DialogTrigger,
   DialogFooter,
 } from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {
   Select,
   SelectContent,
@@ -58,14 +53,87 @@ const RecruiterDashboard = () => {
   const { user } = useAuth();
   const [createJobOpen, setCreateJobOpen] = useState(false);
   const [selectedJob, setSelectedJob] = useState<string | null>(mockJobs[0]?.id || null);
+  const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
+  const [applications, setApplications] = useState<Application[]>(mockApplications);
+  const [viewingCV, setViewingCV] = useState<CV | null>(null);
+  
+  const [filters, setFilters] = useState<FilterState>({
+    search: '',
+    location: 'All Cities',
+    minExperience: 0,
+    maxExperience: 10,
+    minSalary: 0,
+    maxSalary: 10000,
+    skills: [],
+    language: '',
+    languageLevel: '',
+    matchScoreMin: 0
+  });
 
   // Get recruiter's jobs
   const recruiterJobs = mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2');
 
-  // Get applicants for selected job
-  const getApplicantsForJob = (jobId: string) => {
-    return mockApplications.filter(app => app.jobId === jobId);
-  };
+  // Get applicants for selected job with filters
+  const getFilteredApplications = useMemo(() => {
+    let apps = applications.filter(app => app.jobId === selectedJob);
+
+    // Apply filters
+    apps = apps.filter(app => {
+      const candidate = mockCandidateProfiles.find(c => c.id === app.candidateId);
+      if (!candidate) return false;
+
+      // Search filter
+      if (filters.search) {
+        const searchLower = filters.search.toLowerCase();
+        const matchesSearch = 
+          candidate.name.toLowerCase().includes(searchLower) ||
+          candidate.email.toLowerCase().includes(searchLower) ||
+          candidate.skills?.some(s => s.toLowerCase().includes(searchLower));
+        if (!matchesSearch) return false;
+      }
+
+      // Location filter
+      if (filters.location !== 'All Cities' && candidate.location !== filters.location) {
+        return false;
+      }
+
+      // Experience filter
+      const exp = candidate.yearsOfExperience || 0;
+      if (exp < filters.minExperience || exp > filters.maxExperience) {
+        return false;
+      }
+
+      // Skills filter
+      if (filters.skills.length > 0) {
+        const hasAllSkills = filters.skills.every(skill =>
+          candidate.skills?.some(s => s.toLowerCase().includes(skill.toLowerCase()))
+        );
+        if (!hasAllSkills) return false;
+      }
+
+      // Match score filter
+      if (filters.matchScoreMin > 0 && (app.matchScore || 0) < filters.matchScoreMin) {
+        return false;
+      }
+
+      // Language filter
+      if (filters.language && filters.language !== 'any') {
+        const hasLanguage = candidate.languages?.some(l => l.language === filters.language);
+        if (!hasLanguage) return false;
+
+        if (filters.languageLevel && filters.languageLevel !== 'any') {
+          const meetsLevel = candidate.languages?.some(
+            l => l.language === filters.language && l.level === filters.languageLevel
+          );
+          if (!meetsLevel) return false;
+        }
+      }
+
+      return true;
+    });
+
+    return apps;
+  }, [applications, selectedJob, filters]);
 
   const stats = [
     {
@@ -84,14 +152,14 @@ const RecruiterDashboard = () => {
     },
     {
       label: 'Interviews Scheduled',
-      value: 8,
+      value: applications.filter(a => a.status === 'interviewing').length,
       icon: Clock,
       color: 'text-purple-500',
       change: '+3 this week'
     },
     {
       label: 'Positions Filled',
-      value: 12,
+      value: applications.filter(a => a.status === 'hired').length,
       icon: CheckCircle,
       color: 'text-green-500',
       change: '+1 this month'
@@ -104,24 +172,64 @@ const RecruiterDashboard = () => {
     toast.success('Job posted successfully!');
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case 'pending':
-        return <Badge variant="secondary">Pending</Badge>;
-      case 'reviewing':
-        return <Badge className="bg-blue-100 text-blue-700">Reviewing</Badge>;
-      case 'shortlisted':
-        return <Badge className="bg-purple-100 text-purple-700">Shortlisted</Badge>;
-      case 'interview':
-        return <Badge className="bg-accent/20 text-accent">Interview</Badge>;
-      case 'offered':
-        return <Badge className="bg-green-100 text-green-700">Offered</Badge>;
-      case 'rejected':
-        return <Badge variant="destructive">Rejected</Badge>;
-      default:
-        return <Badge variant="secondary">{status}</Badge>;
-    }
+  const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
+    setApplications(prev => prev.map(app => {
+      if (app.id === applicationId) {
+        const updates: Partial<Application> = { status: newStatus };
+        if (newStatus === 'viewed' && !app.viewedAt) {
+          updates.viewedAt = new Date();
+        }
+        if (newStatus === 'contacted' && !app.contactedAt) {
+          updates.contactedAt = new Date();
+        }
+        return { ...app, ...updates };
+      }
+      return app;
+    }));
+    toast.success(`Application moved to ${newStatus}`);
   };
+
+  const handleAddNote = (applicationId: string, noteContent: string) => {
+    setApplications(prev => prev.map(app => {
+      if (app.id === applicationId) {
+        const newNote = {
+          id: `n${Date.now()}`,
+          applicationId,
+          authorId: user?.id || 'r1',
+          authorName: user?.name || 'HR Manager',
+          content: noteContent,
+          createdAt: new Date()
+        };
+        return {
+          ...app,
+          notes: [...(app.notes || []), newNote]
+        };
+      }
+      return app;
+    }));
+    toast.success('Note added successfully');
+  };
+
+  const handleViewCV = (cv: CV) => {
+    setViewingCV(cv);
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      search: '',
+      location: 'All Cities',
+      minExperience: 0,
+      maxExperience: 10,
+      minSalary: 0,
+      maxSalary: 10000,
+      skills: [],
+      language: '',
+      languageLevel: '',
+      matchScoreMin: 0
+    });
+  };
+
+  const selectedJobData = mockJobs.find(j => j.id === selectedJob);
 
   return (
     <div className="min-h-screen bg-muted/30">
@@ -232,10 +340,10 @@ const RecruiterDashboard = () => {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Job Listings */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          {/* Job Listings Sidebar */}
           <div className="lg:col-span-1">
-            <div className="bg-card rounded-xl border border-border">
+            <div className="bg-card rounded-xl border border-border sticky top-4">
               <div className="p-4 border-b border-border">
                 <h2 className="font-semibold">Your Job Postings</h2>
               </div>
@@ -262,6 +370,19 @@ const RecruiterDashboard = () => {
                             {formatDistanceToNow(job.postedAt, { addSuffix: true })}
                           </span>
                         </div>
+                        {job.views && (
+                          <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <Eye className="h-3 w-3" />
+                              {job.views} views
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <TrendingUp className="h-3 w-3" />
+                              {job.clickToApply && job.views ? 
+                                ((job.clickToApply / job.views) * 100).toFixed(1) : 0}% CTR
+                            </span>
+                          </div>
+                        )}
                       </div>
                       <Badge variant={job.isActive ? 'default' : 'secondary'} className="shrink-0">
                         {job.isActive ? 'Active' : 'Closed'}
@@ -274,130 +395,148 @@ const RecruiterDashboard = () => {
           </div>
 
           {/* Applicant Pipeline */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-3">
             <div className="bg-card rounded-xl border border-border">
               <div className="p-4 border-b border-border">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                   <div>
-                    <h2 className="font-semibold">Applicant Pipeline</h2>
+                    <h2 className="font-semibold text-lg">
+                      {selectedJobData?.title || 'Select a Job'}
+                    </h2>
                     <p className="text-sm text-muted-foreground">
-                      {selectedJob ? mockJobs.find(j => j.id === selectedJob)?.title : 'Select a job'}
+                      {getFilteredApplications.length} candidates found
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <div className="relative">
-                      <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                      <Input placeholder="Search candidates..." className="pl-9 w-48" />
-                    </div>
+                    <Button
+                      variant={viewMode === 'kanban' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('kanban')}
+                    >
+                      <LayoutGrid className="h-4 w-4 mr-2" />
+                      Kanban
+                    </Button>
+                    <Button
+                      variant={viewMode === 'list' ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                    >
+                      <List className="h-4 w-4 mr-2" />
+                      List
+                    </Button>
                   </div>
                 </div>
               </div>
 
-              {selectedJob && (
-                <Tabs defaultValue="all" className="p-4">
-                  <TabsList>
-                    <TabsTrigger value="all">All</TabsTrigger>
-                    <TabsTrigger value="pending">Pending</TabsTrigger>
-                    <TabsTrigger value="shortlisted">Shortlisted</TabsTrigger>
-                    <TabsTrigger value="interview">Interview</TabsTrigger>
-                  </TabsList>
+              <div className="p-4 border-b border-border">
+                <ApplicantFilters
+                  filters={filters}
+                  onFiltersChange={setFilters}
+                  onClearFilters={clearFilters}
+                />
+              </div>
 
-                  <TabsContent value="all" className="mt-4">
-                    <div className="space-y-3">
-                      {getApplicantsForJob(selectedJob).length > 0 ? (
-                        getApplicantsForJob(selectedJob).map((app) => {
-                          const candidate = mockCandidates.find(c => c.id === app.candidateId);
-                          return candidate ? (
-                            <div
+              {selectedJob && (
+                <div className="p-4">
+                  {viewMode === 'kanban' ? (
+                    <KanbanBoard
+                      applications={getFilteredApplications}
+                      candidates={mockCandidateProfiles}
+                      cvs={mockCVs}
+                      onStatusChange={handleStatusChange}
+                      onAddNote={handleAddNote}
+                      onViewCV={handleViewCV}
+                    />
+                  ) : (
+                    <div className="space-y-4">
+                      {getFilteredApplications.length > 0 ? (
+                        getFilteredApplications.map(app => {
+                          const candidate = mockCandidateProfiles.find(c => c.id === app.candidateId);
+                          const cv = mockCVs.find(c => c.id === app.cvId);
+                          if (!candidate) return null;
+                          return (
+                            <ApplicantCard
                               key={app.id}
-                              className="flex items-center gap-4 p-4 bg-muted/50 rounded-lg hover:bg-muted transition-colors"
-                            >
-                              <img
-                                src={candidate.avatar}
-                                alt={candidate.name}
-                                className="w-12 h-12 rounded-full"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2">
-                                  <h4 className="font-medium text-foreground">{candidate.name}</h4>
-                                  {app.matchScore && app.matchScore >= 85 && (
-                                    <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                                  )}
-                                </div>
-                                <p className="text-sm text-muted-foreground">{candidate.email}</p>
-                                <p className="text-xs text-muted-foreground">
-                                  Applied {formatDistanceToNow(app.appliedAt, { addSuffix: true })}
-                                </p>
-                              </div>
-                              {app.matchScore && (
-                                <div className="text-center px-3">
-                                  <div className={`text-lg font-bold ${app.matchScore >= 80 ? 'text-accent' : 'text-muted-foreground'}`}>
-                                    {app.matchScore}%
-                                  </div>
-                                  <p className="text-xs text-muted-foreground">Match</p>
-                                </div>
-                              )}
-                              {getStatusBadge(app.status)}
-                              <DropdownMenu>
-                                <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="icon">
-                                    <MoreVertical className="h-4 w-4" />
-                                  </Button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent align="end">
-                                  <DropdownMenuItem>
-                                    <Eye className="h-4 w-4 mr-2" />
-                                    View Profile
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem>
-                                    <FileText className="h-4 w-4 mr-2" />
-                                    View CV
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="text-accent">
-                                    <CheckCircle className="h-4 w-4 mr-2" />
-                                    Shortlist
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="text-destructive">
-                                    <XCircle className="h-4 w-4 mr-2" />
-                                    Reject
-                                  </DropdownMenuItem>
-                                </DropdownMenuContent>
-                              </DropdownMenu>
-                            </div>
-                          ) : null;
+                              application={app}
+                              candidate={candidate}
+                              cv={cv}
+                              onStatusChange={handleStatusChange}
+                              onAddNote={handleAddNote}
+                              onViewCV={handleViewCV}
+                            />
+                          );
                         })
                       ) : (
                         <div className="text-center py-12">
                           <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                          <p className="text-muted-foreground">No applicants yet for this position</p>
+                          <p className="text-muted-foreground">No applicants match your filters</p>
+                          <Button variant="link" onClick={clearFilters}>
+                            Clear filters
+                          </Button>
                         </div>
                       )}
                     </div>
-                  </TabsContent>
-
-                  <TabsContent value="pending" className="mt-4">
-                    <div className="text-center py-12 text-muted-foreground">
-                      Filter by pending status...
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="shortlisted" className="mt-4">
-                    <div className="text-center py-12 text-muted-foreground">
-                      Filter by shortlisted status...
-                    </div>
-                  </TabsContent>
-
-                  <TabsContent value="interview" className="mt-4">
-                    <div className="text-center py-12 text-muted-foreground">
-                      Filter by interview status...
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                  )}
+                </div>
               )}
             </div>
           </div>
         </div>
       </main>
+
+      {/* CV Viewer Dialog */}
+      <Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <FileText className="h-5 w-5" />
+              {viewingCV?.fileName}
+            </DialogTitle>
+            <DialogDescription>
+              ATS Score: {viewingCV?.atsScore}%
+            </DialogDescription>
+          </DialogHeader>
+          {viewingCV?.parsedData && (
+            <div className="space-y-4 mt-4">
+              <div>
+                <h3 className="font-semibold mb-2">Summary</h3>
+                <p className="text-muted-foreground">{viewingCV.parsedData.summary}</p>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Skills</h3>
+                <div className="flex flex-wrap gap-2">
+                  {viewingCV.parsedData.skills.map((skill, idx) => (
+                    <Badge key={idx} variant="secondary">{skill}</Badge>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Experience</h3>
+                <div className="space-y-3">
+                  {viewingCV.parsedData.experience.map((exp, idx) => (
+                    <div key={idx} className="bg-muted/50 rounded-lg p-3">
+                      <div className="font-medium">{exp.title}</div>
+                      <div className="text-sm text-muted-foreground">{exp.company} • {exp.duration}</div>
+                      <p className="text-sm mt-1">{exp.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div>
+                <h3 className="font-semibold mb-2">Education</h3>
+                <div className="space-y-2">
+                  {viewingCV.parsedData.education.map((edu, idx) => (
+                    <div key={idx} className="text-sm">
+                      <span className="font-medium">{edu.degree}</span>
+                      <span className="text-muted-foreground"> • {edu.institution}, {edu.year}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
