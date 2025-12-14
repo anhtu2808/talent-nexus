@@ -11,6 +11,7 @@ interface KanbanBoardProps {
   onStatusChange: (applicationId: string, newStatus: ApplicationStatus) => void;
   onAddNote: (applicationId: string, note: string) => void;
   onViewCV: (cv: CV) => void;
+  onScheduleInterview?: (applicationId: string, candidate: CandidateProfile) => void;
 }
 
 const KanbanBoard = ({
@@ -19,7 +20,8 @@ const KanbanBoard = ({
   cvs,
   onStatusChange,
   onAddNote,
-  onViewCV
+  onViewCV,
+  onScheduleInterview
 }: KanbanBoardProps) => {
   const [draggedApp, setDraggedApp] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<ApplicationStatus | null>(null);
@@ -121,6 +123,7 @@ const KanbanBoard = ({
                           onStatusChange={onStatusChange}
                           onAddNote={onAddNote}
                           onViewCV={onViewCV}
+                          onScheduleInterview={onScheduleInterview}
                           compact
                         />
                       </div>

@@ -37,6 +37,7 @@ interface ApplicantCardProps {
   onStatusChange: (applicationId: string, newStatus: ApplicationStatus) => void;
   onAddNote: (applicationId: string, note: string) => void;
   onViewCV: (cv: CV) => void;
+  onScheduleInterview?: (applicationId: string, candidate: CandidateProfile) => void;
   compact?: boolean;
 }
 
@@ -47,6 +48,7 @@ const ApplicantCard = ({
   onStatusChange,
   onAddNote,
   onViewCV,
+  onScheduleInterview,
   compact = false
 }: ApplicantCardProps) => {
   const [showNotes, setShowNotes] = useState(false);
@@ -367,10 +369,17 @@ const ApplicantCard = ({
           <Mail className="h-4 w-4 mr-2" />
           Email
         </Button>
-        <Button variant="outline" size="sm">
-          <Calendar className="h-4 w-4 mr-2" />
-          Schedule Interview
-        </Button>
+        {onScheduleInterview && (
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => onScheduleInterview(application.id, candidate)}
+            className="text-accent hover:text-accent"
+          >
+            <Calendar className="h-4 w-4 mr-2" />
+            Schedule Interview
+          </Button>
+        )}
         <div className="flex-1" />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

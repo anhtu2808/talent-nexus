@@ -14,7 +14,98 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      interview_slots: {
+        Row: {
+          created_at: string
+          duration_minutes: number
+          end_time: string
+          id: string
+          is_available: boolean
+          job_id: string
+          recruiter_id: string
+          start_time: string
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number
+          end_time: string
+          id?: string
+          is_available?: boolean
+          job_id: string
+          recruiter_id: string
+          start_time: string
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number
+          end_time?: string
+          id?: string
+          is_available?: boolean
+          job_id?: string
+          recruiter_id?: string
+          start_time?: string
+        }
+        Relationships: []
+      }
+      scheduled_interviews: {
+        Row: {
+          application_id: string
+          candidate_email: string
+          candidate_id: string
+          candidate_name: string
+          created_at: string
+          id: string
+          interview_type: string
+          job_title: string
+          meet_link: string
+          notes: string | null
+          reminder_sent: boolean
+          slot_id: string | null
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          application_id: string
+          candidate_email: string
+          candidate_id: string
+          candidate_name: string
+          created_at?: string
+          id?: string
+          interview_type?: string
+          job_title: string
+          meet_link: string
+          notes?: string | null
+          reminder_sent?: boolean
+          slot_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          application_id?: string
+          candidate_email?: string
+          candidate_id?: string
+          candidate_name?: string
+          created_at?: string
+          id?: string
+          interview_type?: string
+          job_title?: string
+          meet_link?: string
+          notes?: string | null
+          reminder_sent?: boolean
+          slot_id?: string | null
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "scheduled_interviews_slot_id_fkey"
+            columns: ["slot_id"]
+            isOneToOne: false
+            referencedRelation: "interview_slots"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

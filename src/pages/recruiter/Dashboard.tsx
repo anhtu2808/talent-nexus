@@ -8,10 +8,12 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useAuth } from '@/contexts/AuthContext';
 import { mockJobs, mockApplications, mockCandidateProfiles, mockCVs } from '@/data/mockData';
-import { Application, ApplicationStatus, CV } from '@/types';
+import { Application, ApplicationStatus, CV, CandidateProfile } from '@/types';
 import KanbanBoard from '@/components/recruiter/KanbanBoard';
 import ApplicantCard from '@/components/recruiter/ApplicantCard';
 import ApplicantFilters, { FilterState } from '@/components/recruiter/ApplicantFilters';
+import InterviewScheduler from '@/components/recruiter/InterviewScheduler';
+import CandidateBookingModal from '@/components/recruiter/CandidateBookingModal';
 import {
   Briefcase,
   Users,
@@ -22,7 +24,8 @@ import {
   CheckCircle,
   LayoutGrid,
   List,
-  FileText
+  FileText,
+  Calendar
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
 import { toast } from 'sonner';
@@ -57,6 +60,14 @@ const RecruiterDashboard = () => {
   const [applications, setApplications] = useState<Application[]>(mockApplications);
   const [viewingCV, setViewingCV] = useState<CV | null>(null);
   
+  // Interview scheduling state
+  const [schedulerOpen, setSchedulerOpen] = useState(false);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
+  const [selectedCandidateForBooking, setSelectedCandidateForBooking] = useState<{
+    applicationId: string;
+    candidate: CandidateProfile;
+  } | null>(null);
+
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     location: 'All Cities',
@@ -214,6 +225,11 @@ const RecruiterDashboard = () => {
     setViewingCV(cv);
   };
 
+  const handleScheduleInterview = (applicationId: string, candidate: CandidateProfile) => {
+    setSelectedCandidateForBooking({ applicationId, candidate });
+    setBookingModalOpen(true);
+  };
+
   const clearFilters = () => {
     setFilters({
       search: '',
@@ -246,13 +262,24 @@ const RecruiterDashboard = () => {
               Manage your job postings and find the best candidates.
             </p>
           </div>
-          <Dialog open={createJobOpen} onOpenChange={setCreateJobOpen}>
-            <DialogTrigger asChild>
-              <Button variant="accent" size="lg">
-                <Plus className="h-4 w-4 mr-2" />
-                Post New Job
+          <div className="flex items-center gap-3">
+            {selectedJob && (
+              <Button 
+                variant="outline" 
+                size="lg"
+                onClick={() => setSchedulerOpen(true)}
+              >
+                <Calendar className="h-4 w-4 mr-2" />
+                Manage Interview Slots
               </Button>
-            </DialogTrigger>
+            )}
+            <Dialog open={createJobOpen} onOpenChange={setCreateJobOpen}>
+              <DialogTrigger asChild>
+                <Button variant="accent" size="lg">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Post New Job
+                </Button>
+              </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create Job Posting</DialogTitle>
@@ -324,6 +351,7 @@ const RecruiterDashboard = () => {
               </form>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
 
         {/* Stats Grid */}
@@ -446,6 +474,7 @@ const RecruiterDashboard = () => {
                       onStatusChange={handleStatusChange}
                       onAddNote={handleAddNote}
                       onViewCV={handleViewCV}
+                      onScheduleInterview={handleScheduleInterview}
                     />
                   ) : (
                     <div className="space-y-4">
@@ -463,6 +492,7 @@ const RecruiterDashboard = () => {
                               onStatusChange={handleStatusChange}
                               onAddNote={handleAddNote}
                               onViewCV={handleViewCV}
+                              onScheduleInterview={handleScheduleInterview}
                             />
                           );
                         })
@@ -537,6 +567,35 @@ const RecruiterDashboard = () => {
           )}
         </DialogContent>
       </Dialog>
+
+      {/* Interview Scheduler Modal */}
+      {selectedJob && selectedJobData && (
+        <InterviewScheduler
+          open={schedulerOpen}
+          onOpenChange={setSchedulerOpen}
+          jobId={selectedJob}
+          jobTitle={selectedJobData.title}
+          recruiterId={user?.id || 'r1'}
+        />
+      )}
+
+      {/* Candidate Booking Modal */}
+      {selectedCandidateForBooking && selectedJob && selectedJobData && (
+        <CandidateBookingModal
+          open={bookingModalOpen}
+          onOpenChange={setBookingModalOpen}
+          applicationId={selectedCandidateForBooking.applicationId}
+          candidateId={selectedCandidateForBooking.candidate.id}
+          candidateName={selectedCandidateForBooking.candidate.name}
+          candidateEmail={selectedCandidateForBooking.candidate.email}
+          jobId={selectedJob}
+          jobTitle={selectedJobData.title}
+          onBooked={() => {
+            // Update application status to interviewing
+            handleStatusChange(selectedCandidateForBooking.applicationId, 'interviewing');
+          }}
+        />
+      )}
     </div>
   );
 };
