@@ -90,7 +90,7 @@ const CandidateDashboard = () => {
     },
     {
       label: 'Interview Invites',
-      value: userApplications.filter(a => a.status === 'interview').length,
+      value: userApplications.filter(a => a.status === 'interviewing').length,
       icon: TrendingUp,
       color: 'text-accent'
     },
