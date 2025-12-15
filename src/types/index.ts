@@ -106,8 +106,8 @@ export interface AuthState {
 
 // Pipeline stage configuration - Simplified to 4 essential stages
 export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: string }[] = [
-  { key: 'new', label: 'Ứng viên mới', color: 'bg-blue-500' },
-  { key: 'interviewing', label: 'Phỏng vấn', color: 'bg-amber-500' },
-  { key: 'hired', label: 'Đã tuyển', color: 'bg-green-500' },
-  { key: 'rejected', label: 'Từ chối', color: 'bg-red-500' },
+  { key: 'new', label: 'New', color: 'bg-blue-500' },
+  { key: 'interviewing', label: 'Interviewing', color: 'bg-amber-500' },
+  { key: 'hired', label: 'Hired', color: 'bg-green-500' },
+  { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
 ];
