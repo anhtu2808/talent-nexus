@@ -1,6 +1,6 @@
 export type UserRole = 'candidate' | 'recruiter' | 'admin';
 
-export type ApplicationStatus = 'new' | 'viewed' | 'contacted' | 'interviewing' | 'offered' | 'hired' | 'rejected';
+export type ApplicationStatus = 'new' | 'interviewing' | 'hired' | 'rejected';
 
 export interface User {
   id: string;
@@ -104,13 +104,10 @@ export interface AuthState {
   isLoading: boolean;
 }
 
-// Pipeline stage configuration
+// Pipeline stage configuration - Simplified to 4 essential stages
 export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: string }[] = [
-  { key: 'new', label: 'New', color: 'bg-blue-500' },
-  { key: 'viewed', label: 'Viewed', color: 'bg-gray-500' },
-  { key: 'contacted', label: 'Contacted', color: 'bg-purple-500' },
-  { key: 'interviewing', label: 'Interviewing', color: 'bg-amber-500' },
-  { key: 'offered', label: 'Offered', color: 'bg-green-500' },
-  { key: 'hired', label: 'Hired', color: 'bg-emerald-600' },
-  { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
+  { key: 'new', label: 'Ứng viên mới', color: 'bg-blue-500' },
+  { key: 'interviewing', label: 'Phỏng vấn', color: 'bg-amber-500' },
+  { key: 'hired', label: 'Đã tuyển', color: 'bg-green-500' },
+  { key: 'rejected', label: 'Từ chối', color: 'bg-red-500' },
 ];
