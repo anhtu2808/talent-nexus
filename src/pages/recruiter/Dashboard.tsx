@@ -71,6 +71,7 @@ const RecruiterDashboard = () => {
   const [filters, setFilters] = useState<FilterState>({
     search: '',
     location: 'All Cities',
+    status: 'all',
     minExperience: 0,
     maxExperience: 10,
     minSalary: 0,
@@ -101,6 +102,11 @@ const RecruiterDashboard = () => {
           candidate.email.toLowerCase().includes(searchLower) ||
           candidate.skills?.some(s => s.toLowerCase().includes(searchLower));
         if (!matchesSearch) return false;
+      }
+
+      // Status filter
+      if (filters.status !== 'all' && app.status !== filters.status) {
+        return false;
       }
 
       // Location filter
@@ -190,7 +196,7 @@ const RecruiterDashboard = () => {
       }
       return app;
     }));
-    toast.success(`Đã chuyển sang trạng thái ${newStatus}`);
+    toast.success(`Status changed to ${newStatus}`);
   };
 
   const handleAddNote = (applicationId: string, noteContent: string) => {
@@ -227,6 +233,7 @@ const RecruiterDashboard = () => {
     setFilters({
       search: '',
       location: 'All Cities',
+      status: 'all',
       minExperience: 0,
       maxExperience: 10,
       minSalary: 0,
@@ -526,7 +533,7 @@ const RecruiterDashboard = () => {
                 onClick={() => window.open('/sample-cv.pdf', '_blank')}
               >
                 <Eye className="h-4 w-4 mr-2" />
-                Mở PDF
+                Open PDF
               </Button>
             </div>
 

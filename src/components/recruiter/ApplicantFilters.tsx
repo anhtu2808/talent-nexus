@@ -26,13 +26,16 @@ import {
   MapPin,
   DollarSign,
   Briefcase,
-  Globe
+  Globe,
+  CircleDot
 } from 'lucide-react';
 import { cities, experienceLevels, languageLevels, trendingSkills } from '@/data/mockData';
+import { ApplicationStatus, PIPELINE_STAGES } from '@/types';
 
 export interface FilterState {
   search: string;
   location: string;
+  status: ApplicationStatus | 'all';
   minExperience: number;
   maxExperience: number;
   minSalary: number;
@@ -70,6 +73,7 @@ const ApplicantFilters = ({ filters, onFiltersChange, onClearFilters }: Applican
   const hasActiveFilters = 
     filters.search ||
     filters.location !== 'All Cities' ||
+    filters.status !== 'all' ||
     filters.minExperience > 0 ||
     filters.maxExperience < 10 ||
     filters.minSalary > 0 ||
@@ -113,6 +117,28 @@ const ApplicantFilters = ({ filters, onFiltersChange, onClearFilters }: Applican
             </SheetHeader>
 
             <div className="space-y-6 mt-6">
+              {/* Status Filter */}
+              <div className="space-y-2">
+                <Label className="flex items-center gap-2">
+                  <CircleDot className="h-4 w-4" />
+                  Status
+                </Label>
+                <Select
+                  value={filters.status}
+                  onValueChange={(value) => updateFilter('status', value as ApplicationStatus | 'all')}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    {PIPELINE_STAGES.map(stage => (
+                      <SelectItem key={stage.key} value={stage.key}>{stage.label}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* Location Filter */}
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
@@ -304,6 +330,15 @@ const ApplicantFilters = ({ filters, onFiltersChange, onClearFilters }: Applican
       {/* Active Filters Display */}
       {hasActiveFilters && (
         <div className="flex flex-wrap gap-2">
+          {filters.status !== 'all' && (
+            <Badge variant="secondary" className="gap-1">
+              <CircleDot className="h-3 w-3" />
+              {PIPELINE_STAGES.find(s => s.key === filters.status)?.label}
+              <button onClick={() => updateFilter('status', 'all')}>
+                <X className="h-3 w-3" />
+              </button>
+            </Badge>
+          )}
           {filters.location !== 'All Cities' && (
             <Badge variant="secondary" className="gap-1">
               <MapPin className="h-3 w-3" />
