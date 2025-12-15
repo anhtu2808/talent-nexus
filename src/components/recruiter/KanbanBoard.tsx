@@ -61,10 +61,8 @@ const KanbanBoard = ({
     setDragOverColumn(null);
   };
 
-  // Only show main pipeline stages for the kanban
-  const kanbanStages = PIPELINE_STAGES.filter(stage => 
-    ['new', 'viewed', 'contacted', 'interviewing', 'offered', 'rejected'].includes(stage.key)
-  );
+  // Show all pipeline stages for the kanban
+  const kanbanStages = PIPELINE_STAGES;
 
   return (
     <div className="flex gap-4 overflow-x-auto pb-4">

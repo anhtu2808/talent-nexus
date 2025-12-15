@@ -186,18 +186,11 @@ const RecruiterDashboard = () => {
   const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
     setApplications(prev => prev.map(app => {
       if (app.id === applicationId) {
-        const updates: Partial<Application> = { status: newStatus };
-        if (newStatus === 'viewed' && !app.viewedAt) {
-          updates.viewedAt = new Date();
-        }
-        if (newStatus === 'contacted' && !app.contactedAt) {
-          updates.contactedAt = new Date();
-        }
-        return { ...app, ...updates };
+        return { ...app, status: newStatus };
       }
       return app;
     }));
-    toast.success(`Application moved to ${newStatus}`);
+    toast.success(`Đã chuyển sang trạng thái ${newStatus}`);
   };
 
   const handleAddNote = (applicationId: string, noteContent: string) => {
@@ -514,57 +507,38 @@ const RecruiterDashboard = () => {
         </div>
       </main>
 
-      {/* CV Viewer Dialog */}
+      {/* CV Viewer Dialog - Simplified */}
       <Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
-        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
-              {viewingCV?.fileName}
-            </DialogTitle>
-            <DialogDescription>
-              ATS Score: {viewingCV?.atsScore}%
-            </DialogDescription>
-          </DialogHeader>
-          {viewingCV?.parsedData && (
-            <div className="space-y-4 mt-4">
-              <div>
-                <h3 className="font-semibold mb-2">Summary</h3>
-                <p className="text-muted-foreground">{viewingCV.parsedData.summary}</p>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Skills</h3>
-                <div className="flex flex-wrap gap-2">
-                  {viewingCV.parsedData.skills.map((skill, idx) => (
-                    <Badge key={idx} variant="secondary">{skill}</Badge>
-                  ))}
+        <DialogContent className="max-w-4xl h-[85vh] p-0 overflow-hidden">
+          <div className="flex flex-col h-full">
+            {/* Header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card">
+              <div className="flex items-center gap-3">
+                <FileText className="h-5 w-5 text-primary" />
+                <div>
+                  <h2 className="font-semibold text-foreground">{viewingCV?.fileName}</h2>
+                  <p className="text-sm text-muted-foreground">ATS Score: {viewingCV?.atsScore}%</p>
                 </div>
               </div>
-              <div>
-                <h3 className="font-semibold mb-2">Experience</h3>
-                <div className="space-y-3">
-                  {viewingCV.parsedData.experience.map((exp, idx) => (
-                    <div key={idx} className="bg-muted/50 rounded-lg p-3">
-                      <div className="font-medium">{exp.title}</div>
-                      <div className="text-sm text-muted-foreground">{exp.company} • {exp.duration}</div>
-                      <p className="text-sm mt-1">{exp.description}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <h3 className="font-semibold mb-2">Education</h3>
-                <div className="space-y-2">
-                  {viewingCV.parsedData.education.map((edu, idx) => (
-                    <div key={idx} className="text-sm">
-                      <span className="font-medium">{edu.degree}</span>
-                      <span className="text-muted-foreground"> • {edu.institution}, {edu.year}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => window.open('/sample-cv.pdf', '_blank')}
+              >
+                <Eye className="h-4 w-4 mr-2" />
+                Mở PDF
+              </Button>
             </div>
-          )}
+
+            {/* PDF Viewer */}
+            <div className="flex-1 bg-muted">
+              <iframe
+                src="/sample-cv.pdf"
+                className="w-full h-full"
+                title="CV Preview"
+              />
+            </div>
+          </div>
         </DialogContent>
       </Dialog>
 
