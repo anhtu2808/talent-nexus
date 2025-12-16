@@ -779,6 +779,38 @@ export const mockCompanies = [
       'Annual company trip, team building activities',
       'Premium healthcare insurance for you and your family',
       'Opportunity to work with latest technologies and global experts'
+    ],
+    reviewsList: [
+      {
+        id: 1,
+        date: 'Tháng Hai 2025',
+        title: 'Công ty tốt, chế độ lương thưởng hấp dẫn',
+        rating: 5,
+        isRecommended: true,
+        content: 'Môi trường làm việc chuyên nghiệp, đồng nghiệp thân thiện. Sếp tâm lý, luôn lắng nghe nhân viên. Có nhiều cơ hội học hỏi và phát triển bản thân. Lương thưởng cạnh tranh so với thị trường.',
+        details: {
+          salary: 5,
+          training: 5,
+          care: 5,
+          culture: 5,
+          workspace: 5
+        }
+      },
+      {
+        id: 2,
+        date: 'Tháng Một 2025',
+        title: 'Chế độ ok. Vài người hơi khó tính thôi, nhưng đâu chả có this có that',
+        rating: 4,
+        isRecommended: true,
+        content: 'Chế độ phúc lợi tốt, bảo hiểm full lương. Tuy nhiên quy trình đôi khi hơi rườm rà. Văn phòng đẹp, xịn xò. Pantry luôn đầy ắp đồ ăn.',
+        details: {
+          salary: 4,
+          training: 5,
+          care: 4,
+          culture: 3,
+          workspace: 5
+        }
+      }
     ]
   },
   {
