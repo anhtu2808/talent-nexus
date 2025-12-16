@@ -15,7 +15,8 @@ import {
   XCircle,
   AlertCircle,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  FileText
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -39,6 +40,25 @@ const CVAnalysis = () => {
 
   // Mock Data mimicking "Resume Worded" structure
   const overallScore = 72;
+
+  const summaryCategory = {
+    id: 'summary',
+    label: 'Executive Summary',
+    score: overallScore,
+    description: 'High-level analysis and key takeaways from your CV.',
+    issues: [], // Empty for compatibility
+    strengths: [
+      "Excellent use of action verbs",
+      "Clear contact information",
+      "Consistent formatting throughout"
+    ],
+    weaknesses: [
+      "Lack of quantified metrics",
+      "Missing key technical keywords",
+      "Soft skills section is sparse"
+    ],
+    conclusion: "Your CV has a strong foundation with good formatting and clear language. However, to pass ATS filters for top tech companies, you need to focus on quantifying your impact (numbers!) and ensuring you list specific frameworks mentioned in job descriptions."
+  };
 
   const categories = [
     {
@@ -117,7 +137,7 @@ const CVAnalysis = () => {
     }
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
+  const [selectedCategory, setSelectedCategory] = useState<any>(summaryCategory);
 
   // Define AI Findings (Keywords to search and highlight)
   const aiFindings = useMemo(() => [
@@ -273,6 +293,26 @@ const CVAnalysis = () => {
               {/* Navigation Menu */}
               <div className="flex-1 overflow-y-auto p-2 space-y-4">
 
+                {/* Summary Section Link */}
+                <button
+                  onClick={() => setSelectedCategory(summaryCategory)}
+                  className={cn(
+                    "w-full flex items-center justify-between p-3 rounded-lg text-sm transition-all mb-2",
+                    selectedCategory.id === 'summary'
+                      ? "bg-indigo-50 text-indigo-700 font-medium border border-indigo-100 shadow-sm"
+                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn("p-1.5 rounded-md", selectedCategory.id === 'summary' ? "bg-indigo-100" : "bg-slate-100")}>
+                      <FileText className="h-4 w-4" />
+                    </div>
+                    <span className="truncate">Executive Summary</span>
+                  </div>
+                </button>
+
+                <div className="h-px bg-border mx-2" />
+
                 {/* Critical Fixes Section */}
                 <div>
                   <div className="pl-3 py-2 text-xs font-semibold text-red-600/80 uppercase tracking-wider flex items-center gap-2">
@@ -337,59 +377,128 @@ const CVAnalysis = () => {
           {/* MIDDLE: Detail View */}
           <div className="lg:col-span-4 bg-white rounded-xl shadow-sm border border-border flex flex-col h-full overflow-hidden">
 
-            {/* Header */}
-            <div className="p-6 border-b border-border bg-slate-50/30">
-              <div className="flex items-center justify-between mb-2">
-                <h2 className="text-2xl font-bold text-foreground">{selectedCategory.label}</h2>
-                <div className="relative w-12 h-12 flex items-center justify-center">
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle className="text-muted/20" strokeWidth="4" stroke="currentColor" fill="transparent" r="20" cx="24" cy="24" />
-                    <circle
-                      className={`${selectedCategory.score >= 70 ? 'text-green-500' : selectedCategory.score >= 50 ? 'text-amber-500' : 'text-red-500'}`}
-                      strokeWidth="4"
-                      strokeDasharray={125}
-                      strokeDashoffset={125 - (125 * selectedCategory.score) / 100}
-                      strokeLinecap="round"
-                      stroke="currentColor"
-                      fill="transparent"
-                      r="20"
-                      cx="24"
-                      cy="24"
-                    />
-                  </svg>
-                  <span className="absolute text-sm font-bold">{selectedCategory.score}</span>
+            {selectedCategory.id === 'summary' ? (
+              // SUMMARY VIEW
+              <div className="h-full flex flex-col">
+                <div className="p-6 border-b border-border bg-indigo-50/30">
+                  <h2 className="text-2xl font-bold text-foreground mb-2 flex items-center gap-2">
+                    <Sparkles className="h-5 w-5 text-indigo-600" />
+                    Executive Summary
+                  </h2>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedCategory.description}
+                  </p>
                 </div>
-              </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {selectedCategory.description}
-              </p>
-            </div>
 
-            {/* Issues List */}
-            <div className="p-4 flex-1 overflow-y-auto space-y-4 bg-muted/10">
-              {selectedCategory.issues.map((issue, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-start gap-4">
-                    {issue.status === 'success' && <div className="p-2 bg-green-100 text-green-600 rounded-full mt-1"><CheckCircle2 className="h-5 w-5" /></div>}
-                    {issue.status === 'warning' && <div className="p-2 bg-amber-100 text-amber-600 rounded-full mt-1"><AlertCircle className="h-5 w-5" /></div>}
-                    {issue.status === 'error' && <div className="p-2 bg-red-100 text-red-600 rounded-full mt-1"><XCircle className="h-5 w-5" /></div>}
+                <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                  <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
+                    <h3 className="font-semibold text-slate-900 mb-3">Professional Verdict</h3>
+                    <p className="text-sm text-slate-700 leading-relaxed">
+                      {selectedCategory.conclusion}
+                    </p>
+                  </div>
 
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-base mb-1">{issue.title}</h4>
-                      <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                        {issue.description}
-                      </p>
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-green-700 flex items-center gap-2">
+                      <CheckCircle2 className="h-4 w-4" /> Key Strengths
+                    </h3>
+                    <ul className="space-y-2">
+                      {selectedCategory.strengths.map((item: string, i: number) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+                          <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
 
-                      <div className="flex justify-end">
-                        <Button variant="ghost" size="sm" className="h-8 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50">
-                          Fix this <ChevronDown className="h-3 w-3 ml-1" />
-                        </Button>
-                      </div>
-                    </div>
+                  <div className="space-y-3">
+                    <h3 className="font-semibold text-red-700 flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4" /> Major Weaknesses
+                    </h3>
+                    <ul className="space-y-2">
+                      {selectedCategory.weaknesses.map((item: string, i: number) => (
+                        <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
+                          <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className="pt-4">
+                    <Button
+                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                      onClick={() => {
+                        // Find first critical issue
+                        const firstCritical = categories.find(c => c.score < 80);
+                        if (firstCritical) setSelectedCategory(firstCritical);
+                      }}
+                    >
+                      Start Fixing Critical Issues &rarr;
+                    </Button>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ) : (
+              // STANDARD CATEGORY VIEW (Issues List)
+              <>
+                <div className="p-6 border-b border-border bg-slate-50/30">
+                  {/* Header */}
+                  <div className="flex items-center justify-between mb-2">
+                    <h2 className="text-2xl font-bold text-foreground">{selectedCategory.label}</h2>
+                    <div className="relative w-12 h-12 flex items-center justify-center">
+                      <svg className="w-full h-full transform -rotate-90">
+                        <circle className="text-muted/20" strokeWidth="4" stroke="currentColor" fill="transparent" r="20" cx="24" cy="24" />
+                        <circle
+                          className={`${selectedCategory.score >= 70 ? 'text-green-500' : selectedCategory.score >= 50 ? 'text-amber-500' : 'text-red-500'}`}
+                          strokeWidth="4"
+                          strokeDasharray={125}
+                          strokeDashoffset={125 - (125 * selectedCategory.score) / 100}
+                          strokeLinecap="round"
+                          stroke="currentColor"
+                          fill="transparent"
+                          r="20"
+                          cx="24"
+                          cy="24"
+                        />
+                      </svg>
+                      <span className="absolute text-sm font-bold">{selectedCategory.score}</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {selectedCategory.description}
+                  </p>
+                </div>
+
+                {/* Issues List */}
+                <div className="p-4 flex-1 overflow-y-auto space-y-4 bg-muted/10">
+                  {selectedCategory.issues.map((issue: any, idx: number) => (
+                    <div key={idx} className="bg-white p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow">
+                      <div className="flex items-start gap-4">
+                        {issue.status === 'success' && <div className="p-2 bg-green-100 text-green-600 rounded-full mt-1"><CheckCircle2 className="h-5 w-5" /></div>}
+                        {issue.status === 'warning' && <div className="p-2 bg-amber-100 text-amber-600 rounded-full mt-1"><AlertCircle className="h-5 w-5" /></div>}
+                        {issue.status === 'error' && <div className="p-2 bg-red-100 text-red-600 rounded-full mt-1"><XCircle className="h-5 w-5" /></div>}
+
+                        <div className="flex-1">
+                          <h4 className="font-semibold text-base mb-1">{issue.title}</h4>
+                          <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                            {issue.description}
+                          </p>
+
+                          <div className="flex justify-end">
+                            <Button variant="ghost" size="sm" className="h-8 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                              Fix this <ChevronDown className="h-3 w-3 ml-1" />
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+
           </div>
 
           {/* RIGHT: PDF Viewer */}
