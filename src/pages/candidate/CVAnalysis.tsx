@@ -11,6 +11,11 @@ import {
   ArrowLeft,
   Sparkles,
   Upload,
+  CheckCircle2,
+  XCircle,
+  AlertCircle,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -31,7 +36,88 @@ const resumePdfUrl = '/sample-cv.pdf';
 
 const CVAnalysis = () => {
   const { id } = useParams();
-  const [matchScore, setMatchScore] = useState(55);
+
+  // Mock Data mimicking "Resume Worded" structure
+  const overallScore = 72;
+
+  const categories = [
+    {
+      id: 'searchability',
+      label: 'Searchability',
+      score: 85,
+      description: 'Ensure your resume gets found by ATS algorithms.',
+      issues: [
+        { title: "Keywords detected", status: "success", description: "Found 15/20 essential keywords for this role." },
+        { title: "File format", status: "success", description: "PDF format is optimal." },
+        { title: "Contact info", status: "success", description: "Email and Phone are clear." }
+      ]
+    },
+    {
+      id: 'hard_skills',
+      label: 'Hard Skills',
+      score: 40,
+      description: 'Technical skills required for the job.',
+      issues: [
+        { title: "Missing Core Frameworks", status: "error", description: "Job requires 'React' and 'Node.js' but they appear low in frequency." },
+        { title: "Tools Section", status: "warning", description: "Consider grouping tools by category (DevOps, Frontend, etc.)." }
+      ]
+    },
+    {
+      id: 'soft_skills',
+      label: 'Soft Skills',
+      score: 60,
+      description: 'Interpersonal skills and leadership.',
+      issues: [
+        { title: "Leadership words", status: "warning", description: "Try words like 'Led', 'Mentored', 'Spearheaded' to show leadership." },
+        { title: "Communication", status: "success", description: "Good use of 'Collaborated' and 'Presented'." },
+        { title: "Teamwork", status: "success", description: "Cross-functional team experience is well highlighted." }
+      ]
+    },
+    {
+      id: 'recruiter_check',
+      label: 'Recruiter Tips',
+      score: 75,
+      description: 'What human recruiters look for in 6 seconds.',
+      issues: [
+        { title: "Bullet point length", status: "warning", description: "Some bullet points are too long. Keep them under 2 lines." },
+        { title: "Active Voice", status: "success", description: "Majority of sentences use active voice." },
+        { title: "Avoid Clichés", status: "success", description: "No 'Go-getter' or 'Hard worker' clichés found." }
+      ]
+    },
+    {
+      id: 'formatting',
+      label: 'Formatting',
+      score: 100,
+      description: 'Visual layout and structure.',
+      issues: [
+        { title: "Section Headers", status: "success", description: "Standard headers (Experience, Education) detected." },
+        { title: "Date Consistency", status: "success", description: "Dates are formatted consistently (MM/YYYY)." },
+        { title: "Margins", status: "success", description: "Margins are standard size." }
+      ]
+    },
+    {
+      id: 'impact',
+      label: 'Quantify Impact',
+      score: 30,
+      description: 'Use numbers to prove your value.',
+      issues: [
+        { title: "Lack of metrics", status: "error", description: "Only 14% of your bullet points include numbers. Aim for 40%+." },
+        { title: "Action verbs", status: "warning", description: "Start every bullet with a strong action verb." }
+      ]
+    },
+    {
+      id: 'brevity',
+      label: 'Brevity & Style',
+      score: 90,
+      description: 'Conciseness and formatting.',
+      issues: [
+        { title: "Length efficient", status: "success", description: "1 page is perfect for your experience level." },
+        { title: "Consistent fonts", status: "success", description: "Font usage is professional and consistent." }
+      ]
+    }
+  ];
+
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
 
   // Define AI Findings (Keywords to search and highlight)
   const aiFindings = useMemo(() => [
@@ -56,10 +142,8 @@ const CVAnalysis = () => {
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   // Configure Search Plugin with Custom Highlighting
-  // REMOVED useMemo because searchPlugin uses hooks internally
   const searchPluginInstance = searchPlugin({
     keyword: [
-      // Load keywords to highlight
       ...aiFindings.map(f => f.keyword)
     ],
     renderHighlights: (props: RenderHighlightsProps) => {
@@ -129,84 +213,204 @@ const CVAnalysis = () => {
 
   const handleOptimize = () => {
     toast.success("Optimizing your CV...");
-    setMatchScore(prev => Math.min(prev + 15, 95));
   };
 
   return (
     <div className="min-h-screen bg-muted/30 flex flex-col">
       <Header />
 
-      <main className="flex-1 w-full px-4 lg:px-8 py-6">
+      <main className="flex-1 w-full px-4 lg:px-6 py-6 h-[calc(100vh-4rem)] overflow-hidden">
+
+        {/* Back Link Moved Outside Grid */}
         <Link
           to="/candidate/dashboard"
-          className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4 transition-colors"
+          className="inline-flex items-center text-muted-foreground hover:text-foreground mb-4 transition-colors text-sm"
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Dashboard
+          Back
         </Link>
 
-        {/* Full Height Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[calc(100vh-8rem)]">
+        {/* 3-Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full pb-10">
 
-          {/* Sidebar - Analysis Control */}
-          <div className="lg:col-span-3 space-y-4 flex flex-col h-full overflow-hidden">
-            <div className="bg-card rounded-xl border border-border p-6 shadow-sm flex-1 flex flex-col overflow-y-auto">
-              <div className="text-center mb-6">
-                <h3 className="font-semibold text-lg mb-4">Match Rate</h3>
-                <div className="relative w-40 h-40 mx-auto flex items-center justify-center">
+          {/* LEFT: Navigation & Score */}
+          <div className="lg:col-span-3 flex flex-col h-full space-y-4">
+
+            <div className="bg-white rounded-xl shadow-sm border border-border flex-1 flex flex-col overflow-hidden">
+              {/* Overall Score Area */}
+              <div className="p-6 border-b border-border flex flex-col items-center justify-center bg-slate-50/50">
+                <div className="relative w-32 h-32 flex items-center justify-center mb-4">
                   <svg className="w-full h-full transform -rotate-90">
-                    <circle className="text-muted/30" strokeWidth="12" stroke="currentColor" fill="transparent" r="70" cx="80" cy="80" />
-                    <circle className="text-amber-400" strokeWidth="12" strokeDasharray={440} strokeDashoffset={440 - (440 * matchScore) / 100} strokeLinecap="round" stroke="currentColor" fill="transparent" r="70" cx="80" cy="80" />
+                    <circle className="text-muted/20" strokeWidth="10" stroke="currentColor" fill="transparent" r="58" cx="64" cy="64" />
+                    <circle
+                      className={`${overallScore >= 70 ? 'text-green-500' : overallScore >= 50 ? 'text-amber-500' : 'text-red-500'} transition-all duration-1000 ease-out`}
+                      strokeWidth="10"
+                      strokeDasharray={365}
+                      strokeDashoffset={365 - (365 * overallScore) / 100}
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="transparent"
+                      r="58"
+                      cx="64"
+                      cy="64"
+                    />
                   </svg>
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
-                    <span className="text-4xl font-bold text-foreground">{matchScore}%</span>
+                    <span className="text-4xl font-bold text-foreground">{overallScore}</span>
+                    <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-semibold mt-1">Overall</span>
                   </div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 w-full">
+                  <Button variant="outline" size="sm" className="w-full text-xs">
+                    <Upload className="h-3 w-3 mr-1.5" /> Re-upload
+                  </Button>
+                  <Button size="sm" className="w-full text-xs bg-indigo-600 hover:bg-indigo-700 text-white">
+                    <Sparkles className="h-3 w-3 mr-1.5" /> Optimize
+                  </Button>
                 </div>
               </div>
 
-              <div className="space-y-3 mb-8">
-                <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                  <Upload className="h-4 w-4 mr-2" />
-                  Upload & rescan
-                </Button>
-                <Button onClick={handleOptimize} className="w-full bg-blue-50 text-blue-600 hover:bg-blue-100 border border-blue-200">
-                  <Sparkles className="h-4 w-4 mr-2" />
-                  One-Click Optimize
-                </Button>
-              </div>
+              {/* Navigation Menu */}
+              <div className="flex-1 overflow-y-auto p-2 space-y-4">
 
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-medium">Searchability</span>
-                    <span className="text-blue-600 text-xs font-medium">3 issues to fix</span>
+                {/* Critical Fixes Section */}
+                <div>
+                  <div className="pl-3 py-2 text-xs font-semibold text-red-600/80 uppercase tracking-wider flex items-center gap-2">
+                    <AlertCircle className="h-3 w-3" />
+                    Critical Fixes
                   </div>
-                  <Progress value={70} className="h-2 bg-muted [&>div]:bg-blue-500" />
-                </div>
-                <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
-                    <span className="font-medium">Hard Skills</span>
-                    <span className="text-blue-600 text-xs font-medium">10 issues to fix</span>
+                  <div className="space-y-1">
+                    {categories.filter(c => c.score < 80).map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={cn(
+                          "w-full flex items-center justify-between p-3 rounded-lg text-sm transition-all",
+                          selectedCategory.id === cat.id
+                            ? "bg-red-50 text-red-700 font-medium border border-red-100 shadow-sm"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        )}
+                      >
+                        <span className="flex-1 text-left truncate mr-2">{cat.label}</span>
+                        <span className={cn(
+                          "px-2 py-0.5 rounded text-xs font-bold min-w-[1.5rem] text-center",
+                          cat.score >= 50 ? "bg-amber-100 text-amber-700" : "bg-red-100 text-red-700"
+                        )}>
+                          {cat.score}
+                        </span>
+                      </button>
+                    ))}
                   </div>
-                  <Progress value={40} className="h-2 bg-muted [&>div]:bg-red-500" />
                 </div>
+
+                {/* Passed Section */}
+                <div>
+                  <div className="pl-3 py-2 text-xs font-semibold text-green-600/80 uppercase tracking-wider flex items-center gap-2">
+                    <CheckCircle2 className="h-3 w-3" />
+                    Passed Checks
+                  </div>
+                  <div className="space-y-1">
+                    {categories.filter(c => c.score >= 80).map((cat) => (
+                      <button
+                        key={cat.id}
+                        onClick={() => setSelectedCategory(cat)}
+                        className={cn(
+                          "w-full flex items-center justify-between p-3 rounded-lg text-sm transition-all",
+                          selectedCategory.id === cat.id
+                            ? "bg-green-50 text-green-700 font-medium border border-green-100 shadow-sm"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        )}
+                      >
+                        <span className="flex-1 text-left truncate mr-2">{cat.label}</span>
+                        <span className="bg-green-100 text-green-700 px-2 py-0.5 rounded text-xs font-bold min-w-[1.5rem] text-center">
+                          {cat.score}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
 
-          {/* Main - PDF Viewer */}
-          <div className="lg:col-span-9 bg-white rounded-xl shadow-lg border border-border overflow-hidden flex flex-col h-full relative z-0">
+          {/* MIDDLE: Detail View */}
+          <div className="lg:col-span-4 bg-white rounded-xl shadow-sm border border-border flex flex-col h-full overflow-hidden">
 
-            {/* PDF Viewer Container */}
+            {/* Header */}
+            <div className="p-6 border-b border-border bg-slate-50/30">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-2xl font-bold text-foreground">{selectedCategory.label}</h2>
+                <div className="relative w-12 h-12 flex items-center justify-center">
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle className="text-muted/20" strokeWidth="4" stroke="currentColor" fill="transparent" r="20" cx="24" cy="24" />
+                    <circle
+                      className={`${selectedCategory.score >= 70 ? 'text-green-500' : selectedCategory.score >= 50 ? 'text-amber-500' : 'text-red-500'}`}
+                      strokeWidth="4"
+                      strokeDasharray={125}
+                      strokeDashoffset={125 - (125 * selectedCategory.score) / 100}
+                      strokeLinecap="round"
+                      stroke="currentColor"
+                      fill="transparent"
+                      r="20"
+                      cx="24"
+                      cy="24"
+                    />
+                  </svg>
+                  <span className="absolute text-sm font-bold">{selectedCategory.score}</span>
+                </div>
+              </div>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {selectedCategory.description}
+              </p>
+            </div>
+
+            {/* Issues List */}
+            <div className="p-4 flex-1 overflow-y-auto space-y-4 bg-muted/10">
+              {selectedCategory.issues.map((issue, idx) => (
+                <div key={idx} className="bg-white p-4 rounded-xl border border-border shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-start gap-4">
+                    {issue.status === 'success' && <div className="p-2 bg-green-100 text-green-600 rounded-full mt-1"><CheckCircle2 className="h-5 w-5" /></div>}
+                    {issue.status === 'warning' && <div className="p-2 bg-amber-100 text-amber-600 rounded-full mt-1"><AlertCircle className="h-5 w-5" /></div>}
+                    {issue.status === 'error' && <div className="p-2 bg-red-100 text-red-600 rounded-full mt-1"><XCircle className="h-5 w-5" /></div>}
+
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-base mb-1">{issue.title}</h4>
+                      <p className="text-sm text-muted-foreground leading-relaxed mb-3">
+                        {issue.description}
+                      </p>
+
+                      <div className="flex justify-end">
+                        <Button variant="ghost" size="sm" className="h-8 text-xs text-blue-600 hover:text-blue-700 hover:bg-blue-50">
+                          Fix this <ChevronDown className="h-3 w-3 ml-1" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT: PDF Viewer */}
+          <div className="lg:col-span-5 bg-white rounded-xl shadow-lg border border-border overflow-hidden flex flex-col h-full relative z-0">
+            {/* PDF Toolbar can go here if needed */}
+            <div className="bg-slate-50 border-b border-border p-2 flex justify-end text-xs text-muted-foreground">
+              Viewing: <span className="font-medium ml-1 text-foreground">sample-cv.pdf</span>
+            </div>
+
+            {/* PDF Content */}
             <div className="flex-1 relative overflow-hidden">
               <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                 <Viewer
                   fileUrl={resumePdfUrl}
                   plugins={[defaultLayoutPluginInstance, searchPluginInstance]}
+                  defaultScale={0.8}
                 />
               </Worker>
             </div>
           </div>
+
         </div>
       </main>
     </div>
