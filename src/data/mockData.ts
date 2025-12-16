@@ -772,7 +772,14 @@ export const mockCompanies = [
       web: 'AngularJs, ReactJs, Micro FrontEnd, HTML/Javascript/CSS',
       backend: 'SpringBoot (Java), Golang, Hasura, GraphQL, MongoDB, Oracle, Microservice',
       cloud: 'AWS, Google Cloud, Viettel Cloud, Kubernetes, Microsoft Azure, Multi DC'
-    }
+    },
+    reasonsToJoin: [
+      'Top-tier compensation and benefits package',
+      'Flexible working hours & Hybrid working model (2 days remote/week)',
+      'Annual company trip, team building activities',
+      'Premium healthcare insurance for you and your family',
+      'Opportunity to work with latest technologies and global experts'
+    ]
   },
   {
     id: '2',

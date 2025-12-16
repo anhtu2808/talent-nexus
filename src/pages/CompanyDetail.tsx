@@ -68,18 +68,19 @@ const CompanyDetail = () => {
                                                 <Building2 className="w-4 h-4" />
                                                 <span>{company.industry}</span>
                                             </div>
+
                                             <div className="flex items-center gap-2 text-slate-700">
-                                                <Star className="w-4 h-4 text-yellow-500" />
-                                                <span className="font-medium">{company.rating.toFixed(1)} / 5.0</span>
-                                                <span className="text-slate-500 text-sm">({company.reviews} reviews)</span>
+                                                <Calendar className="w-4 h-4 text-blue-600" />
+                                                <span className="font-medium">{company.workingTime}</span>
                                             </div>
                                         </div>
 
                                         {/* Working Environment moved here */}
                                         <div className="flex flex-wrap gap-6 pb-6 border-t border-slate-100">
                                             <div className="flex items-center gap-2 text-slate-700">
-                                                <Calendar className="w-4 h-4 text-blue-600" />
-                                                <span className="font-medium">{company.workingTime}</span>
+                                                <Star className="w-4 h-4 text-yellow-500" />
+                                                <span className="font-medium">{company.rating.toFixed(1)} / 5.0</span>
+                                                <span className="text-slate-500 text-sm">({company.reviews} reviews)</span>
                                             </div>
 
                                         </div>
@@ -161,6 +162,27 @@ const CompanyDetail = () => {
                                                     <Badge key={idx} variant="secondary" className="bg-white hover:bg-white text-slate-700 font-normal border border-slate-200">
                                                         {specialty}
                                                     </Badge>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {company.reasonsToJoin && (
+                                        <div className="mt-8 border-t border-slate-100 pt-6">
+                                            <h3 className="text-xl font-bold flex items-center gap-2 text-slate-900 mb-6">
+                                                <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                Why you will love working here
+                                            </h3>
+                                            <div className="grid grid-cols-1 gap-3">
+                                                {company.reasonsToJoin.map((reason, idx) => (
+                                                    <div key={idx} className="flex items-start gap-3 p-3 bg-slate-50 rounded-lg">
+                                                        <div className="mt-0.5 w-5 h-5 rounded-full bg-green-100 flex items-center justify-center shrink-0">
+                                                            <svg className="w-3 h-3 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+                                                            </svg>
+                                                        </div>
+                                                        <span className="text-slate-700">{reason}</span>
+                                                    </div>
                                                 ))}
                                             </div>
                                         </div>
