@@ -124,7 +124,12 @@ const Applications = () => {
                       <Link to={`/candidate/applications/${app.id}`} className="font-medium text-foreground hover:text-accent truncate block text-lg">
                         {job.title}
                       </Link>
-                      <p className="text-sm text-muted-foreground">{job.company} • {job.location}</p>
+                      <div className="text-sm text-muted-foreground">
+                        <Link to={`/candidate/applications/${app.id}`} className="hover:text-accent transition-colors">
+                          {job.company}
+                        </Link>
+                        <span> • {job.location}</span>
+                      </div>
                       <div className="flex items-center mt-1 text-xs text-muted-foreground gap-2">
                         <span>Applied {formatDistanceToNow(app.appliedAt, { addSuffix: true })}</span>
                       </div>
