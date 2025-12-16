@@ -750,3 +750,133 @@ export const experienceLevels = [
 export const languageLevels = [
   'Basic', 'Intermediate', 'Professional', 'Fluent', 'Native'
 ];
+
+export const mockCompanies = [
+  {
+    id: '1',
+    name: 'TechVision Corp',
+    logo: 'https://ui-avatars.com/api/?name=TV&background=0F2238&color=fff&size=100',
+    location: 'Ho Chi Minh City',
+    industry: 'Software Development',
+    employees: '500-1000',
+    description: 'Leading provider of enterprise software solutions.',
+    rating: 4.8,
+    reviews: 124,
+    followers: 8500,
+    workingTime: 'Monday - Friday',
+    specialties: ['Enterprise Software', 'Cloud Solutions', 'Digital Transformation'],
+    introduction: 'TechVision Corp is a global leader in providing innovative software solutions for enterprises. We specialize in digital transformation, cloud computing, and AI-driven applications. Our mission is to empower businesses with technology that drives growth and efficiency.',
+    techStack: {
+      keySkills: ['Java', 'JavaScript', 'Python', 'Oracle', 'AngularJS', 'ReactJS'],
+      mobile: 'React Native (Javascript), Flutter (Dart), Mini App',
+      web: 'AngularJs, ReactJs, Micro FrontEnd, HTML/Javascript/CSS',
+      backend: 'SpringBoot (Java), Golang, Hasura, GraphQL, MongoDB, Oracle, Microservice',
+      cloud: 'AWS, Google Cloud, Viettel Cloud, Kubernetes, Microsoft Azure, Multi DC'
+    }
+  },
+  {
+    id: '2',
+    name: 'FinTech Solutions',
+    logo: 'https://ui-avatars.com/api/?name=FS&background=38B65F&color=fff&size=100',
+    location: 'Ha Noi',
+    industry: 'Financial Technology',
+    employees: '100-500',
+    description: 'Revolutionizing banking with secure and scalable tech.',
+    rating: 4.5,
+    reviews: 89,
+    followers: 4200,
+    workingTime: 'Monday - Friday',
+    specialties: ['FinTech', 'Blockchain', 'Cybersecurity'],
+    introduction: 'FinTech Solutions is dedicated to modernizing the financial sector. We build secure, modular, and scalable banking platforms that enable financial institutions to innovate faster.'
+  },
+  {
+    id: '3',
+    name: 'AI Dynamics',
+    logo: 'https://ui-avatars.com/api/?name=AI&background=6366f1&color=fff&size=100',
+    location: 'Da Nang',
+    industry: 'Artificial Intelligence',
+    employees: '50-100',
+    description: 'Building the future with advanced AI & ML models.',
+    rating: 4.9,
+    reviews: 56,
+    followers: 3100,
+    workingTime: 'Flexible',
+    specialties: ['Artificial Intelligence', 'Machine Learning', 'Data Science'],
+    introduction: 'AI Dynamics is at the forefront of AI research and application. We develop cutting-edge models for NLP, computer vision, and predictive analytics to solve complex real-world problems.'
+  },
+  {
+    id: '4',
+    name: 'CloudScale Inc',
+    logo: 'https://ui-avatars.com/api/?name=CS&background=f59e0b&color=fff&size=100',
+    location: 'Remote',
+    industry: 'Cloud Infrastructure',
+    employees: '200-500',
+    description: 'Global leader in cloud computing and DevOps services.',
+    rating: 4.7,
+    reviews: 102,
+    followers: 5600,
+    workingTime: 'Remote / Flexible',
+    specialties: ['Cloud Computing', 'DevOps', 'Infrastructure as Code'],
+    introduction: 'CloudScale Inc helps businesses scale their infrastructure with ease. We provide comprehensive cloud services, from migration to management, ensuring high availability and performance.'
+  },
+  {
+    id: '5',
+    name: 'StartupHub',
+    logo: 'https://ui-avatars.com/api/?name=SH&background=ec4899&color=fff&size=100',
+    location: 'Ho Chi Minh City',
+    industry: 'Internet / Product',
+    employees: '50-150',
+    description: 'Fast-growing startup incubator and product studio.',
+    rating: 4.6,
+    reviews: 45,
+    followers: 2800,
+    workingTime: 'Monday - Friday',
+    specialties: ['Product Management', 'Startup Incubation', 'Venture Capital'],
+    introduction: 'StartupHub is where great ideas become reality. We partner with founders to build, launch, and scale successful products. Join a vibrant community of innovators and creators.'
+  },
+  {
+    id: '6',
+    name: 'Quality First Ltd',
+    logo: 'https://ui-avatars.com/api/?name=QF&background=14b8a6&color=fff&size=100',
+    location: 'Ha Noi',
+    industry: 'Quality Assurance',
+    employees: '1000+',
+    description: 'Ensuring software excellence through automation.',
+    rating: 4.4,
+    reviews: 210,
+    followers: 1200,
+    workingTime: 'Monday - Friday',
+    specialties: ['Software Testing', 'QA Automation', 'Performance Testing'],
+    introduction: 'Quality First Ltd is committed to delivering bug-free software. We offer a full range of QA services, including manual testing, automation, and security audits.'
+  },
+  {
+    id: '7',
+    name: 'FPT Software',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/2560px-FPT_logo_2010.svg.png',
+    location: 'Global',
+    industry: 'IT Services',
+    employees: '10000+',
+    description: 'Vietnam’s largest IT software & services company.',
+    rating: 4.2,
+    reviews: 1500,
+    followers: 45000,
+    workingTime: 'Monday - Friday',
+    specialties: ['Outsourcing', 'Digital Platforms', 'Enterprise Services'],
+    introduction: 'FPT Software is the leading software outsourcing company in Vietnam. With a global presence, we provide world-class technology services to clients across various industries, from automotive to healthcare.'
+  },
+  {
+    id: '8',
+    name: 'Viettel Group',
+    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Viettel_logo_2021.svg/1200px-Viettel_logo_2021.svg.png',
+    location: 'Ha Noi',
+    industry: 'Telecommunications',
+    employees: '10000+',
+    description: 'Leading telecommunications group in Vietnam.',
+    rating: 4.5,
+    reviews: 2300,
+    followers: 60000,
+    workingTime: 'Monday - Friday',
+    specialties: ['Telecommunications', 'Cyber Security', 'High Tech Manufacturing'],
+    introduction: 'Viettel Group is a multinational telecommunications company headquartered in Hanoi. We are driving the digital society with our extensive network infrastructure and innovative digital solutions.'
+  }
+];
