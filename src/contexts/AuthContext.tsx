@@ -22,11 +22,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    // Mock successful login
+    // Mock successful login - with specific IDs for each role
     const mockUser: User = {
-      id: role === 'candidate' ? 'c1' : 'r1',
+      id: role === 'candidate' ? 'c1' : role === 'recruiter' ? 'r1' : 'admin1',
       email,
-      name: role === 'candidate' ? 'Nguyen Van A' : 'HR Manager',
+      name: role === 'candidate' ? 'Nguyen Van A' : role === 'recruiter' ? 'HR Manager' : 'Admin User',
       role,
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=0F2238&color=fff`,
       createdAt: new Date()

@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ShieldCheck } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/types';
@@ -25,11 +26,13 @@ const Auth = () => {
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const redirectPath = user.role === 'recruiter' ? '/recruiter/dashboard' : '/candidate/dashboard';
-      navigate(redirectPath);
-    }
-  }, [isAuthenticated, user, navigate]);
+  if (isAuthenticated && user) {
+    let redirectPath = '/candidate/dashboard';
+    if (user.role === 'recruiter') redirectPath = '/recruiter/dashboard';
+    if (user.role === 'admin') redirectPath = '/admin/dashboard';  
+    navigate(redirectPath);
+  }
+}, [isAuthenticated, user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -125,7 +128,7 @@ const Auth = () => {
             {/* Role Selection */}
             <div className="mb-6">
               <Label className="text-sm text-muted-foreground mb-3 block">I am a:</Label>
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-3 gap-3">
                 <button
                   onClick={() => setSelectedRole('candidate')}
                   className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'candidate'
@@ -145,6 +148,17 @@ const Auth = () => {
                 >
                   <Briefcase className="h-5 w-5" />
                   <span className="font-medium">Recruiter</span>
+                </button>
+                <button
+                  onClick={() => setSelectedRole('admin')}
+                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                    selectedRole === 'admin'
+                      ? 'border-red-500 bg-red-50 text-red-600'
+                      : 'border-border hover:border-red-300'
+                  }`}
+                >
+                  <ShieldCheck className="h-5 w-5" />
+                  <span className="font-medium">Admin</span>
                 </button>
               </div>
             </div>
@@ -200,7 +214,10 @@ const Auth = () => {
                   </div>
                   <Button type="submit" variant="accent" className="w-full" disabled={isLoading}>
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                    Sign In as {selectedRole === 'candidate' ? 'Candidate' : 'Recruiter'}
+                    Sign In as {
+                        selectedRole === 'candidate' ? 'Candidate' : 
+                        selectedRole === 'recruiter' ? 'Recruiter' : 'Administrator'
+                      }
                   </Button>
                 </form>
               </TabsContent>
