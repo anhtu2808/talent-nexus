@@ -2,86 +2,10 @@ import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { mockJobs } from '@/data/mockData';
+import { mockCompanies, mockJobs } from '@/data/mockData';
 import { ArrowRight, Building2, MapPin, Search, Users } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-// Extended mock companies data
-const mockCompanies = [
-  {
-    id: '1',
-    name: 'TechVision Corp',
-    logo: 'https://ui-avatars.com/api/?name=TV&background=0F2238&color=fff&size=100',
-    location: 'Ho Chi Minh City',
-    industry: 'Software Development',
-    employees: '500-1000',
-    description: 'Leading provider of enterprise software solutions.'
-  },
-  {
-    id: '2',
-    name: 'FinTech Solutions',
-    logo: 'https://ui-avatars.com/api/?name=FS&background=38B65F&color=fff&size=100',
-    location: 'Ha Noi',
-    industry: 'Financial Technology',
-    employees: '100-500',
-    description: 'Revolutionizing banking with secure and scalable tech.'
-  },
-  {
-    id: '3',
-    name: 'AI Dynamics',
-    logo: 'https://ui-avatars.com/api/?name=AI&background=6366f1&color=fff&size=100',
-    location: 'Da Nang',
-    industry: 'Artificial Intelligence',
-    employees: '50-100',
-    description: 'Building the future with advanced AI & ML models.'
-  },
-  {
-    id: '4',
-    name: 'CloudScale Inc',
-    logo: 'https://ui-avatars.com/api/?name=CS&background=f59e0b&color=fff&size=100',
-    location: 'Remote',
-    industry: 'Cloud Infrastructure',
-    employees: '200-500',
-    description: 'Global leader in cloud computing and DevOps services.'
-  },
-  {
-    id: '5',
-    name: 'StartupHub',
-    logo: 'https://ui-avatars.com/api/?name=SH&background=ec4899&color=fff&size=100',
-    location: 'Ho Chi Minh City',
-    industry: 'Internet / Product',
-    employees: '50-150',
-    description: 'Fast-growing startup incubator and product studio.'
-  },
-  {
-    id: '6',
-    name: 'Quality First Ltd',
-    logo: 'https://ui-avatars.com/api/?name=QF&background=14b8a6&color=fff&size=100',
-    location: 'Ha Noi',
-    industry: 'Quality Assurance',
-    employees: '1000+',
-    description: 'Ensuring software excellence through automation.'
-  },
-  {
-    id: '7',
-    name: 'FPT Software',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/FPT_logo_2010.svg/2560px-FPT_logo_2010.svg.png',
-    location: 'Global',
-    industry: 'IT Services',
-    employees: '10000+',
-    description: 'Vietnam’s largest IT software & services company.'
-  },
-  {
-    id: '8',
-    name: 'Viettel Group',
-    logo: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Viettel_logo_2021.svg/1200px-Viettel_logo_2021.svg.png',
-    location: 'Ha Noi',
-    industry: 'Telecommunications',
-    employees: '10000+',
-    description: 'Leading telecommunications group in Vietnam.'
-  }
-];
 
 const Companies = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -173,9 +97,9 @@ const Companies = () => {
                       </div>
                     </div>
 
-                    <Link to={`/jobs?search=${encodeURIComponent(company.name)}`}>
+                    <Link to={`/companies/${company.id}`}>
                       <Button className="w-full mt-4 bg-accent hover:bg-accent/90 text-white shadow-md hover:shadow-lg transition-all group-hover:translate-y-[-2px]">
-                        View Jobs <ArrowRight className="ml-2 h-4 w-4" />
+                        View Details <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </Link>
                   </div>

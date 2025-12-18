@@ -28,6 +28,7 @@ const Header = () => {
   const getDashboardLink = () => {
     if (user?.role === 'recruiter') return '/recruiter/dashboard';
     if (user?.role === 'candidate') return '/candidate/dashboard';
+    if (user?.role === 'admin') return '/admin/dashboard';
     return '/';
   };
 
