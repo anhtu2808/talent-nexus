@@ -10,13 +10,14 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { Briefcase, ChevronDown, LayoutDashboard, LogOut, Menu, User, X } from 'lucide-react';
+import { Briefcase, ChevronDown, LogOut, Menu, User, X } from 'lucide-react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -29,6 +30,10 @@ const Header = () => {
     if (user?.role === 'candidate') return '/candidate/dashboard';
     if (user?.role === 'admin') return '/admin/dashboard';
     return '/';
+  };
+
+  const isActive = (path: string) => {
+    return location.pathname === path;
   };
 
   return (
@@ -46,15 +51,36 @@ const Header = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6">
-          <Link to="/jobs" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to="/jobs"
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-foreground",
+              isActive('/jobs') ? "text-accent" : "text-muted-foreground"
+            )}
+          >
             All Jobs
           </Link>
-          <Link to="/companies" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+          <Link
+            to="/companies"
+            className={cn(
+              "text-sm font-medium transition-colors hover:text-foreground",
+              isActive('/companies') ? "text-accent" : "text-muted-foreground"
+            )}
+          >
             Companies
           </Link>
-          <Link to="/blog" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-            Blog
-          </Link>
+
+          {isAuthenticated && user && (
+            <Link
+              to={getDashboardLink()}
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-foreground",
+                isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
+              )}
+            >
+              Dashboard
+            </Link>
+          )}
         </nav>
 
         {/* Desktop Auth Section */}
@@ -81,10 +107,7 @@ const Header = () => {
                   </span>
                 </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate(getDashboardLink())}>
-                  <LayoutDashboard className="mr-2 h-4 w-4" />
-                  Dashboard
-                </DropdownMenuItem>
+
                 <DropdownMenuItem onClick={() => navigate('/profile')}>
                   <User className="mr-2 h-4 w-4" />
                   Profile
@@ -127,15 +150,37 @@ const Header = () => {
       )}>
         <div className="container py-4 space-y-4">
           <nav className="flex flex-col gap-2">
-            <Link to="/jobs" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+            <Link
+              to="/jobs"
+              className={cn(
+                "px-3 py-2 text-sm font-medium transition-colors hover:text-foreground hover:bg-muted rounded-lg",
+                isActive('/jobs') ? "text-accent" : "text-muted-foreground"
+              )}
+            >
               All Jobs
             </Link>
-            <Link to="/companies" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
+            <Link
+              to="/companies"
+              className={cn(
+                "px-3 py-2 text-sm font-medium transition-colors hover:text-foreground hover:bg-muted rounded-lg",
+                isActive('/companies') ? "text-accent" : "text-muted-foreground"
+              )}
+            >
               Companies
             </Link>
-            <Link to="/blog" className="px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors">
-              Blog
-            </Link>
+
+            {isAuthenticated && user && (
+              <Link
+                to={getDashboardLink()}
+                className={cn(
+                  "px-3 py-2 text-sm font-medium transition-colors hover:text-foreground hover:bg-muted rounded-lg",
+                  isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
+                )}
+              >
+                Dashboard
+              </Link>
+            )}
+
           </nav>
           {!isAuthenticated && (
             <div className="flex flex-col gap-2 pt-2 border-t border-border">

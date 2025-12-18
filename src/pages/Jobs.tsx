@@ -44,7 +44,7 @@ const Jobs = () => {
     // Filter by keyword
     if (keyword) {
       const lowerKeyword = keyword.toLowerCase();
-      jobs = jobs.filter(job => 
+      jobs = jobs.filter(job =>
         job.title.toLowerCase().includes(lowerKeyword) ||
         job.company.toLowerCase().includes(lowerKeyword) ||
         job.skills.some(skill => skill.toLowerCase().includes(lowerKeyword))
@@ -63,7 +63,7 @@ const Jobs = () => {
 
     // Filter by skills
     if (selectedSkills.length > 0) {
-      jobs = jobs.filter(job => 
+      jobs = jobs.filter(job =>
         selectedSkills.some(skill => job.skills.includes(skill))
       );
     }
@@ -165,7 +165,7 @@ const Jobs = () => {
   return (
     <div className="min-h-screen flex flex-col bg-muted/30">
       <Header />
-      
+
       {/* Search Bar */}
       <div className="bg-primary py-8">
         <div className="container">

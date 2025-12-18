@@ -262,10 +262,12 @@ const CandidateDashboard = () => {
                       className="w-12 h-12 rounded-lg"
                     />
                     <div className="flex-1 min-w-0">
-                      <Link to={`/candidate/applications`} className="font-medium text-foreground hover:text-accent truncate block">
+                      <Link to={`/candidate/applications/${app.id}`} className="font-medium text-foreground hover:text-accent truncate block">
                         {job.title}
                       </Link>
-                      <p className="text-sm text-muted-foreground">{job.company}</p>
+                      <Link to={`/candidate/applications/${app.id}`} className="text-sm text-muted-foreground hover:text-accent transition-colors">
+                        {job.company}
+                      </Link>
                     </div>
                     <Badge className={statusConfig.color}>
                       <StatusIcon className="h-3 w-3 mr-1" />
