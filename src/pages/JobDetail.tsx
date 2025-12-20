@@ -233,7 +233,7 @@ const JobDetail = () => {
                     >
                       <span className="relative z-10 flex items-center justify-center gap-2">
                         <CheckCircle className="w-5 h-5" />
-                        Check Match & Apply
+                        Check Match
                       </span>
                       {/* Detailed gradient effect/shimmer could go here if we wanted extra "pop" */}
                     </Button>
