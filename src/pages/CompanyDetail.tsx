@@ -119,6 +119,15 @@ const CompanyDetail = () => {
                                             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
                                         )}
                                     </button>
+                                    <button
+                                        onClick={() => setActiveTab('jobs')}
+                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'jobs' ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
+                                    >
+                                        Jobs <Badge variant="secondary" className="ml-1 bg-slate-100 text-slate-600">{companyJobs.length}</Badge>
+                                        {activeTab === 'jobs' && (
+                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
+                                        )}
+                                    </button>
                                 </div>
                             </div>
 
@@ -341,6 +350,63 @@ const CompanyDetail = () => {
                                             ))}
                                         </div>
                                     </div>
+                                </div>
+                            )}
+
+                            {/* Tab Content: Jobs */}
+                            {activeTab === 'jobs' && (
+                                <div className="space-y-4">
+                                    <h3 className="text-xl font-bold text-slate-900 mb-6">Open Positions ({companyJobs.length})</h3>
+                                    {companyJobs.length > 0 ? (
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {companyJobs.map((job) => (
+                                                <Link to={`/jobs/${job.id}`} key={job.id} className="block group">
+                                                    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 hover:border-blue-500 hover:shadow-md transition-all">
+                                                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                                                            <div>
+                                                                <h4 className="font-bold text-lg text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                                                                    {job.title}
+                                                                </h4>
+                                                                <div className="flex flex-wrap items-center gap-4 text-slate-500 text-sm">
+                                                                    <span className="flex items-center gap-1.5">
+                                                                        <MapPin className="w-4 h-4" /> {job.location}
+                                                                    </span>
+                                                                    <span className="flex items-center gap-1.5">
+                                                                        <Calendar className="w-4 h-4" /> {new Date(job.postedAt).toLocaleDateString()}
+                                                                    </span>
+                                                                    <span className="flex items-center gap-1.5 font-medium text-emerald-600">
+                                                                        <span className="px-2 py-0.5 bg-emerald-50 rounded-full border border-emerald-100">
+                                                                            ${job.salary}
+                                                                        </span>
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex flex-wrap gap-2 mt-3">
+                                                                    {job.skills.map(skill => (
+                                                                        <Badge key={skill} variant="secondary" className="bg-slate-50 text-slate-600 font-normal">
+                                                                            {skill}
+                                                                        </Badge>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                            <div className="shrink-0">
+                                                                <Button className="w-full md:w-auto bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200">
+                                                                    View Details
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-12 text-center">
+                                            <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                                <Briefcase className="w-8 h-8 text-slate-300" />
+                                            </div>
+                                            <h3 className="text-lg font-medium text-slate-900 mb-1">No open positions</h3>
+                                            <p className="text-slate-500">This company currently has no open job listings.</p>
+                                        </div>
+                                    )}
                                 </div>
                             )}
 
