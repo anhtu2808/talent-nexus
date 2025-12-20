@@ -1,6 +1,6 @@
+import CVMatchAnalysis from '@/components/jobs/CVMatchAnalysis';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
-import CVMatchAnalysis from '@/components/jobs/CVMatchAnalysis';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -10,8 +10,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-  DialogTrigger,
+  DialogTitle
 } from '@/components/ui/dialog';
 import { mockCVs, mockJobs } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
@@ -42,6 +41,7 @@ const JobDetail = () => {
   const [matchScore, setMatchScore] = useState<number | null>(null);
   const [showDetailedAnalysis, setShowDetailedAnalysis] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [dialogMode, setDialogMode] = useState<'check' | 'apply'>('check');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   if (!job) {
@@ -88,11 +88,29 @@ const JobDetail = () => {
     }, 2000);
   };
 
+  const handleApply = () => {
+    if (!selectedCV) return;
+
+    setIsUploading(true);
+    // Simulate API call
+    setTimeout(() => {
+      setIsUploading(false);
+      toast({
+        title: "Application Submitted",
+        description: `You have successfully applied for ${job.title}`,
+      });
+      setIsDialogOpen(false);
+      resetState();
+    }, 1500);
+  };
+
   const resetState = () => {
     setSelectedCV(null);
     setMatchScore(null);
     setShowDetailedAnalysis(false);
     setIsAnalyzing(false);
+    // Don't reset dialogMode here as it might be needed if we re-open, 
+    // but typically we set it on open.
   };
 
   // Filter mocked CVs for demonstration (assuming user is logged in)
@@ -203,18 +221,43 @@ const JobDetail = () => {
                   setIsDialogOpen(open);
                   if (!open) resetState();
                 }}>
-                  <DialogTrigger asChild>
-                    <Button className="w-full" size="lg" variant="accent">
-                      Check CV Match & Apply
+                  <div className="space-y-3">
+                    <Button
+                      className="w-full relative overflow-hidden group"
+                      size="lg"
+                      variant="accent"
+                      onClick={() => {
+                        setDialogMode('check');
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      <span className="relative z-10 flex items-center justify-center gap-2">
+                        <CheckCircle className="w-5 h-5" />
+                        Check Match & Apply
+                      </span>
+                      {/* Detailed gradient effect/shimmer could go here if we wanted extra "pop" */}
                     </Button>
-                  </DialogTrigger>
+
+                    <Button
+                      className="w-full"
+                      size="lg"
+                      variant="outline"
+                      onClick={() => {
+                        setDialogMode('apply');
+                        setIsDialogOpen(true);
+                      }}
+                    >
+                      Apply Now
+                    </Button>
+                  </div>
+
                   <DialogContent className={cn(
                     "overflow-hidden p-0",
                     showDetailedAnalysis ? "max-w-5xl" : "max-w-3xl"
                   )}>
                     {showDetailedAnalysis && matchScore !== null ? (
-                      <CVMatchAnalysis 
-                        job={job} 
+                      <CVMatchAnalysis
+                        job={job}
                         matchScore={matchScore}
                         onClose={() => setIsDialogOpen(false)}
                         onApply={() => {
@@ -229,9 +272,13 @@ const JobDetail = () => {
                     ) : (
                       <>
                         <DialogHeader className="p-6 pb-0">
-                          <DialogTitle>Compare CV with Job Description</DialogTitle>
+                          <DialogTitle>
+                            {dialogMode === 'check' ? 'Compare CV with Job Description' : 'Apply for this Position'}
+                          </DialogTitle>
                           <DialogDescription>
-                            Select a CV to see how well you match this position.
+                            {dialogMode === 'check'
+                              ? 'Select a CV to see how well you match this position.'
+                              : 'Select a CV to submit your application.'}
                           </DialogDescription>
                         </DialogHeader>
 
@@ -332,13 +379,30 @@ const JobDetail = () => {
                         {!isAnalyzing && (
                           <DialogFooter className="p-6 pt-0">
                             <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                            <Button
-                              variant="accent"
-                              disabled={!selectedCV}
-                              onClick={handleCheckMatch}
-                            >
-                              Analyze Match
-                            </Button>
+                            {dialogMode === 'check' ? (
+                              <Button
+                                variant="accent"
+                                disabled={!selectedCV}
+                                onClick={handleCheckMatch}
+                              >
+                                Analyze Match
+                              </Button>
+                            ) : (
+                              <Button
+                                variant="accent"
+                                disabled={!selectedCV || isUploading}
+                                onClick={handleApply}
+                              >
+                                {isUploading ? (
+                                  <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Applying...
+                                  </>
+                                ) : (
+                                  "Submit Application"
+                                )}
+                              </Button>
+                            )}
                           </DialogFooter>
                         )}
                       </>
