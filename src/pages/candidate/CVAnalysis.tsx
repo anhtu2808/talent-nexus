@@ -41,24 +41,6 @@ const CVAnalysis = () => {
   // Mock Data mimicking "Resume Worded" structure
   const overallScore = 72;
 
-  const summaryCategory = {
-    id: 'summary',
-    label: 'Executive Summary',
-    score: overallScore,
-    description: 'High-level analysis and key takeaways from your CV.',
-    issues: [], // Empty for compatibility
-    strengths: [
-      "Excellent use of action verbs",
-      "Clear contact information",
-      "Consistent formatting throughout"
-    ],
-    weaknesses: [
-      "Lack of quantified metrics",
-      "Missing key technical keywords",
-      "Soft skills section is sparse"
-    ],
-    conclusion: "Your CV has a strong foundation with good formatting and clear language. However, to pass ATS filters for top tech companies, you need to focus on quantifying your impact (numbers!) and ensuring you list specific frameworks mentioned in job descriptions."
-  };
 
   const categories = [
     {
@@ -169,7 +151,7 @@ const CVAnalysis = () => {
     }
   ];
 
-  const [selectedCategory, setSelectedCategory] = useState<any>(summaryCategory);
+  const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
   // Define AI Findings (Keywords to search and highlight)
   const aiFindings = useMemo(() => [
@@ -239,7 +221,7 @@ const CVAnalysis = () => {
                         {finding.message}
                       </p>
                       <div className="flex items-center pt-2">
-                        <Button size="sm" variant="outline" className="h-7 text-xs">Apply Fix</Button>
+                        <Button size="sm" variant="outline" className="h-7 text-xs">Fixed</Button>
                       </div>
                     </div>
                   </div>
@@ -287,12 +269,12 @@ const CVAnalysis = () => {
           </Button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full pb-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-start">
 
           {/* LEFT: Navigation & Details (Expandable) */}
-          <div className="lg:col-span-5 flex flex-col h-full space-y-4">
+          <div className="lg:col-span-3 flex flex-col max-h-full space-y-4">
 
-            <div className="bg-white rounded-xl shadow-sm border border-border flex-1 flex flex-col overflow-hidden">
+            <div className="bg-white rounded-xl shadow-sm border border-border flex flex-col overflow-hidden">
               {/* Overall Score Area */}
               <div className="p-6 border-b border-border flex flex-col items-center justify-center bg-slate-50/50">
                 <div className="relative w-32 h-32 flex items-center justify-center">
@@ -321,82 +303,6 @@ const CVAnalysis = () => {
               {/* Navigation Menu (Accordion Style) */}
               <div className="flex-1 overflow-y-auto p-2 space-y-2">
 
-                {/* Summary Section */}
-                <div className="rounded-lg border border-transparent transition-all overflow-hidden">
-                  <button
-                    onClick={() => setSelectedCategory(selectedCategory.id === 'summary' ? null : summaryCategory)}
-                    className={cn(
-                      "w-full flex items-center justify-between p-3 text-sm transition-all",
-                      selectedCategory?.id === 'summary'
-                        ? "bg-indigo-50 text-indigo-700 font-medium"
-                        : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className={cn("p-1.5 rounded-md", selectedCategory?.id === 'summary' ? "bg-indigo-100" : "bg-slate-100")}>
-                        <FileText className="h-4 w-4" />
-                      </div>
-                      <span className="truncate">Executive Summary</span>
-                    </div>
-                    {selectedCategory?.id === 'summary' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                  </button>
-
-                  {/* Summary Expanded Content */}
-                  {selectedCategory?.id === 'summary' && (
-                    <div className="p-4 bg-indigo-50/10 border-t border-indigo-100 space-y-4">
-                      <div className="bg-slate-50 p-4 rounded-xl border border-slate-100">
-                        <h3 className="font-semibold text-slate-900 mb-2 text-xs uppercase tracking-wider">Professional Verdict</h3>
-                        <p className="text-sm text-slate-700 leading-relaxed">
-                          {summaryCategory.conclusion}
-                        </p>
-                      </div>
-
-                      <div className="space-y-3">
-                        <h3 className="font-semibold text-green-700 flex items-center gap-2 text-sm">
-                          <CheckCircle2 className="h-4 w-4" /> Key Strengths
-                        </h3>
-                        <ul className="space-y-2">
-                          {summaryCategory.strengths.map((item: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                              <span className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="space-y-3">
-                        <h3 className="font-semibold text-red-700 flex items-center gap-2 text-sm">
-                          <AlertCircle className="h-4 w-4" /> Major Weaknesses
-                        </h3>
-                        <ul className="space-y-2">
-                          {summaryCategory.weaknesses.map((item: string, i: number) => (
-                            <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                              <span className="w-1.5 h-1.5 rounded-full bg-red-500 mt-1.5 shrink-0" />
-                              {item}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className="pt-2">
-                        <Button
-                          size="sm"
-                          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white text-xs"
-                          onClick={() => {
-                            // Find first critical issue
-                            const firstCritical = categories.find(c => c.score < 80);
-                            if (firstCritical) setSelectedCategory(firstCritical);
-                          }}
-                        >
-                          Start Fixing Critical Issues &rarr;
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-                </div>
-
-                <div className="h-px bg-border mx-2" />
 
                 {/* Critical Fixes Section */}
                 <div className="space-y-1">
@@ -429,27 +335,27 @@ const CVAnalysis = () => {
 
                       {/* Expanded Content for Category */}
                       {selectedCategory?.id === cat.id && (
-                        <div className="p-3 bg-red-50/10 border-t border-red-100 space-y-3">
-                          <p className="text-xs text-muted-foreground leading-relaxed px-1">
+                        <div className="p-4 bg-red-50/30 border-t border-red-100 space-y-4">
+                          <p className="text-sm text-slate-600 leading-relaxed px-1">
                             {cat.description}
                           </p>
                           <div className="space-y-3">
                             {cat.issues.map((issue: any, idx: number) => (
-                              <div key={idx} className="bg-white p-3 rounded-lg border border-border shadow-sm">
+                              <div key={idx} className="bg-white p-4 rounded-lg border border-border shadow-sm">
                                 <div className="flex items-start gap-3">
-                                  {issue.status === 'success' && <div className="p-1.5 bg-green-100 text-green-600 rounded-full mt-0.5 shrink-0"><CheckCircle2 className="h-3.5 w-3.5" /></div>}
-                                  {issue.status === 'warning' && <div className="p-1.5 bg-amber-100 text-amber-600 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-3.5 w-3.5" /></div>}
-                                  {issue.status === 'error' && <div className="p-1.5 bg-red-100 text-red-600 rounded-full mt-0.5 shrink-0"><XCircle className="h-3.5 w-3.5" /></div>}
+                                  {issue.status === 'success' && <div className="p-1.5 bg-green-100 text-green-600 rounded-full mt-0.5 shrink-0"><CheckCircle2 className="h-4 w-4" /></div>}
+                                  {issue.status === 'warning' && <div className="p-1.5 bg-amber-100 text-amber-600 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-4 w-4" /></div>}
+                                  {issue.status === 'error' && <div className="p-1.5 bg-red-100 text-red-600 rounded-full mt-0.5 shrink-0"><XCircle className="h-4 w-4" /></div>}
 
                                   <div className="flex-1 min-w-0">
-                                    <h4 className="font-semibold text-sm mb-0.5 truncate">{issue.title}</h4>
-                                    <p className="text-xs text-muted-foreground leading-relaxed mb-2">
+                                    <h4 className="font-semibold text-sm mb-1 text-slate-900 leading-snug">{issue.title}</h4>
+                                    <p className="text-sm text-slate-600 leading-relaxed mb-3">
                                       {issue.description}
                                     </p>
 
-                                    <div className="flex justify-end">
-                                      <Button variant="ghost" size="sm" className="h-6 text-[10px] px-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50">
-                                        Fix this <ChevronDown className="h-2.5 w-2.5 ml-1" />
+                                    <div className="flex justify-start">
+                                      <Button variant="outline" size="sm" className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50">
+                                        Fix this issue <ChevronDown className="h-3 w-3 ml-1" />
                                       </Button>
                                     </div>
                                   </div>
@@ -490,21 +396,21 @@ const CVAnalysis = () => {
                       </button>
                       {/* Expanded Content for Category */}
                       {selectedCategory?.id === cat.id && (
-                        <div className="p-3 bg-green-50/10 border-t border-green-100 space-y-3">
-                          <p className="text-xs text-muted-foreground leading-relaxed px-1">
+                        <div className="p-4 bg-green-50/30 border-t border-green-100 space-y-4">
+                          <p className="text-sm text-slate-600 leading-relaxed px-1">
                             {cat.description}
                           </p>
                           <div className="space-y-3">
                             {cat.issues.map((issue: any, idx: number) => (
-                              <div key={idx} className="bg-white p-3 rounded-lg border border-border shadow-sm">
+                              <div key={idx} className="bg-white p-4 rounded-lg border border-border shadow-sm">
                                 <div className="flex items-start gap-3">
-                                  {issue.status === 'success' && <div className="p-1.5 bg-green-100 text-green-600 rounded-full mt-0.5 shrink-0"><CheckCircle2 className="h-3.5 w-3.5" /></div>}
-                                  {issue.status === 'warning' && <div className="p-1.5 bg-amber-100 text-amber-600 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-3.5 w-3.5" /></div>}
-                                  {issue.status === 'error' && <div className="p-1.5 bg-red-100 text-red-600 rounded-full mt-0.5 shrink-0"><XCircle className="h-3.5 w-3.5" /></div>}
+                                  {issue.status === 'success' && <div className="p-1.5 bg-green-100 text-green-600 rounded-full mt-0.5 shrink-0"><CheckCircle2 className="h-4 w-4" /></div>}
+                                  {issue.status === 'warning' && <div className="p-1.5 bg-amber-100 text-amber-600 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-4 w-4" /></div>}
+                                  {issue.status === 'error' && <div className="p-1.5 bg-red-100 text-red-600 rounded-full mt-0.5 shrink-0"><XCircle className="h-4 w-4" /></div>}
 
                                   <div className="flex-1 min-w-0">
-                                    <h4 className="font-semibold text-sm mb-0.5 truncate">{issue.title}</h4>
-                                    <p className="text-xs text-muted-foreground leading-relaxed mb-1">
+                                    <h4 className="font-semibold text-sm mb-1 text-slate-900 leading-snug">{issue.title}</h4>
+                                    <p className="text-sm text-slate-600 leading-relaxed mb-1">
                                       {issue.description}
                                     </p>
                                   </div>
@@ -531,7 +437,7 @@ const CVAnalysis = () => {
           </div>
 
           {/* RIGHT: PDF Viewer (Expanded) */}
-          <div className="lg:col-span-7 bg-white rounded-xl shadow-lg border border-border overflow-hidden flex flex-col h-full relative z-0">
+          <div className="lg:col-span-9 bg-white rounded-xl shadow-lg border border-border overflow-hidden flex flex-col h-full relative z-0">
             {/* PDF Toolbar can go here if needed */}
             <div className="bg-slate-50 border-b border-border p-2 flex justify-end text-xs text-muted-foreground">
               Viewing: <span className="font-medium ml-1 text-foreground">sample-cv.pdf</span>
@@ -543,7 +449,7 @@ const CVAnalysis = () => {
                 <Viewer
                   fileUrl={resumePdfUrl}
                   plugins={[defaultLayoutPluginInstance, searchPluginInstance]}
-                  defaultScale={1.25}
+                  defaultScale={1.7}
                 />
               </Worker>
             </div>
