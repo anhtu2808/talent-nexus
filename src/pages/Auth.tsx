@@ -9,6 +9,9 @@ import { ArrowLeft, Briefcase, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lu
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { mockCompanies } from '@/data/mockData';
+import { Building2 } from 'lucide-react';
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -23,7 +26,7 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '', companyId: '' });
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -237,6 +240,31 @@ const Auth = () => {
                       />
                     </div>
                   </div>
+
+                  {selectedRole === 'recruiter' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="register-company">Company</Label>
+                      <div className="relative">
+                        <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                        <Select
+                          value={registerData.companyId}
+                          onValueChange={(value) => setRegisterData({ ...registerData, companyId: value })}
+                        >
+                          <SelectTrigger className="pl-10">
+                            <SelectValue placeholder="Select your company" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {mockCompanies.map((company) => (
+                              <SelectItem key={company.id} value={company.id}>
+                                {company.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="register-email">Email</Label>
                     <div className="relative">
