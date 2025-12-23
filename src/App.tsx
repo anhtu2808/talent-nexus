@@ -17,7 +17,8 @@ import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
-import AdminDashboard from "./pages/admin/Dashboard"; 
+import RecruiterRegister from "./pages/recruiter/Register";
+import AdminDashboard from "./pages/admin/Dashboard";
 import UserManagement from "./pages/admin/UserManagement";
 import { AdminLayout } from "./pages/admin/AdminLayout";
 import SystemLogs from "./pages/admin/SystemLogs";
@@ -49,17 +50,18 @@ const App = () => (
               <Route path="/candidate/applications/:id" element={<ApplicationDetail />} />
               <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
               <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+              <Route path="/recruiter/register" element={<RecruiterRegister />} />
               <Route path="/admin" element={<AdminLayout />}>
-              {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
-              <Route index element={<AdminDashboard />} /> 
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UserManagement />} />
-              <Route path="jobs" element={<JobManagement />} />
-              <Route path="companies" element={<CompanyManagement />} />
-              <Route path="ai-monitoring" element={<AdminAIMonitoring />} />
-              <Route path="logs" element={<SystemLogs />} />
-              <Route path="analytics" element={<Analytics />} />
-            </Route>
+                {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="jobs" element={<JobManagement />} />
+                <Route path="companies" element={<CompanyManagement />} />
+                <Route path="ai-monitoring" element={<AdminAIMonitoring />} />
+                <Route path="logs" element={<SystemLogs />} />
+                <Route path="analytics" element={<Analytics />} />
+              </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

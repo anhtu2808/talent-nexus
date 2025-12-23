@@ -291,7 +291,13 @@ const Auth = () => {
                     Create {selectedRole === 'candidate' ? 'Candidate' : 'Recruiter'} Account
                   </Button>
                   {selectedRole === 'recruiter' && (
-                    <Button type="submit" variant="outline" className="w-full mt-2" disabled={isLoading}>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full mt-2"
+                      onClick={() => navigate('/recruiter/register')}
+                      disabled={isLoading}
+                    >
                       Post your job now!
                     </Button>
                   )}
