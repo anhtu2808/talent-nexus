@@ -57,7 +57,7 @@ const RecruiterRegister = () => {
             // (company, phone, etc.)
 
             toast.success('Recruiter account created successfully! Please complete your company profile.');
-            navigate('/recruiter/dashboard');
+            navigate('/recruiter/verify');
         } catch (error) {
             toast.error('Registration failed. Please try again.');
         }
