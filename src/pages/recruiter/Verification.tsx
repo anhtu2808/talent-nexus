@@ -103,7 +103,10 @@ const Verification = () => {
                             </Card>
 
                             {/* Step 2 */}
-                            <Card className="p-6 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer group">
+                            <Card
+                                className="p-6 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer group"
+                                onClick={() => navigate('/recruiter/verify/company')}
+                            >
                                 <div className="flex items-center gap-4">
                                     <div className="h-6 w-6 rounded-full border-2 border-muted-foreground group-hover:border-[#00B14F] flex items-center justify-center">
                                     </div>

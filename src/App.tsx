@@ -20,6 +20,7 @@ import RecruiterDashboard from "./pages/recruiter/Dashboard";
 import RecruiterRegister from "./pages/recruiter/Register";
 import RecruiterVerification from "./pages/recruiter/Verification";
 import VerifyPhone from "./pages/recruiter/VerifyPhone";
+import VerifyCompany from "./pages/recruiter/VerifyCompany";
 import AdminDashboard from "./pages/admin/Dashboard";
 import UserManagement from "./pages/admin/UserManagement";
 import { AdminLayout } from "./pages/admin/AdminLayout";
@@ -55,6 +56,7 @@ const App = () => (
               <Route path="/recruiter/register" element={<RecruiterRegister />} />
               <Route path="/recruiter/verify" element={<RecruiterVerification />} />
               <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
+              <Route path="/recruiter/verify/company" element={<VerifyCompany />} />
               <Route path="/admin" element={<AdminLayout />}>
                 {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
                 <Route index element={<AdminDashboard />} />
