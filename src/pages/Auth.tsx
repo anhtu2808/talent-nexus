@@ -26,13 +26,13 @@ const Auth = () => {
   const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
 
   useEffect(() => {
-  if (isAuthenticated && user) {
-    let redirectPath = '/candidate/dashboard';
-    if (user.role === 'recruiter') redirectPath = '/recruiter/dashboard';
-    if (user.role === 'admin') redirectPath = '/admin/dashboard';  
-    navigate(redirectPath);
-  }
-}, [isAuthenticated, user, navigate]);
+    if (isAuthenticated && user) {
+      let redirectPath = '/candidate/dashboard';
+      if (user.role === 'recruiter') redirectPath = '/recruiter/dashboard';
+      if (user.role === 'admin') redirectPath = '/admin/dashboard';
+      navigate(redirectPath);
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,8 +132,8 @@ const Auth = () => {
                 <button
                   onClick={() => setSelectedRole('candidate')}
                   className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'candidate'
-                      ? 'border-accent bg-accent/10 text-accent'
-                      : 'border-border hover:border-accent/50'
+                    ? 'border-accent bg-accent/10 text-accent'
+                    : 'border-border hover:border-accent/50'
                     }`}
                 >
                   <User className="h-5 w-5" />
@@ -142,8 +142,8 @@ const Auth = () => {
                 <button
                   onClick={() => setSelectedRole('recruiter')}
                   className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'recruiter'
-                      ? 'border-accent bg-accent/10 text-accent'
-                      : 'border-border hover:border-accent/50'
+                    ? 'border-accent bg-accent/10 text-accent'
+                    : 'border-border hover:border-accent/50'
                     }`}
                 >
                   <Briefcase className="h-5 w-5" />
@@ -151,11 +151,10 @@ const Auth = () => {
                 </button>
                 <button
                   onClick={() => setSelectedRole('admin')}
-                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${
-                    selectedRole === 'admin'
-                      ? 'border-red-500 bg-red-50 text-red-600'
-                      : 'border-border hover:border-red-300'
-                  }`}
+                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'admin'
+                    ? 'border-red-500 bg-red-50 text-red-600'
+                    : 'border-border hover:border-red-300'
+                    }`}
                 >
                   <ShieldCheck className="h-5 w-5" />
                   <span className="font-medium">Admin</span>
@@ -215,9 +214,9 @@ const Auth = () => {
                   <Button type="submit" variant="accent" className="w-full" disabled={isLoading}>
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     Sign In as {
-                        selectedRole === 'candidate' ? 'Candidate' : 
+                      selectedRole === 'candidate' ? 'Candidate' :
                         selectedRole === 'recruiter' ? 'Recruiter' : 'Administrator'
-                      }
+                    }
                   </Button>
                 </form>
               </TabsContent>
@@ -291,6 +290,11 @@ const Auth = () => {
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     Create {selectedRole === 'candidate' ? 'Candidate' : 'Recruiter'} Account
                   </Button>
+                  {selectedRole === 'recruiter' && (
+                    <Button type="submit" variant="outline" className="w-full mt-2" disabled={isLoading}>
+                      Post your job now!
+                    </Button>
+                  )}
                 </form>
               </TabsContent>
             </Tabs>
