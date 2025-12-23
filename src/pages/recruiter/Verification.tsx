@@ -89,7 +89,10 @@ const Verification = () => {
 
                         <div className="space-y-4">
                             {/* Step 1 */}
-                            <Card className="p-6 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer group">
+                            <Card
+                                className="p-6 flex items-center justify-between hover:shadow-md transition-shadow cursor-pointer group"
+                                onClick={() => navigate('/recruiter/verify/phone')}
+                            >
                                 <div className="flex items-center gap-4">
                                     <div className="h-6 w-6 rounded-full border-2 border-muted-foreground group-hover:border-[#00B14F] flex items-center justify-center">
                                         {/* Check icon would go here if completed */}
@@ -131,7 +134,7 @@ const Verification = () => {
                         <span className="flex items-center gap-2 text-sm text-gray-400">
                             Powered by <span className="font-bold text-white">SmartRecruit</span>
                         </span>
-                        <Button className="rounded-full bg-[#00B14F] hover:bg-[#009b45] text-white border-0" onClick={() => navigate('/recruiter/dashboard')}>
+                        <Button className="rounded-full bg-[#00B14F] hover:bg-[#009b45] text-white border-0" onClick={() => navigate('/recruiter/verify/phone')}>
                             Next: Phone number verification <ChevronRight className="ml-2 h-4 w-4" />
                         </Button>
                     </div>
