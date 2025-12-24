@@ -23,6 +23,7 @@ import VerifyPhone from "./pages/recruiter/VerifyPhone";
 import VerifyCompany from "./pages/recruiter/VerifyCompany";
 import VerifyLicense from "./pages/recruiter/VerifyLicense";
 import AdminDashboard from "./pages/admin/Dashboard";
+import TeamManagement from "./pages/recruiter/TeamManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import { AdminLayout } from "./pages/admin/AdminLayout";
 import SystemLogs from "./pages/admin/SystemLogs";
@@ -54,6 +55,7 @@ const App = () => (
               <Route path="/candidate/applications/:id" element={<ApplicationDetail />} />
               <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
               <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+              <Route path="/recruiter/team" element={<TeamManagement />} />
               <Route path="/recruiter/register" element={<RecruiterRegister />} />
               <Route path="/recruiter/verify" element={<RecruiterVerification />} />
               <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />

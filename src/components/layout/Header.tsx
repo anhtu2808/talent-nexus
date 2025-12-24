@@ -71,15 +71,28 @@ const Header = () => {
           </Link>
 
           {isAuthenticated && user && (
-            <Link
-              to={getDashboardLink()}
-              className={cn(
-                "text-sm font-medium transition-colors hover:text-foreground",
-                isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
+            <>
+              <Link
+                to={getDashboardLink()}
+                className={cn(
+                  "text-sm font-medium transition-colors hover:text-foreground",
+                  isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
+                )}
+              >
+                Dashboard
+              </Link>
+              {user.role === 'recruiter' && (
+                <Link
+                  to="/recruiter/team"
+                  className={cn(
+                    "text-sm font-medium transition-colors hover:text-foreground",
+                    isActive('/recruiter/team') ? "text-accent" : "text-muted-foreground"
+                  )}
+                >
+                  Team
+                </Link>
               )}
-            >
-              Dashboard
-            </Link>
+            </>
           )}
         </nav>
 
