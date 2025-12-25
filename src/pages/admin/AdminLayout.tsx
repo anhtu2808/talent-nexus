@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Outlet, Link, useNavigate, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import NotificationDropdown from '@/components/notifications/NotificationDropdown';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -11,11 +11,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { AdminSidebar } from "@/components/layout/AdminSidebar" // Import Sidebar đã sửa ở bước trước
 import { cn } from '@/lib/utils';
 import { 
-  Briefcase, ChevronDown, LayoutDashboard, LogOut, 
-  Menu, X, Shield, Users, Activity, FileText, Settings, BarChart3, 
-  Building
+  ChevronDown, LogOut, Menu, User, Settings
 } from 'lucide-react';
 
 interface AdminLayoutProps {
@@ -25,110 +24,105 @@ interface AdminLayoutProps {
 }
 
 export function AdminLayout({ children, title, subtitle }: AdminLayoutProps) {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/auth');
   };
 
-  const navItems = [
-    { title: "Dashboard", url: "/admin/dashboard", icon: LayoutDashboard },
-    { title: "Users", url: "/admin/users", icon: Users },
-    { title: "Jobs", url: "/admin/jobs", icon: Briefcase },
-    { title: "Companies", url: "/admin/companies", icon: Building },
-    { title: "AI Monitoring", url: "/admin/ai-monitoring", icon: Activity },
-    { title: "Logs", url: "/admin/logs", icon: FileText },
-    { title: "Analytics", url: "/admin/analytics", icon: BarChart3 },
-  ];
-
   return (
-    <div className="min-h-screen bg-[#F8FAFC]">
-      {/* Header đồng bộ với phong cách SmartRecruit */}
-      <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-        <div className="container flex h-16 items-center justify-between">
-          <div className="flex items-center gap-8">
-            {/* Logo dark navy */}
-            <Link to="/" className="flex items-center gap-2">
-              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#0F2238]">
-                <Shield className="h-5 w-5 text-white" />
-              </div>
-              <span className="text-xl font-bold text-foreground">
-                Smart<span className="text-[#38B65F]">Recruit</span>
-              </span>
-            </Link>
+    <div className="min-h-screen bg-[#F8FAFC] flex">
+      {/* Sidebar cố định bên trái */}
+      <AdminSidebar 
+        collapsed={collapsed} 
+        onToggle={() => setCollapsed(!collapsed)} 
+      />
 
-            <nav className="hidden md:flex items-center gap-6 overflow-x-auto no-scrollbar">
-              {navItems.map((item) => (
-                <Link 
-                  key={item.url}
-                  to={item.url} 
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-foreground whitespace-nowrap",
-                    location.pathname === item.url 
-                      ? "text-[#38B65F] font-bold" // Active color xanh lá giống hình SmartRecruit
-                      : "text-muted-foreground"
-                  )}
-                >
-                  {item.title}
-                </Link>
-              ))}
-            </nav>
+      {/* Khu vực nội dung bên phải */}
+      <div className={cn(
+        "flex-1 flex flex-col transition-all duration-300",
+        collapsed ? "pl-16" : "pl-64" // Padding để không bị Sidebar đè lên
+      )}>
+        
+        {/* Topbar: Chứa thông tin User & Thông báo */}
+        <header className="h-16 border-b border-slate-200 bg-white sticky top-0 z-30 flex items-center justify-between px-8">
+          <div>
+            {/* Có thể để Search bar hoặc Breadcrumbs ở đây */}
           </div>
 
-          <div className="hidden md:flex items-center gap-4">
+          <div className="flex items-center gap-4">
             <NotificationDropdown />
-            {isAuthenticated && user && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="flex items-center gap-2 px-2 hover:bg-[#F8FAFC]">
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={user.avatar} alt={user.name} />
-                      <AvatarFallback className="bg-[#38B65F]/10 text-[#38B65F] font-bold">
-                        {user.name.charAt(0)}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm font-medium">{user.name}</span>
-                    <ChevronDown className="h-4 w-4 text-muted-foreground" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <div className="px-2 py-1.5">
-                    <p className="text-sm font-bold text-[#0F2238]">{user.name}</p>
-                    <p className="text-xs text-muted-foreground">{user.email}</p>
-                    <span className="mt-1 inline-block rounded-full bg-[#38B65F]/10 px-2 py-0.5 text-xs font-medium text-[#38B65F] capitalize">
-                      {user.role}
-                    </span>
-                  </div>
-                  <DropdownMenuSeparator />
-                  {navItems.map((item) => (
-                    <DropdownMenuItem key={item.url} onClick={() => navigate(item.url)}>
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {item.title}
-                    </DropdownMenuItem>
-                  ))}
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    Logout
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
-        </div>
-      </header>
+            
+            <div className="h-6 w-[1px] bg-slate-200 mx-2" /> {/* Divider */}
 
-      <main className="container py-8 md:py-12">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-[#0F2238] tracking-tight">{title}</h1>
-          {subtitle && <p className="text-slate-500 mt-2 text-sm font-medium">{subtitle}</p>}
-        </div>
-        {children || <Outlet />}
-      </main>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="flex items-center gap-3 px-2 hover:bg-slate-50 transition-colors">
+                  <div className="text-right hidden sm:block">
+                    <p className="text-xs font-bold text-[#0F2238] leading-none">{user?.name}</p>
+                    <p className="text-[10px] text-slate-400 mt-1 uppercase font-black tracking-tighter">
+                      {user?.role}
+                    </p>
+                  </div>
+                  <Avatar className="h-9 w-9 border-2 border-[#38B65F]/20">
+                    <AvatarImage src={user?.avatar} alt={user?.name} />
+                    <AvatarFallback className="bg-[#38B65F]/10 text-[#38B65F] font-bold">
+                      {user?.name?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <ChevronDown className="h-4 w-4 text-slate-400" />
+                </Button>
+              </DropdownMenuTrigger>
+              
+              <DropdownMenuContent align="end" className="w-56 rounded-xl shadow-xl border-slate-100 p-1">
+                <div className="px-3 py-2 border-b border-slate-50 mb-1">
+                  <p className="text-xs text-slate-400 font-medium">Signed in as</p>
+                  <p className="text-sm font-bold text-[#0F2238] truncate">{user?.email}</p>
+                </div>
+                
+                <DropdownMenuItem className="gap-2 font-medium cursor-pointer rounded-lg">
+                  <User className="w-4 h-4 text-slate-400" /> Profile Settings
+                </DropdownMenuItem>
+                <DropdownMenuItem className="gap-2 font-medium cursor-pointer rounded-lg">
+                  <Settings className="w-4 h-4 text-slate-400" /> System Config
+                </DropdownMenuItem>
+                
+                <DropdownMenuSeparator className="bg-slate-50" />
+                
+                <DropdownMenuItem 
+                  onClick={handleLogout} 
+                  className="gap-2 font-bold text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer rounded-lg"
+                >
+                  <LogOut className="w-4 h-4" /> Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        </header>
+
+        {/* Nội dung chính */}
+        <main className="p-8 max-w-7xl mx-auto w-full">
+          {(title || subtitle) && (
+            <div className="mb-8">
+              <h1 className="text-3xl font-black text-[#0F2238] tracking-tight">
+                {title}
+              </h1>
+              {subtitle && (
+                <p className="text-slate-500 mt-1 text-sm font-medium">
+                  {subtitle}
+                </p>
+              )}
+            </div>
+          )}
+          
+          <div className="animate-in fade-in duration-500">
+            {children || <Outlet />}
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
