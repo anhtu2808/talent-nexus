@@ -4,12 +4,16 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const SettingsView = () => {
     const [taxId, setTaxId] = useState("");
     const [companyName, setCompanyName] = useState("");
     const [internationalName, setInternationalName] = useState("");
     const [shortName, setShortName] = useState("");
+    const [registrationType, setRegistrationType] = useState<"auth" | "license">("auth");
+    const [isCreatingCompany, setIsCreatingCompany] = useState(false);
     const [address, setAddress] = useState("");
 
     const handleTaxIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,69 +78,108 @@ const SettingsView = () => {
                     <Button variant="accent">Save changes</Button>
                 </TabsContent>
 
-                <TabsContent value="business-reg" className="mt-6 space-y-4 max-w-2xl">
-                    <div className="space-y-2">
-                        <Label htmlFor="licenseUrl">Business license (Link or Upload)</Label>
-                        <Input id="licenseUrl" type="file" />
+                <TabsContent value="business-reg" className="mt-6 space-y-6 max-w-2xl">
+                    <div className="space-y-4">
+                        <Label>Document Type</Label>
+                        <RadioGroup defaultValue="auth" value={registrationType} onValueChange={(v) => setRegistrationType(v as "auth" | "license")}>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="auth" id="type-auth" />
+                                <Label htmlFor="type-auth">Authorisation Letter (Giấy uỷ quyền)</Label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <RadioGroupItem value="license" id="type-license" />
+                                <Label htmlFor="type-license">Business Registration Certificate (Giấy đăng ký kinh doanh)</Label>
+                            </div>
+                        </RadioGroup>
                     </div>
-                    <Button variant="accent">Submit</Button>
+
+                    <div className="space-y-2">
+                        <Label htmlFor="licenseUrl">
+                            {registrationType === 'auth' ? 'Upload Authorisation Letter' : 'Upload Business License'}
+                        </Label>
+                        <Input id="licenseUrl" type="file" />
+                        <p className="text-xs text-muted-foreground">
+                            {registrationType === 'auth'
+                                ? 'Upload the official letter authorizing you to recruit on behalf of the company.'
+                                : 'Upload your company\'s business registration certificate.'}
+                        </p>
+                    </div>
+                    <Button variant="accent">Submit Verification</Button>
                 </TabsContent>
 
-                <TabsContent value="company-info" className="mt-6 space-y-4 max-w-2xl">
-                    <div className="space-y-2">
-                        <Label htmlFor="taxId">Tax ID</Label>
-                        <Input
-                            id="taxId"
-                            placeholder="Enter your company's tax ID"
-                            value={taxId}
-                            onChange={handleTaxIdChange}
+                <TabsContent value="company-info" className="mt-6 space-y-6 max-w-2xl">
+                    <div className="flex items-center space-x-2 border p-4 rounded-lg bg-muted/20">
+                        <Checkbox
+                            id="create-mode"
+                            checked={isCreatingCompany}
+                            onCheckedChange={(c) => setIsCreatingCompany(c as boolean)}
                         />
+                        <div>
+                            <Label htmlFor="create-mode" className="font-medium">Register New Business Entity</Label>
+                            <p className="text-sm text-muted-foreground">Check this if you need to create a new company profile instead of linking to an existing one.</p>
+                        </div>
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="companyName">Company name</Label>
-                        <Input
-                            id="companyName"
-                            placeholder="Talent Nexus"
-                            value={companyName}
-                            onChange={(e) => setCompanyName(e.target.value)}
-                        />
+
+                    <div className={isCreatingCompany ? "" : "opacity-100" /* Just for structure, logic handled below */}>
+                        <div className="space-y-4">
+                            <div className="space-y-2">
+                                <Label htmlFor="taxId">Tax ID {isCreatingCompany && <span className="text-red-500">*</span>}</Label>
+                                <Input
+                                    id="taxId"
+                                    placeholder="Enter your company's tax ID"
+                                    value={taxId}
+                                    onChange={handleTaxIdChange}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="companyName">Company Name {isCreatingCompany && <span className="text-red-500">*</span>}</Label>
+                                <Input
+                                    id="companyName"
+                                    placeholder="Talent Nexus"
+                                    value={companyName}
+                                    onChange={(e) => setCompanyName(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="internationalName">International Name</Label>
+                                <Input
+                                    id="internationalName"
+                                    placeholder="Talent Nexus Joint Stock Company"
+                                    value={internationalName}
+                                    onChange={(e) => setInternationalName(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="shortName">Short Name</Label>
+                                <Input
+                                    id="shortName"
+                                    placeholder="Talent Nexus"
+                                    value={shortName}
+                                    onChange={(e) => setShortName(e.target.value)}
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="website">Website</Label>
+                                <Input id="website" placeholder="https://talentnexus.com" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Description</Label>
+                                <Textarea id="description" placeholder="Introduce your company..." className="min-h-[150px]" />
+                            </div>
+                            <div className="space-y-2">
+                                <Label htmlFor="address">Address</Label>
+                                <Input
+                                    id="address"
+                                    placeholder="123 Đường ABC, Quận XYZ, TP.HCM"
+                                    value={address}
+                                    onChange={(e) => setAddress(e.target.value)}
+                                />
+                            </div>
+                            <Button variant="accent">
+                                {isCreatingCompany ? 'Create Company Profile' : 'Update Information'}
+                            </Button>
+                        </div>
                     </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="internationalName">International name</Label>
-                        <Input
-                            id="internationalName"
-                            placeholder="Talent Nexus Joint Stock Company"
-                            value={internationalName}
-                            onChange={(e) => setInternationalName(e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="shortName">Short name</Label>
-                        <Input
-                            id="shortName"
-                            placeholder="Talent Nexus"
-                            value={shortName}
-                            onChange={(e) => setShortName(e.target.value)}
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="website">Website</Label>
-                        <Input id="website" placeholder="https://talentnexus.com" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="description">Description</Label>
-                        <Textarea id="description" placeholder="Introduce your company..." className="min-h-[150px]" />
-                    </div>
-                    <div className="space-y-2">
-                        <Label htmlFor="address">Address</Label>
-                        <Input
-                            id="address"
-                            placeholder="123 Đường ABC, Quận XYZ, TP.HCM"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                        />
-                    </div>
-                    <Button variant="accent">Update information</Button>
                 </TabsContent>
             </Tabs>
         </div>

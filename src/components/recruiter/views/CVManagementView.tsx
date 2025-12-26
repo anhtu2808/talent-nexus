@@ -32,7 +32,9 @@ import {
 const CVManagementView = () => {
     const { user } = useAuth();
     // Initialize with 'all' by default or mockJobs[0]?.id if strict
-    const [selectedJob, setSelectedJob] = useState<string>('all');
+    const [selectedJob, setSelectedJob] = useState<string>(
+        mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2')[0]?.id || ''
+    );
     const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
     const [applications, setApplications] = useState<Application[]>(mockApplications);
     const [viewingCV, setViewingCV] = useState<CV | null>(null);
@@ -66,13 +68,9 @@ const CVManagementView = () => {
     const getFilteredApplications = useMemo(() => {
         let apps = applications;
 
-        // Filter by Job ID if not "all"
-        if (selectedJob !== 'all') {
+        // Filter by Job ID
+        if (selectedJob) {
             apps = apps.filter(app => app.jobId === selectedJob);
-        } else {
-            // If "all", we should logically only show apps for the recruiter's jobs
-            const recruiterJobIds = recruiterJobs.map(j => j.id);
-            apps = apps.filter(app => recruiterJobIds.includes(app.jobId));
         }
 
         // Apply filters
@@ -203,17 +201,18 @@ const CVManagementView = () => {
                 </div>
                 <div className="flex items-center gap-3">
                     <Select value={selectedJob} onValueChange={setSelectedJob}>
-                        <SelectTrigger className="w-[250px]">
+                        <SelectTrigger className="w-[300px]">
                             <SelectValue placeholder="Select a Job" />
                         </SelectTrigger>
                         <SelectContent>
-                            <SelectItem value="all">All Jobs</SelectItem>
                             {recruiterJobs.map(job => (
-                                <SelectItem key={job.id} value={job.id}>{job.title}</SelectItem>
+                                <SelectItem key={job.id} value={job.id}>
+                                    {job.title} <span className="text-muted-foreground">({job.isActive ? 'Open' : 'Closed'})</span>
+                                </SelectItem>
                             ))}
                         </SelectContent>
                     </Select>
-                    {selectedJob !== 'all' && (
+                    {selectedJob && (
                         <Button
                             variant="outline"
                             onClick={() => setSchedulerOpen(true)}
@@ -230,7 +229,7 @@ const CVManagementView = () => {
                     <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         <div>
                             <h2 className="font-semibold text-lg">
-                                {selectedJob === 'all' ? 'All Applications' : (selectedJobData?.title || 'Job Selection')}
+                                {selectedJobData?.title || 'Job Selection'}
                             </h2>
                             <p className="text-sm text-muted-foreground">
                                 {getFilteredApplications.length} candidates found
@@ -348,7 +347,7 @@ const CVManagementView = () => {
             </Dialog>
 
             {/* Interview Scheduler Modal */}
-            {selectedJob && selectedJob !== 'all' && selectedJobData && (
+            {selectedJob && selectedJobData && (
                 <InterviewScheduler
                     open={schedulerOpen}
                     onOpenChange={setSchedulerOpen}
@@ -367,8 +366,8 @@ const CVManagementView = () => {
                     candidateId={selectedCandidateForBooking.candidate.id}
                     candidateName={selectedCandidateForBooking.candidate.name}
                     candidateEmail={selectedCandidateForBooking.candidate.email}
-                    jobId={selectedJob === 'all' ? (mockJobs.find(j => j.id === selectedCandidateForBooking.applicationId/* This logic is flawed for All, need to look up job from app */) || mockJobs[0]).id : selectedJob}
-                    jobTitle={selectedJob === 'all' ? 'Recruitment Process' : (selectedJobData?.title || 'Job')}
+                    jobId={selectedJob}
+                    jobTitle={selectedJobData?.title || 'Job'}
                     onBooked={() => {
                         handleStatusChange(selectedCandidateForBooking.applicationId, 'interviewing');
                     }}
