@@ -142,7 +142,7 @@ const Notifications = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-50"
+                        className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
                         onClick={() => deleteNotification(notification.id)}
                         title="Dismiss"
                       >

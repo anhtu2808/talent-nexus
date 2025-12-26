@@ -8,8 +8,8 @@ const DashboardCVCard = () => {
 
       <div className="bg-gray-50 rounded-lg p-4 border border-gray-100">
         <div className="flex items-start gap-4">
-          <div className="bg-red-50 p-3 rounded-lg">
-            <FileText className="h-8 w-8 text-red-500" />
+          <div className="bg-primary/10 p-3 rounded-lg">
+            <FileText className="h-8 w-8 text-primary" />
           </div>
 
           <div className="flex-1">

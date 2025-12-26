@@ -13,7 +13,7 @@ const DashboardITviecProfile = () => {
             <div
               className="absolute inset-0 rounded-full"
               style={{
-                background: 'conic-gradient(#fca5a5 10%, #f3f4f6 10%)'
+                background: 'conic-gradient(hsl(var(--primary)) 10%, #f3f4f6 10%)'
                 // Light red for progress, gray for remainder
               }}
             />
@@ -24,23 +24,23 @@ const DashboardITviecProfile = () => {
 
           <div className="max-w-xs">
             <p className="text-muted-foreground">
-              Reach <span className="font-bold text-red-500">70%</span> of your profile to start generating your IT professional CV.
+              Reach <span className="font-bold text-primary">70%</span> of your profile to start generating your IT professional CV.
             </p>
           </div>
         </div>
 
         {/* Templates Promo */}
         <div className="flex-1 w-full md:w-auto">
-          <div className="border border-gray-200 rounded-lg p-4 flex items-center justify-between hover:border-red-200 transition-colors group cursor-pointer">
+          <div className="border border-gray-200 rounded-lg p-4 flex items-center justify-between hover:border-primary/50 transition-colors group cursor-pointer">
             <div className="flex flex-col gap-1">
-              <span className="font-medium text-foreground group-hover:text-red-500 transition-colors">
+              <span className="font-medium text-foreground group-hover:text-primary transition-colors">
                 Explore CV templates
               </span>
               <span className="text-xs text-muted-foreground">
                 Professional templates for developers
               </span>
             </div>
-            <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-red-500 transition-colors" />
+            <ArrowRight className="h-5 w-5 text-gray-400 group-hover:text-primary transition-colors" />
           </div>
         </div>
       </div>

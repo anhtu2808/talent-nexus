@@ -105,8 +105,8 @@ const CVManager = () => {
               key={cv.id}
               className="flex flex-col md:flex-row md:items-center gap-4 p-5 bg-white border border-gray-200 rounded-xl hover:border-accent/40 hover:shadow-sm transition-all group"
             >
-              <div className="p-3 rounded-lg bg-red-50 border border-red-100">
-                <FileText className="h-8 w-8 text-red-500" />
+              <div className="p-3 rounded-lg bg-primary/10 border border-primary/20">
+                <FileText className="h-8 w-8 text-primary" />
               </div>
 
               <div className="flex-1 min-w-0">
@@ -143,7 +143,7 @@ const CVManager = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="text-muted-foreground hover:text-red-500"
+                  className="text-muted-foreground hover:text-primary"
                   onClick={() => handleDelete(cv.id)}
                 >
                   <Trash2 className="h-4 w-4" />

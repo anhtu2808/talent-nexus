@@ -83,18 +83,18 @@ const DashboardSidebar = () => {
               className={cn(
                 "flex items-center justify-between px-4 py-3 text-sm font-medium transition-colors hover:bg-muted/50 border-l-4 border-transparent",
                 active
-                  ? "text-red-500 bg-red-50 border-red-500"
+                  ? "text-primary bg-primary/10 border-primary"
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
               <div className="flex items-center gap-3">
-                <item.icon className={cn("h-5 w-5", active ? "text-red-500" : "text-muted-foreground")} />
+                <item.icon className={cn("h-5 w-5", active ? "text-primary" : "text-muted-foreground")} />
                 <span>{item.label}</span>
               </div>
               {item.badge !== undefined && (
                 <span className={cn(
                   "px-2 py-0.5 rounded-full text-xs text-white",
-                  item.badge > 0 ? "bg-red-500" : "bg-gray-400"
+                  item.badge > 0 ? "bg-primary" : "bg-gray-400"
                 )}>
                   {item.badge}
                 </span>

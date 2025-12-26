@@ -204,7 +204,7 @@ const ApplicationDetail = () => {
             {cv ? (
               <div className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg border border-border/50">
                 <div className="p-2 bg-background rounded border border-border/50">
-                  <FileText className="h-6 w-6 text-red-500" />
+                  <FileText className="h-6 w-6 text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium truncate">{cv.fileName}</p>
