@@ -59,7 +59,7 @@ const RecruiterDashboard = () => {
   const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
   const [applications, setApplications] = useState<Application[]>(mockApplications);
   const [viewingCV, setViewingCV] = useState<CV | null>(null);
-  
+
   // Interview scheduling state
   const [schedulerOpen, setSchedulerOpen] = useState(false);
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
@@ -97,7 +97,7 @@ const RecruiterDashboard = () => {
       // Search filter
       if (filters.search) {
         const searchLower = filters.search.toLowerCase();
-        const matchesSearch = 
+        const matchesSearch =
           candidate.name.toLowerCase().includes(searchLower) ||
           candidate.email.toLowerCase().includes(searchLower) ||
           candidate.skills?.some(s => s.toLowerCase().includes(searchLower));
@@ -250,7 +250,7 @@ const RecruiterDashboard = () => {
   return (
     <div className="min-h-screen bg-muted/30">
       <Header />
-      
+
       <main className="container py-8">
         {/* Welcome Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
@@ -264,8 +264,8 @@ const RecruiterDashboard = () => {
           </div>
           <div className="flex items-center gap-3">
             {selectedJob && (
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="lg"
                 onClick={() => setSchedulerOpen(true)}
               >
@@ -280,77 +280,77 @@ const RecruiterDashboard = () => {
                   Post New Job
                 </Button>
               </DialogTrigger>
-            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-              <DialogHeader>
-                <DialogTitle>Create Job Posting</DialogTitle>
-                <DialogDescription>
-                  Fill in the details to create a new job listing. AI will help extract keywords for better matching.
-                </DialogDescription>
-              </DialogHeader>
-              <form onSubmit={handleCreateJob} className="space-y-4 mt-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="job-title">Job Title *</Label>
-                    <Input id="job-title" placeholder="e.g., Senior React Developer" required />
+              <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                <DialogHeader>
+                  <DialogTitle>Create Job Posting</DialogTitle>
+                  <DialogDescription>
+                    Fill in the details to create a new job listing. AI will help extract keywords for better matching.
+                  </DialogDescription>
+                </DialogHeader>
+                <form onSubmit={handleCreateJob} className="space-y-4 mt-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="job-title">Job Title *</Label>
+                      <Input id="job-title" placeholder="e.g., Senior React Developer" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="job-type">Job Type *</Label>
+                      <Select required>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="full-time">Full-time</SelectItem>
+                          <SelectItem value="part-time">Part-time</SelectItem>
+                          <SelectItem value="contract">Contract</SelectItem>
+                          <SelectItem value="remote">Remote</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="location">Location *</Label>
+                      <Input id="location" placeholder="e.g., Ho Chi Minh City" required />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="salary">Salary Range *</Label>
+                      <Input id="salary" placeholder="e.g., $2,000 - $4,000" required />
+                    </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="job-type">Job Type *</Label>
-                    <Select required>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="full-time">Full-time</SelectItem>
-                        <SelectItem value="part-time">Part-time</SelectItem>
-                        <SelectItem value="contract">Contract</SelectItem>
-                        <SelectItem value="remote">Remote</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="location">Location *</Label>
-                    <Input id="location" placeholder="e.g., Ho Chi Minh City" required />
+                    <Label htmlFor="description">Job Description *</Label>
+                    <Textarea
+                      id="description"
+                      placeholder="Describe the role, responsibilities, and what you're looking for..."
+                      className="min-h-32"
+                      required
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="salary">Salary Range *</Label>
-                    <Input id="salary" placeholder="e.g., $2,000 - $4,000" required />
+                    <Label htmlFor="requirements">Requirements *</Label>
+                    <Textarea
+                      id="requirements"
+                      placeholder="List the requirements, one per line..."
+                      className="min-h-24"
+                      required
+                    />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Job Description *</Label>
-                  <Textarea 
-                    id="description" 
-                    placeholder="Describe the role, responsibilities, and what you're looking for..."
-                    className="min-h-32"
-                    required 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="requirements">Requirements *</Label>
-                  <Textarea 
-                    id="requirements" 
-                    placeholder="List the requirements, one per line..."
-                    className="min-h-24"
-                    required 
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="skills">Required Skills (comma-separated) *</Label>
-                  <Input id="skills" placeholder="e.g., React, TypeScript, Node.js" required />
-                </div>
-                <DialogFooter>
-                  <Button type="button" variant="outline" onClick={() => setCreateJobOpen(false)}>
-                    Cancel
-                  </Button>
-                  <Button type="submit" variant="accent">
-                    Post Job
-                  </Button>
-                </DialogFooter>
-              </form>
-            </DialogContent>
-          </Dialog>
+                  <div className="space-y-2">
+                    <Label htmlFor="skills">Required Skills (comma-separated) *</Label>
+                    <Input id="skills" placeholder="e.g., React, TypeScript, Node.js" required />
+                  </div>
+                  <DialogFooter>
+                    <Button type="button" variant="outline" onClick={() => setCreateJobOpen(false)}>
+                      Cancel
+                    </Button>
+                    <Button type="submit" variant="accent">
+                      Post Job
+                    </Button>
+                  </DialogFooter>
+                </form>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
@@ -380,9 +380,8 @@ const RecruiterDashboard = () => {
                   <button
                     key={job.id}
                     onClick={() => setSelectedJob(job.id)}
-                    className={`w-full p-4 text-left hover:bg-muted/50 transition-colors ${
-                      selectedJob === job.id ? 'bg-accent/5 border-l-2 border-accent' : ''
-                    }`}
+                    className={`w-full p-4 text-left hover:bg-muted/50 transition-colors ${selectedJob === job.id ? 'bg-accent/5 border-l-2 border-accent' : ''
+                      }`}
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="flex-1 min-w-0">
@@ -406,7 +405,7 @@ const RecruiterDashboard = () => {
                             </span>
                             <span className="flex items-center gap-1">
                               <TrendingUp className="h-3 w-3" />
-                              {job.clickToApply && job.views ? 
+                              {job.clickToApply && job.views ?
                                 ((job.clickToApply / job.views) * 100).toFixed(1) : 0}% CTR
                             </span>
                           </div>

@@ -16,8 +16,15 @@ import Index from "./pages/Index";
 import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
-import AdminDashboard from "./pages/admin/Dashboard"; 
+import RecruiterRegister from "./pages/recruiter/Register";
+import RecruiterVerification from "./pages/recruiter/Verification";
+import VerifyPhone from "./pages/recruiter/VerifyPhone";
+import VerifyCompany from "./pages/recruiter/VerifyCompany";
+import VerifyLicense from "./pages/recruiter/VerifyLicense";
+import AdminDashboard from "./pages/admin/Dashboard";
+import TeamManagement from "./pages/recruiter/TeamManagement";
 import UserManagement from "./pages/admin/UserManagement";
 import { AdminLayout } from "./pages/admin/AdminLayout";
 import SystemLogs from "./pages/admin/SystemLogs";
@@ -41,6 +48,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/companies/:id" element={<CompanyDetail />} />
@@ -50,15 +58,21 @@ const App = () => (
               <Route path="/candidate/applications/:id" element={<ApplicationDetail />} />
               <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
               <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+              <Route path="/recruiter/team" element={<TeamManagement />} />
+              <Route path="/recruiter/register" element={<RecruiterRegister />} />
+              <Route path="/recruiter/verify" element={<RecruiterVerification />} />
+              <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
+              <Route path="/recruiter/verify/company" element={<VerifyCompany />} />
+              <Route path="/recruiter/verify/license" element={<VerifyLicense />} />
               <Route path="/admin" element={<AdminLayout />}>
-              {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
-              <Route index element={<AdminDashboard />} /> 
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UserManagement />} />
-              <Route path="jobs" element={<JobManagement />} />
-              <Route path="companies" element={<CompanyManagement />} />
-              <Route path="transactions" element={<TransactionManagement />} />
-            </Route>
+                {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="jobs" element={<JobManagement />} />
+                <Route path="companies" element={<CompanyManagement />} />
+                <Route path="transactions" element={<TransactionManagement />} />
+              </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
