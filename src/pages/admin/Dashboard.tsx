@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { 
   Users, Briefcase, FileText, Activity, TrendingUp, TrendingDown,
-  AlertTriangle, CheckCircle, Clock, Server, Cpu, Database
+  CheckCircle, Clock, ShieldAlert, Building2, ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -14,11 +14,19 @@ const stats = [
   { label: "AI Requests Today", value: "8,492", change: "-5%", trend: "down", icon: Activity },
 ];
 
-const systemHealth = [
-  { name: "API Server", status: "healthy", uptime: "99.9%", icon: Server },
-  { name: "AI Matching Service", status: "healthy", uptime: "99.7%", icon: Cpu },
-  { name: "Database (Supabase)", status: "healthy", uptime: "99.99%", icon: Database },
-];
+// Dữ liệu công ty đang chờ duyệt
+const pendingCompanies = [
+  { id: 1, name: "FPT Software", appliedAt: "2023-10-20T10:00:00", type: "Technology" },
+  { id: 2, name: "Vietcombank", appliedAt: "2023-10-22T14:30:00", type: "Banking" },
+  { id: 3, name: "VinGroup", appliedAt: "2023-10-24T09:15:00", type: "Conglomerate" },
+].sort((a, b) => new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime()); // Sắp xếp cũ nhất lên đầu
+
+// Hàm tính thời gian chờ đơn giản
+const getWaitTime = (dateString: string) => {
+  const diffInHours = Math.floor((new Date().getTime() - new Date(dateString).getTime()) / (1000 * 60 * 60));
+  if (diffInHours > 24) return `${Math.floor(diffInHours / 24)}d ago`;
+  return `${diffInHours}h ago`;
+};
 
 const recentUsers = [
   { id: 1, name: "Nguyen Van A", email: "vana@gmail.com", role: "Candidate", status: "Active", joined: "Today" },
@@ -59,29 +67,39 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* System Health */}
+        {/* Pending Approvals Section */}
         <Card className="border-none shadow-sm bg-white overflow-hidden">
           <CardHeader className="border-b border-slate-50 bg-slate-50/50">
             <CardTitle className="text-lg font-bold flex items-center gap-2 text-[#0F2238]">
-              <Activity className="w-5 h-5 text-[#38B65F]" /> System Health
+              <ShieldAlert className="w-5 h-5 text-orange-500" /> Pending Approvals
             </CardTitle>
           </CardHeader>
           <CardContent className="p-6 space-y-4">
-            {systemHealth.map((system) => (
-              <div key={system.name} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 group hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-slate-100">
+            {pendingCompanies.map((company) => (
+              <div key={company.id} className="flex items-center justify-between p-3.5 rounded-xl bg-slate-50 group hover:bg-white hover:shadow-sm transition-all border border-transparent hover:border-slate-100">
                 <div className="flex items-center gap-3">
-                  <system.icon className="w-4 h-4 text-slate-400 group-hover:text-[#38B65F]" />
-                  <span className="font-bold text-sm text-[#0F2238]">{system.name}</span>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-xs font-semibold text-slate-400">{system.uptime}</span>
-                  <div className="relative h-2 w-2">
-                    <span className="animate-ping absolute inset-0 rounded-full bg-green-400 opacity-75"></span>
-                    <span className="relative block h-2 w-2 rounded-full bg-green-500"></span>
+                  <div className="p-2 bg-orange-50 rounded-lg group-hover:bg-orange-500 transition-colors">
+                    <Building2 className="w-4 h-4 text-orange-500 group-hover:text-white" />
                   </div>
+                  <div>
+                    <p className="font-bold text-sm text-[#0F2238]">{company.name}</p>
+                    <p className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{company.type}</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end gap-1">
+                  <div className="flex items-center gap-1.5 text-xs font-bold text-orange-600">
+                    <Clock className="w-3 h-3" />
+                    {getWaitTime(company.appliedAt)}
+                  </div>
+                  <button className="text-[10px] font-bold text-[#38B65F] flex items-center hover:underline">
+                    Review <ChevronRight className="w-3 h-3" />
+                  </button>
                 </div>
               </div>
             ))}
+            {pendingCompanies.length === 0 && (
+              <div className="text-center py-6 text-slate-400 text-sm">No pending approvals</div>
+            )}
           </CardContent>
         </Card>
 

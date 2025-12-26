@@ -52,11 +52,10 @@ export default function CompanyManagement() {
   return (
     <div className="space-y-6 text-left">
       {/* 1. Stats Cards - Đồng bộ phong cách Dashboard */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard label="Total Companies" value="842" color="text-[#0F2238]" icon={<Building2 />} />
         <StatCard label="Verified" value="790" color="text-[#38B65F]" icon={<ShieldCheck />} />
         <StatCard label="Pending Approval" value="12" color="text-amber-500" icon={<ClockIcon />} />
-        <StatCard label="Active Jobs" value="1,234" color="text-blue-500" icon={<Briefcase />} />
       </div>
 
       {/* 2. Filter Bar */}

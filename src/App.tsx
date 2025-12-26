@@ -5,11 +5,26 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import GlobalError from "./components/GlobalError";
+import CandidateLayout from "./components/layout/CandidateLayout";
+import { AdminLayout } from "./pages/admin/AdminLayout";
+import CompanyManagement from "./pages/admin/CompanyManagement";
+import AdminDashboard from "./pages/admin/Dashboard";
+import JobManagement from "./pages/admin/JobManagement";
+import TransactionManagement from "./pages/admin/Transactions";
+import UserManagement from "./pages/admin/UserManagement";
 import Auth from "./pages/Auth";
 import ApplicationDetail from "./pages/candidate/ApplicationDetail";
 import Applications from "./pages/candidate/Applications";
 import CVAnalysis from "./pages/candidate/CVAnalysis";
+import CVManager from "./pages/candidate/CVManager";
 import CandidateDashboard from "./pages/candidate/Dashboard";
+import Notifications from "./pages/candidate/Notifications";
+import {
+  JobInvitations,
+  Profile,
+  Settings,
+  Subscriptions,
+} from "./pages/candidate/PlaceholderPages";
 import Companies from "./pages/Companies";
 import CompanyDetail from "./pages/CompanyDetail";
 import Index from "./pages/Index";
@@ -17,18 +32,15 @@ import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
-import AdminDashboard from "./pages/admin/Dashboard"; 
-import UserManagement from "./pages/admin/UserManagement";
-import { AdminLayout } from "./pages/admin/AdminLayout";
-import SystemLogs from "./pages/admin/SystemLogs";
-import AdminAIMonitoring from "./pages/admin/AIMonitoring";
-import JobManagement from "./pages/admin/JobManagement";
-import Analytics from "./pages/admin/AdminAnalytics";
-import CompanyManagement from "./pages/admin/CompanyManagement";
+import RecruiterRegister from "./pages/recruiter/Register";
+import TeamManagement from "./pages/recruiter/TeamManagement";
+import RecruiterVerification from "./pages/recruiter/Verification";
+import VerifyCompany from "./pages/recruiter/VerifyCompany";
+import VerifyLicense from "./pages/recruiter/VerifyLicense";
+import VerifyPhone from "./pages/recruiter/VerifyPhone";
 
 
 const queryClient = new QueryClient();
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <GlobalError>
@@ -40,26 +52,39 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/companies/:id" element={<CompanyDetail />} />
               <Route path="/jobs/:id" element={<JobDetail />} />
-              <Route path="/candidate/dashboard" element={<CandidateDashboard />} />
-              <Route path="/candidate/applications" element={<Applications />} />
-              <Route path="/candidate/applications/:id" element={<ApplicationDetail />} />
               <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
+              <Route path="/candidate" element={<CandidateLayout />}>
+                <Route path="dashboard" element={<CandidateDashboard />} />
+                <Route path="applications" element={<Applications />} />
+                <Route path="applications/:id" element={<ApplicationDetail />} />
+                <Route path="cv-manager" element={<CVManager />} />
+                <Route path="profile" element={<Profile />} />
+                <Route path="job-invitations" element={<JobInvitations />} />
+                <Route path="subscriptions" element={<Subscriptions />} />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="settings" element={<Settings />} />
+              </Route>
               <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+              <Route path="/recruiter/team" element={<TeamManagement />} />
+              <Route path="/recruiter/register" element={<RecruiterRegister />} />
+              <Route path="/recruiter/verify" element={<RecruiterVerification />} />
+              <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
+              <Route path="/recruiter/verify/company" element={<VerifyCompany />} />
+              <Route path="/recruiter/verify/license" element={<VerifyLicense />} />
               <Route path="/admin" element={<AdminLayout />}>
-              {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
-              <Route index element={<AdminDashboard />} /> 
-              <Route path="dashboard" element={<AdminDashboard />} />
-              <Route path="users" element={<UserManagement />} />
-              <Route path="jobs" element={<JobManagement />} />
-              <Route path="companies" element={<CompanyManagement />} />
-              <Route path="ai-monitoring" element={<AdminAIMonitoring />} />
-              <Route path="logs" element={<SystemLogs />} />
-              <Route path="analytics" element={<Analytics />} />
-            </Route>
+                {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
+                <Route index element={<AdminDashboard />} />
+                <Route path="dashboard" element={<AdminDashboard />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route path="jobs" element={<JobManagement />} />
+                <Route path="companies" element={<CompanyManagement />} />
+                <Route path="transactions" element={<TransactionManagement />} />
+              </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
