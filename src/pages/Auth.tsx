@@ -9,6 +9,9 @@ import { ArrowLeft, Briefcase, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lu
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'sonner';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { mockCompanies } from '@/data/mockData';
+import { Building2 } from 'lucide-react';
 
 const Auth = () => {
   const [searchParams] = useSearchParams();
@@ -23,16 +26,16 @@ const Auth = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
-  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '' });
+  const [registerData, setRegisterData] = useState({ name: '', email: '', password: '', confirmPassword: '', companyId: '' });
 
   useEffect(() => {
-  if (isAuthenticated && user) {
-    let redirectPath = '/candidate/dashboard';
-    if (user.role === 'recruiter') redirectPath = '/recruiter/dashboard';
-    if (user.role === 'admin') redirectPath = '/admin/dashboard';  
-    navigate(redirectPath);
-  }
-}, [isAuthenticated, user, navigate]);
+    if (isAuthenticated && user) {
+      let redirectPath = '/candidate/dashboard';
+      if (user.role === 'recruiter') redirectPath = '/recruiter/dashboard';
+      if (user.role === 'admin') redirectPath = '/admin/dashboard';
+      navigate(redirectPath);
+    }
+  }, [isAuthenticated, user, navigate]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -132,8 +135,8 @@ const Auth = () => {
                 <button
                   onClick={() => setSelectedRole('candidate')}
                   className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'candidate'
-                      ? 'border-accent bg-accent/10 text-accent'
-                      : 'border-border hover:border-accent/50'
+                    ? 'border-accent bg-accent/10 text-accent'
+                    : 'border-border hover:border-accent/50'
                     }`}
                 >
                   <User className="h-5 w-5" />
@@ -142,8 +145,8 @@ const Auth = () => {
                 <button
                   onClick={() => setSelectedRole('recruiter')}
                   className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'recruiter'
-                      ? 'border-accent bg-accent/10 text-accent'
-                      : 'border-border hover:border-accent/50'
+                    ? 'border-accent bg-accent/10 text-accent'
+                    : 'border-border hover:border-accent/50'
                     }`}
                 >
                   <Briefcase className="h-5 w-5" />
@@ -151,11 +154,10 @@ const Auth = () => {
                 </button>
                 <button
                   onClick={() => setSelectedRole('admin')}
-                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${
-                    selectedRole === 'admin'
-                      ? 'border-red-500 bg-red-50 text-red-600'
-                      : 'border-border hover:border-red-300'
-                  }`}
+                  className={`flex items-center justify-center gap-2 p-4 rounded-xl border-2 transition-all ${selectedRole === 'admin'
+                    ? 'border-red-500 bg-red-50 text-red-600'
+                    : 'border-border hover:border-red-300'
+                    }`}
                 >
                   <ShieldCheck className="h-5 w-5" />
                   <span className="font-medium">Admin</span>
@@ -215,9 +217,9 @@ const Auth = () => {
                   <Button type="submit" variant="accent" className="w-full" disabled={isLoading}>
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     Sign In as {
-                        selectedRole === 'candidate' ? 'Candidate' : 
+                      selectedRole === 'candidate' ? 'Candidate' :
                         selectedRole === 'recruiter' ? 'Recruiter' : 'Administrator'
-                      }
+                    }
                   </Button>
                 </form>
               </TabsContent>
@@ -238,6 +240,31 @@ const Auth = () => {
                       />
                     </div>
                   </div>
+
+                  {selectedRole === 'recruiter' && (
+                    <div className="space-y-2">
+                      <Label htmlFor="register-company">Company</Label>
+                      <div className="relative">
+                        <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
+                        <Select
+                          value={registerData.companyId}
+                          onValueChange={(value) => setRegisterData({ ...registerData, companyId: value })}
+                        >
+                          <SelectTrigger className="pl-10">
+                            <SelectValue placeholder="Select your company" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {mockCompanies.map((company) => (
+                              <SelectItem key={company.id} value={company.id}>
+                                {company.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                  )}
+
                   <div className="space-y-2">
                     <Label htmlFor="register-email">Email</Label>
                     <div className="relative">
@@ -291,6 +318,17 @@ const Auth = () => {
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     Create {selectedRole === 'candidate' ? 'Candidate' : 'Recruiter'} Account
                   </Button>
+                  {selectedRole === 'recruiter' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full mt-2"
+                      onClick={() => navigate('/recruiter/register')}
+                      disabled={isLoading}
+                    >
+                      Post your job now!
+                    </Button>
+                  )}
                 </form>
               </TabsContent>
             </Tabs>
