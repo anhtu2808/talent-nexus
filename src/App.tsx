@@ -31,23 +31,13 @@ import Index from "./pages/Index";
 import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
-import Profile from "./pages/Profile";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
 import RecruiterRegister from "./pages/recruiter/Register";
+import TeamManagement from "./pages/recruiter/TeamManagement";
 import RecruiterVerification from "./pages/recruiter/Verification";
-import VerifyPhone from "./pages/recruiter/VerifyPhone";
 import VerifyCompany from "./pages/recruiter/VerifyCompany";
 import VerifyLicense from "./pages/recruiter/VerifyLicense";
-import AdminDashboard from "./pages/admin/Dashboard";
-import TeamManagement from "./pages/recruiter/TeamManagement";
-import UserManagement from "./pages/admin/UserManagement";
-import { AdminLayout } from "./pages/admin/AdminLayout";
-import SystemLogs from "./pages/admin/SystemLogs";
-import AdminAIMonitoring from "./pages/admin/AIMonitoring";
-import JobManagement from "./pages/admin/JobManagement";
-import Analytics from "./pages/admin/AdminAnalytics";
-import CompanyManagement from "./pages/admin/CompanyManagement";
-import TransactionManagement from "./pages/admin/Transactions";
+import VerifyPhone from "./pages/recruiter/VerifyPhone";
 
 
 const queryClient = new QueryClient();
