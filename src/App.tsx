@@ -16,6 +16,7 @@ import Index from "./pages/Index";
 import JobDetail from "./pages/JobDetail";
 import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
+import Profile from "./pages/Profile";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
 import RecruiterRegister from "./pages/recruiter/Register";
 import RecruiterVerification from "./pages/recruiter/Verification";
@@ -47,6 +48,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="/jobs" element={<Jobs />} />
               <Route path="/companies" element={<Companies />} />
               <Route path="/companies/:id" element={<CompanyDetail />} />
