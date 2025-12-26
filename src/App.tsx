@@ -31,6 +31,7 @@ import AdminAIMonitoring from "./pages/admin/AIMonitoring";
 import JobManagement from "./pages/admin/JobManagement";
 import Analytics from "./pages/admin/AdminAnalytics";
 import CompanyManagement from "./pages/admin/CompanyManagement";
+import TransactionManagement from "./pages/admin/Transactions";
 
 
 const queryClient = new QueryClient();
@@ -68,9 +69,7 @@ const App = () => (
                 <Route path="users" element={<UserManagement />} />
                 <Route path="jobs" element={<JobManagement />} />
                 <Route path="companies" element={<CompanyManagement />} />
-                <Route path="ai-monitoring" element={<AdminAIMonitoring />} />
-                <Route path="logs" element={<SystemLogs />} />
-                <Route path="analytics" element={<Analytics />} />
+                <Route path="transactions" element={<TransactionManagement />} />
               </Route>
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
