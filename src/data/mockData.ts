@@ -728,7 +728,7 @@ export const trendingSkills = [
 ];
 
 export const cities = [
-  'All Cities', 'Ho Chi Minh City', 'Ha Noi', 'Da Nang', 'Can Tho', 'Binh Duong', 'Remote'
+  'All Cities', 'Ho Chi Minh City', 'Ha Noi', 'Da Nang', 'Can Tho', 'Binh Duong'
 ];
 
 export const jobTypes = [

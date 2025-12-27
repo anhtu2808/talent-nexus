@@ -4,7 +4,8 @@ import {
     FileText,
     Settings,
     BarChart,
-    LogOut
+    LogOut,
+    CreditCard
 } from 'lucide-react';
 
 interface SidebarProps {
@@ -28,6 +29,11 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             id: 'cvs',
             label: 'CVs',
             icon: FileText,
+        },
+        {
+            id: 'plans',
+            label: 'Plans & Billing',
+            icon: CreditCard,
         },
         {
             id: 'settings',
