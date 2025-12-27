@@ -17,9 +17,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { 
-  Search, 
-  MoreVertical, 
+import {
+  Search,
+  MoreVertical,
   Eye,
   Pause,
   Play,
@@ -44,7 +44,7 @@ const jobs = [
 export default function AdminJobs() {
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredJobs = jobs.filter(job => 
+  const filteredJobs = jobs.filter(job =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     job.company.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -127,8 +127,8 @@ export default function AdminJobs() {
                       <Badge className={cn(
                         "shadow-none rounded-lg px-2.5 py-0.5 font-bold text-[10px] border-none",
                         job.status === "Active" ? "bg-green-50 text-green-600" :
-                        job.status === "Paused" ? "bg-amber-50 text-amber-600" :
-                        "bg-red-50 text-red-600"
+                          job.status === "Paused" ? "bg-amber-50 text-amber-600" :
+                            "bg-red-50 text-red-600"
                       )}>
                         ● {job.status}
                       </Badge>

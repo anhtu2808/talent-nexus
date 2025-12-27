@@ -52,7 +52,7 @@ const JobCard = ({ job, variant = 'default', showApply = true }: JobCardProps) =
           <div className={cn("flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground", isCompact ? "mt-2" : "mt-3")}>
             <div className="flex items-center gap-1">
               <MapPin className="h-4 w-4" />
-              <span>{job.location}</span>
+              <span>{job.location.join(', ')}</span>
             </div>
             <div className="flex items-center gap-1">
               <DollarSign className="h-4 w-4" />

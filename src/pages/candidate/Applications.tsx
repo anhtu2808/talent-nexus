@@ -59,7 +59,7 @@ const Applications = () => {
                   companyLogo={job.companyLogo}
                   companyName={job.company}
                   jobTitle={job.title}
-                  location={job.location}
+                  location={job.location.join(', ')}
                   salary={job.salary}
                   appliedDate={format(new Date(app.appliedAt), 'dd/MM/yyyy')}
                   status={app.status}

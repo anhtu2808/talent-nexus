@@ -26,7 +26,7 @@ export interface Job {
   title: string;
   company: string;
   companyLogo?: string;
-  location: string;
+  location: string[];
   salary: string;
   type: 'full-time' | 'part-time' | 'contract' | 'remote';
   description: string;

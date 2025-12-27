@@ -369,7 +369,7 @@ const CompanyDetail = () => {
                                                                 </h4>
                                                                 <div className="flex flex-wrap items-center gap-4 text-slate-500 text-sm">
                                                                     <span className="flex items-center gap-1.5">
-                                                                        <MapPin className="w-4 h-4" /> {job.location}
+                                                                        <MapPin className="w-4 h-4" /> {job.location.join(', ')}
                                                                     </span>
                                                                     <span className="flex items-center gap-1.5">
                                                                         <Calendar className="w-4 h-4" /> {new Date(job.postedAt).toLocaleDateString()}
@@ -463,7 +463,7 @@ const CompanyDetail = () => {
                                                         </span>
                                                         <div className="flex items-center justify-between">
                                                             <span className="flex items-center gap-1">
-                                                                <MapPin className="w-3 h-3" /> {job.location}
+                                                                <MapPin className="w-3 h-3" /> {job.location.join(', ')}
                                                             </span>
                                                             <span className="text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">Apply &rarr;</span>
                                                         </div>

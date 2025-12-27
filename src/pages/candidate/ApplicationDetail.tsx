@@ -121,7 +121,7 @@ const ApplicationDetail = () => {
                   </span>
                   <span className="flex items-center gap-1">
                     <MapPin className="h-4 w-4" />
-                    {job.location}
+                    {job.location.join(', ')}
                   </span>
                 </div>
                 <div className="flex gap-2 mt-4">

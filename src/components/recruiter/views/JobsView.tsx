@@ -84,9 +84,8 @@ const JobsView = () => {
 
     const handleEditJob = (job: Job) => {
         setEditingJob(job);
-        // Split locations if stored as comma-sep string or handle array if changed. 
-        // Mock data has single location string, so we just treat it as one item for now.
-        setSelectedLocations([job.location]);
+        // Location is now string[], so we use it directly
+        setSelectedLocations(job.location);
         setSelectedSkills(job.skills || []);
         setCreateJobOpen(true);
     };
@@ -370,7 +369,7 @@ const JobsView = () => {
                     <DialogHeader>
                         <DialogTitle className="text-xl">{viewingJob?.title}</DialogTitle>
                         <DialogDescription>
-                            {viewingJob?.location} • {viewingJob?.type} • {viewingJob?.salary}
+                            {viewingJob?.location.join(', ')} • {viewingJob?.type} • {viewingJob?.salary}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="space-y-6 mt-4">
@@ -428,7 +427,7 @@ const JobsView = () => {
                                     Posted {formatDistanceToNow(job.postedAt, { addSuffix: true })}
                                 </span>
                                 <span className="w-1 h-1 bg-muted-foreground rounded-full" />
-                                <span>{job.location}</span>
+                                <span>{job.location.join(', ')}</span>
                                 <span className="w-1 h-1 bg-muted-foreground rounded-full" />
                                 <span>{job.salary}</span>
                                 {job.deadline && (
