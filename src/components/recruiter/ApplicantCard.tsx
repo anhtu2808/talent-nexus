@@ -39,6 +39,7 @@ interface ApplicantCardProps {
   onViewCV: (cv: CV) => void;
   onScheduleInterview?: (applicationId: string, candidate: CandidateProfile) => void;
   compact?: boolean;
+  tier?: 'free' | 'premium';
 }
 
 const ApplicantCard = ({
@@ -49,7 +50,8 @@ const ApplicantCard = ({
   onAddNote,
   onViewCV,
   onScheduleInterview,
-  compact = false
+  compact = false,
+  tier = 'premium'
 }: ApplicantCardProps) => {
   const [showNotes, setShowNotes] = useState(false);
   const [newNote, setNewNote] = useState('');
@@ -85,12 +87,12 @@ const ApplicantCard = ({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2">
               <h4 className="font-medium text-sm text-foreground truncate">{candidate.name}</h4>
-              {application.matchScore && application.matchScore >= 85 && (
+              {tier !== 'free' && application.matchScore && application.matchScore >= 85 && (
                 <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 shrink-0" />
               )}
             </div>
             <p className="text-xs text-muted-foreground truncate">{candidate.location}</p>
-            {application.matchScore && (
+            {tier !== 'free' && application.matchScore && (
               <div className={cn(
                 "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium mt-1",
                 getMatchScoreColor(application.matchScore)
@@ -172,7 +174,7 @@ const ApplicantCard = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <h3 className="font-semibold text-lg text-foreground">{candidate.name}</h3>
-            {application.matchScore && application.matchScore >= 85 && (
+            {tier !== 'free' && application.matchScore && application.matchScore >= 85 && (
               <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
             )}
           </div>
@@ -196,7 +198,7 @@ const ApplicantCard = ({
           </div>
         </div>
         <div className="flex items-center gap-2">
-          {application.matchScore && (
+          {tier !== 'free' && application.matchScore && (
             <div className={cn(
               "flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-semibold",
               getMatchScoreColor(application.matchScore)
@@ -370,8 +372,8 @@ const ApplicantCard = ({
           Email
         </Button>
         {onScheduleInterview && (
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => onScheduleInterview(application.id, candidate)}
             className="text-accent hover:text-accent"

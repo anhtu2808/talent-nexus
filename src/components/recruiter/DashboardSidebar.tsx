@@ -7,6 +7,7 @@ import {
     LogOut,
     CreditCard
 } from 'lucide-react';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 
 interface SidebarProps {
     activeTab: string;
@@ -14,6 +15,7 @@ interface SidebarProps {
 }
 
 export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
+    const { tier, togglePlan } = useSubscription();
     const menuItems = [
         {
             id: 'reports',
@@ -57,12 +59,34 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
                     </Button>
                 ))}
             </div>
-            <div className="mt-auto p-4 border-t border-border">
+            <div className="p-4 border-t border-border mt-auto">
+                <div className="mb-4 p-3 bg-muted/50 rounded-lg">
+                    <div className="text-xs font-medium text-muted-foreground mb-2">Dev Mode: Plan</div>
+                    <div className="flex bg-background rounded-md border border-border p-1">
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`flex-1 h-7 text-xs ${tier === 'free' ? 'bg-primary text-primary-foreground shadow-sm' : ''}`}
+                            onClick={() => tier === 'premium' && togglePlan()}
+                        >
+                            Free
+                        </Button>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className={`flex-1 h-7 text-xs ${tier === 'premium' ? 'bg-primary text-primary-foreground shadow-sm' : ''}`}
+                            onClick={() => tier === 'free' && togglePlan()}
+                        >
+                            Premium
+                        </Button>
+                    </div>
+                </div>
+
                 <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50">
                     <LogOut className="h-4 w-4 mr-2" />
                     Đăng xuất
                 </Button>
             </div>
-        </div>
+        </div >
     );
 };

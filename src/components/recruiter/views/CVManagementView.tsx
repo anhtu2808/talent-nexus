@@ -14,7 +14,8 @@ import {
     Users,
     FileText,
     Eye,
-    Calendar
+    Calendar,
+    Lock
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -29,8 +30,11 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
+import { useSubscription } from '@/contexts/SubscriptionContext';
+
 const CVManagementView = () => {
     const { user } = useAuth();
+    const { tier } = useSubscription();
     // Initialize with 'all' by default or mockJobs[0]?.id if strict
     const [selectedJob, setSelectedJob] = useState<string>(
         mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2')[0]?.id || ''
@@ -275,6 +279,7 @@ const CVManagementView = () => {
                                 onAddNote={handleAddNote}
                                 onViewCV={handleViewCV}
                                 onScheduleInterview={handleScheduleInterview}
+                                tier={tier}
                             />
                         ) : (
                             <div className="space-y-4">
@@ -293,6 +298,7 @@ const CVManagementView = () => {
                                                 onAddNote={handleAddNote}
                                                 onViewCV={handleViewCV}
                                                 onScheduleInterview={handleScheduleInterview}
+                                                tier={tier}
                                             />
                                         );
                                     })
@@ -313,17 +319,17 @@ const CVManagementView = () => {
 
             {/* CV Viewer Dialog */}
             <Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
-                <DialogContent className="max-w-4xl h-[85vh] p-0 overflow-hidden">
-                    <div className="flex flex-col h-full">
-                        {/* Header */}
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card">
-                            <div className="flex items-center gap-3">
-                                <FileText className="h-5 w-5 text-primary" />
-                                <div>
-                                    <h2 className="font-semibold text-foreground">{viewingCV?.fileName}</h2>
-                                    <p className="text-sm text-muted-foreground">ATS Score: {viewingCV?.atsScore}%</p>
-                                </div>
+                <DialogContent className="max-w-7xl h-[90vh] p-0 overflow-hidden flex flex-col">
+                    {/* Header */}
+                    <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card shrink-0">
+                        <div className="flex items-center gap-3">
+                            <FileText className="h-5 w-5 text-primary" />
+                            <div>
+                                <h2 className="font-semibold text-foreground">{viewingCV?.fileName}</h2>
+                                <p className="text-sm text-muted-foreground">Uploaded at {viewingCV && new Date(viewingCV.uploadedAt).toLocaleDateString()}</p>
                             </div>
+                        </div>
+                        <div className="flex items-center gap-2">
                             <Button
                                 variant="outline"
                                 size="sm"
@@ -333,14 +339,113 @@ const CVManagementView = () => {
                                 Open PDF
                             </Button>
                         </div>
+                    </div>
 
-                        {/* PDF Viewer */}
-                        <div className="flex-1 bg-muted">
+                    <div className="flex-1 grid grid-cols-1 lg:grid-cols-3 overflow-hidden">
+                        {/* PDF Viewer - 2/3 width */}
+                        <div className="lg:col-span-2 bg-muted border-r border-border h-full overflow-hidden">
                             <iframe
                                 src="/sample-cv.pdf"
                                 className="w-full h-full"
                                 title="CV Preview"
                             />
+                        </div>
+
+                        {/* ATS Analysis Panel - 1/3 width */}
+                        <div className="bg-card p-6 overflow-y-auto h-full space-y-8 relative">
+                            {/* Premium Lock Overlay for Free Tier */}
+                            {tier === 'free' && (
+                                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
+                                    <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
+                                        <Lock className="h-8 w-8 text-primary" />
+                                    </div>
+                                    <h3 className="text-xl font-bold mb-2">Premium Feature</h3>
+                                    <p className="text-muted-foreground mb-6">Detailed ATS analysis and scoring breakdown is available only on the Premium plan.</p>
+                                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
+                                        Upgrade to Unlock
+                                    </Button>
+                                </div>
+                            )}
+
+                            <div>
+                                <h3 className="text-lg font-semibold mb-4">ATS Analysis</h3>
+                                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-border">
+                                    <div>
+                                        <div className="text-sm text-muted-foreground">Overall Score</div>
+                                        <div className="text-3xl font-bold text-primary">{viewingCV?.atsScore}%</div>
+                                    </div>
+                                    <div className="h-12 w-12 rounded-full border-4 border-primary flex items-center justify-center text-xs font-bold">
+                                        {viewingCV?.atsScore}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {viewingCV?.atsBreakdown ? (
+                                <>
+                                    <div className="space-y-4">
+                                        <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Score Breakdown</h4>
+                                        <div className="space-y-3">
+                                            <div>
+                                                <div className="flex justify-between text-sm mb-1">
+                                                    <span>Skills Match</span>
+                                                    <span>{viewingCV.atsBreakdown.skillsMatch}%</span>
+                                                </div>
+                                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-blue-500 rounded-full"
+                                                        style={{ width: `${viewingCV.atsBreakdown.skillsMatch}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="flex justify-between text-sm mb-1">
+                                                    <span>Keywords Match</span>
+                                                    <span>{viewingCV.atsBreakdown.keywordsMatch}%</span>
+                                                </div>
+                                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-indigo-500 rounded-full"
+                                                        style={{ width: `${viewingCV.atsBreakdown.keywordsMatch}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <div className="flex justify-between text-sm mb-1">
+                                                    <span>Formatting</span>
+                                                    <span>{viewingCV.atsBreakdown.formattingScore}%</span>
+                                                </div>
+                                                <div className="h-2 bg-muted rounded-full overflow-hidden">
+                                                    <div
+                                                        className="h-full bg-green-500 rounded-full"
+                                                        style={{ width: `${viewingCV.atsBreakdown.formattingScore}%` }}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-4">
+                                        <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Analysis Feedback</h4>
+                                        <div className="space-y-2">
+                                            {viewingCV.atsBreakdown.missingKeywords.length > 0 && (
+                                                <div className="p-3 bg-red-500/10 text-red-600 rounded-lg text-sm">
+                                                    <strong>Missing Keywords:</strong> {viewingCV.atsBreakdown.missingKeywords.join(', ')}
+                                                </div>
+                                            )}
+                                            {viewingCV.atsBreakdown.feedback.map((item, idx) => (
+                                                <div key={idx} className="p-3 bg-blue-500/10 text-blue-600 rounded-lg text-sm flex gap-2">
+                                                    <div className="mt-0.5">•</div>
+                                                    <div>{item}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="text-center py-8 text-muted-foreground">
+                                    No detailed analysis available.
+                                </div>
+                            )}
                         </div>
                     </div>
                 </DialogContent>

@@ -12,6 +12,7 @@ interface KanbanBoardProps {
   onAddNote: (applicationId: string, note: string) => void;
   onViewCV: (cv: CV) => void;
   onScheduleInterview?: (applicationId: string, candidate: CandidateProfile) => void;
+  tier?: 'free' | 'premium';
 }
 
 const KanbanBoard = ({
@@ -21,7 +22,8 @@ const KanbanBoard = ({
   onStatusChange,
   onAddNote,
   onViewCV,
-  onScheduleInterview
+  onScheduleInterview,
+  tier = 'premium'
 }: KanbanBoardProps) => {
   const [draggedApp, setDraggedApp] = useState<string | null>(null);
   const [dragOverColumn, setDragOverColumn] = useState<ApplicationStatus | null>(null);
@@ -123,6 +125,7 @@ const KanbanBoard = ({
                           onViewCV={onViewCV}
                           onScheduleInterview={onScheduleInterview}
                           compact
+                          tier={tier}
                         />
                       </div>
                     );

@@ -40,56 +40,60 @@ import VerifyLicense from "./pages/recruiter/VerifyLicense";
 import VerifyPhone from "./pages/recruiter/VerifyPhone";
 
 
+import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+
 const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <GlobalError>
       <AuthProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<Auth />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="/jobs" element={<Jobs />} />
-              <Route path="/companies" element={<Companies />} />
-              <Route path="/companies/:id" element={<CompanyDetail />} />
-              <Route path="/jobs/:id" element={<JobDetail />} />
-              <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
-              <Route path="/candidate" element={<CandidateLayout />}>
-                <Route path="dashboard" element={<CandidateDashboard />} />
-                <Route path="applications" element={<Applications />} />
-                <Route path="applications/:id" element={<ApplicationDetail />} />
-                <Route path="cv-manager" element={<CVManager />} />
-                <Route path="profile" element={<Profile />} />
-                <Route path="job-invitations" element={<JobInvitations />} />
-                <Route path="subscriptions" element={<Subscriptions />} />
-                <Route path="notifications" element={<Notifications />} />
-                <Route path="settings" element={<Settings />} />
-              </Route>
-              <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
-              <Route path="/recruiter/team" element={<TeamManagement />} />
-              <Route path="/recruiter/register" element={<RecruiterRegister />} />
-              <Route path="/recruiter/verify" element={<RecruiterVerification />} />
-              <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
-              <Route path="/recruiter/verify/company" element={<VerifyCompany />} />
-              <Route path="/recruiter/verify/license" element={<VerifyLicense />} />
-              <Route path="/admin" element={<AdminLayout />}>
-                {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
-                <Route index element={<AdminDashboard />} />
-                <Route path="dashboard" element={<AdminDashboard />} />
-                <Route path="users" element={<UserManagement />} />
-                <Route path="jobs" element={<JobManagement />} />
-                <Route path="companies" element={<CompanyManagement />} />
-                <Route path="transactions" element={<TransactionManagement />} />
-              </Route>
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
-        </TooltipProvider>
+        <SubscriptionProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Auth />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="/jobs" element={<Jobs />} />
+                <Route path="/companies" element={<Companies />} />
+                <Route path="/companies/:id" element={<CompanyDetail />} />
+                <Route path="/jobs/:id" element={<JobDetail />} />
+                <Route path="/candidate/cv-check/:id" element={<CVAnalysis />} />
+                <Route path="/candidate" element={<CandidateLayout />}>
+                  <Route path="dashboard" element={<CandidateDashboard />} />
+                  <Route path="applications" element={<Applications />} />
+                  <Route path="applications/:id" element={<ApplicationDetail />} />
+                  <Route path="cv-manager" element={<CVManager />} />
+                  <Route path="profile" element={<Profile />} />
+                  <Route path="job-invitations" element={<JobInvitations />} />
+                  <Route path="subscriptions" element={<Subscriptions />} />
+                  <Route path="notifications" element={<Notifications />} />
+                  <Route path="settings" element={<Settings />} />
+                </Route>
+                <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
+                <Route path="/recruiter/team" element={<TeamManagement />} />
+                <Route path="/recruiter/register" element={<RecruiterRegister />} />
+                <Route path="/recruiter/verify" element={<RecruiterVerification />} />
+                <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
+                <Route path="/recruiter/verify/company" element={<VerifyCompany />} />
+                <Route path="/recruiter/verify/license" element={<VerifyLicense />} />
+                <Route path="/admin" element={<AdminLayout />}>
+                  {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="dashboard" element={<AdminDashboard />} />
+                  <Route path="users" element={<UserManagement />} />
+                  <Route path="jobs" element={<JobManagement />} />
+                  <Route path="companies" element={<CompanyManagement />} />
+                  <Route path="transactions" element={<TransactionManagement />} />
+                </Route>
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </TooltipProvider>
+        </SubscriptionProvider>
       </AuthProvider>
     </GlobalError>
   </QueryClientProvider>

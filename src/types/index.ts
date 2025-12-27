@@ -65,6 +65,15 @@ export interface Application {
   rejectionReason?: string;
 }
 
+export interface ATSBreakdown {
+  skillsMatch: number;
+  keywordsMatch: number;
+  formattingScore: number;
+  missingKeywords: string[];
+  formattingIssues: string[];
+  feedback: string[];
+}
+
 export interface CV {
   id: string;
   candidateId: string;
@@ -73,6 +82,7 @@ export interface CV {
   uploadedAt: Date;
   parsedData?: CVParsedData;
   atsScore?: number;
+  atsBreakdown?: ATSBreakdown;
 }
 
 export interface CVParsedData {

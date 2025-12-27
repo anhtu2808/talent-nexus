@@ -1,6 +1,10 @@
 import { BarChart, TrendingUp, Users } from 'lucide-react';
+import { useSubscription } from '@/contexts/SubscriptionContext';
+import { Button } from '@/components/ui/button';
 
 const ReportsView = () => {
+    const { tier } = useSubscription();
+
     return (
         <div className="space-y-6">
             <div className="flex items-center justify-between">
@@ -46,8 +50,33 @@ const ReportsView = () => {
                 </div>
             </div>
 
-            <div className="rounded-xl border border-border bg-card p-8 text-center text-muted-foreground">
-                <p>Details charts will be updated in the next version.</p>
+            <div className="relative">
+                {tier === 'free' && (
+                    <div className="absolute inset-0 bg-background/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center rounded-xl border border-border">
+                        <div className="bg-card p-6 rounded-lg shadow-lg text-center max-w-sm border border-border">
+                            <div className="mb-4 flex justify-center">
+                                <div className="p-3 bg-primary/10 rounded-full">
+                                    <BarChart className="h-8 w-8 text-primary" />
+                                </div>
+                            </div>
+                            <h3 className="text-lg font-bold mb-2">Detailed Reports is a Premium Feature</h3>
+                            <p className="text-muted-foreground mb-4">Upgrade to Premium to access detailed analytics, trends, and recruitment insights.</p>
+                            <Button className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+                                Upgrade to Premium
+                            </Button>
+                        </div>
+                    </div>
+                )}
+
+                <div className={`grid md:grid-cols-2 gap-6 ${tier === 'free' ? 'opacity-50 pointer-events-none select-none' : ''}`}>
+                    {/* Mock Charts */}
+                    <div className="bg-card p-6 rounded-xl border border-border h-[300px] flex items-center justify-center">
+                        <div className="text-center text-muted-foreground">Detailed Applicant Trends (Chart)</div>
+                    </div>
+                    <div className="bg-card p-6 rounded-xl border border-border h-[300px] flex items-center justify-center">
+                        <div className="text-center text-muted-foreground">Source Effectiveness (Chart)</div>
+                    </div>
+                </div>
             </div>
         </div>
     );

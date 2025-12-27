@@ -491,6 +491,14 @@ export const mockCVs: CV[] = [
         }
       ],
       summary: 'Experienced frontend developer with 5+ years of experience in React ecosystem'
+    },
+    atsBreakdown: {
+      skillsMatch: 90,
+      keywordsMatch: 85,
+      formattingScore: 95,
+      missingKeywords: ['Redux', 'GraphQL testing'],
+      formattingIssues: [],
+      feedback: ['Strong match for React roles', 'Consider adding more details on leadership experience']
     }
   },
   {
