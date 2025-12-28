@@ -26,6 +26,7 @@ const navItems = [
   { title: "Job Management", url: "/admin/jobs", icon: Briefcase },
   { title: "Company Management", url: "/admin/companies", icon: Building },
   { title: "Transactions", url: "/admin/transactions", icon: FileText },
+  { title: "Pricing", url: "/admin/pricing", icon: BarChart3 },
 ];
 
 export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {

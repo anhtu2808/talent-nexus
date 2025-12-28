@@ -38,6 +38,7 @@ import RecruiterVerification from "./pages/recruiter/Verification";
 import VerifyCompany from "./pages/recruiter/VerifyCompany";
 import VerifyLicense from "./pages/recruiter/VerifyLicense";
 import VerifyPhone from "./pages/recruiter/VerifyPhone";
+import PricingManagement from "./pages/admin/PricingManagement";
 
 
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
@@ -87,6 +88,7 @@ const App = () => (
                   <Route path="jobs" element={<JobManagement />} />
                   <Route path="companies" element={<CompanyManagement />} />
                   <Route path="transactions" element={<TransactionManagement />} />
+                  <Route path="pricing" element={<PricingManagement />} />
                 </Route>
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
