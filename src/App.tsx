@@ -18,6 +18,7 @@ import Applications from "./pages/candidate/Applications";
 import CVAnalysis from "./pages/candidate/CVAnalysis";
 import CVManager from "./pages/candidate/CVManager";
 import CandidateDashboard from "./pages/candidate/Dashboard";
+import UpgradeAccount from "./pages/candidate/UpgradeAccount";
 import Notifications from "./pages/candidate/Notifications";
 import {
   JobInvitations,
@@ -72,6 +73,7 @@ const App = () => (
                   <Route path="subscriptions" element={<Subscriptions />} />
                   <Route path="notifications" element={<Notifications />} />
                   <Route path="settings" element={<Settings />} />
+                  <Route path="upgrade" element={<UpgradeAccount />} />
                 </Route>
                 <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
                 <Route path="/recruiter/team" element={<TeamManagement />} />

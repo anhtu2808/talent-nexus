@@ -7,7 +7,8 @@ import {
   LayoutDashboard,
   Mail,
   Settings,
-  User
+  User,
+  Crown,
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -52,6 +53,11 @@ const DashboardSidebar = () => {
       icon: Settings,
       label: 'Settings',
       href: '/candidate/settings', // Placeholder path
+    },
+    {
+      icon: Crown,
+      label: 'Upgrade Account',
+      href: '/candidate/upgrade',
     },
   ];
 
