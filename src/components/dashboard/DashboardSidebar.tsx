@@ -1,4 +1,5 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 import { cn } from '@/lib/utils';
 import {
   Bell,
@@ -13,6 +14,7 @@ import { Link, useLocation } from 'react-router-dom';
 
 const DashboardSidebar = () => {
   const { user } = useAuth();
+  const { tier, setTier } = useSubscription();
   const location = useLocation();
 
   const menuItems = [
@@ -61,7 +63,7 @@ const DashboardSidebar = () => {
   };
 
   return (
-    <div className="bg-background rounded-xl h-full">
+    <div className="bg-background rounded-xl h-full flex flex-col">
       {/* Welcome Section */}
       <div className="mb-6 px-4 pt-4">
         <h2 className="text-lg font-bold text-foreground">
@@ -100,7 +102,37 @@ const DashboardSidebar = () => {
           );
         })}
       </nav>
-    </div>
+
+
+      {/* Dev Mode: Plan Switcher */}
+      <div className="mt-auto p-4 border-t">
+        <p className="text-xs font-semibold text-muted-foreground mb-2">Dev Mode: Plan</p>
+        <div className="flex bg-muted p-1 rounded-lg">
+          <button
+            onClick={() => setTier('free')}
+            className={cn(
+              "flex-1 py-1.5 text-xs font-medium rounded-md transition-all",
+              tier === 'free'
+                ? "bg-background shadow text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Free
+          </button>
+          <button
+            onClick={() => setTier('premium')}
+            className={cn(
+              "flex-1 py-1.5 text-xs font-medium rounded-md transition-all",
+              tier === 'premium'
+                ? "bg-background shadow text-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            Premium
+          </button>
+        </div>
+      </div>
+    </div >
   );
 };
 
