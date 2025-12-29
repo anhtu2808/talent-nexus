@@ -492,9 +492,23 @@ const CVAnalysis = () => {
 
               {/* Optimize Button (Footer) */}
               <div className="p-4 border-t border-border bg-slate-50">
-                <Button size="lg" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm font-semibold">
-                  <Sparkles className="h-4 w-4 mr-2" /> Optimize CV
-                </Button>
+                {tier === 'free' ? (
+                  <Button
+                    size="lg"
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 shadow-sm font-semibold border border-slate-200"
+                    onClick={() => navigate('/candidate/upgrade')}
+                  >
+                    <Lock className="h-4 w-4 mr-2" /> Unlock CV Optimization
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm font-semibold"
+                    onClick={handleOptimize}
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" /> Optimize CV
+                  </Button>
+                )}
               </div>
 
             </div>
