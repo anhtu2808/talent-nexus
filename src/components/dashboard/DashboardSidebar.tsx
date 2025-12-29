@@ -50,14 +50,14 @@ const DashboardSidebar = () => {
       href: '/candidate/notifications', // Placeholder path
     },
     {
-      icon: Settings,
-      label: 'Settings',
-      href: '/candidate/settings', // Placeholder path
-    },
-    {
       icon: Crown,
       label: 'Upgrade Account',
       href: '/candidate/upgrade',
+    },
+    {
+      icon: Settings,
+      label: 'Settings',
+      href: '/candidate/settings', // Placeholder path
     },
   ];
 

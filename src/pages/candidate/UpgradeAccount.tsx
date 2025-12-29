@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 
 const UpgradeAccount = () => {
     const navigate = useNavigate();
-    const [selectedPlan, setSelectedPlan] = useState("6 Months VIP");
+    const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
     const plans = [
         {
