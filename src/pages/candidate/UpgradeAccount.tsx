@@ -11,8 +11,10 @@ import { Badge } from "@/components/ui/badge";
 import { Check, X, Crown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const UpgradeAccount = () => {
+    const navigate = useNavigate();
     const [selectedPlan, setSelectedPlan] = useState("6 Months VIP");
 
     const plans = [
@@ -155,6 +157,7 @@ const UpgradeAccount = () => {
                                 className="w-full"
                                 variant={selectedPlan === plan.name ? "default" : "outline"}
                                 disabled={plan.name === "Free"}
+                                onClick={() => navigate("/candidate/payment", { state: { plan } })}
                             >
                                 {plan.action}
                             </Button>
