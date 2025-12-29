@@ -10,7 +10,7 @@ const CandidateDashboard = () => {
       <h2 className="text-xl font-bold text-foreground">Your Attached CV</h2>
       <DashboardCVCard />
 
-      <h2 className="text-xl font-bold text-foreground">ITviec Profile</h2>
+      <h2 className="text-xl font-bold text-foreground">Profile</h2>
       <DashboardITviecProfile />
     </>
   );

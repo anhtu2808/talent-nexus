@@ -8,7 +8,6 @@ import {
   Mail,
   Settings,
   User,
-  Crown,
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -19,7 +18,7 @@ const DashboardSidebar = () => {
   const menuItems = [
     {
       icon: LayoutDashboard,
-      label: 'Dashboard',
+      label: 'Overview',
       href: '/candidate/dashboard',
     },
     {
@@ -49,11 +48,7 @@ const DashboardSidebar = () => {
       label: 'Notifications',
       href: '/candidate/notifications', // Placeholder path
     },
-    {
-      icon: Crown,
-      label: 'Upgrade Account',
-      href: '/candidate/upgrade',
-    },
+
     {
       icon: Settings,
       label: 'Settings',
@@ -69,10 +64,6 @@ const DashboardSidebar = () => {
     <div className="bg-background rounded-xl h-full">
       {/* Welcome Section */}
       <div className="mb-6 px-4 pt-4">
-        <div className="flex items-center gap-2 mb-1">
-          <span className="text-xl">👋</span>
-          <span className="text-sm text-muted-foreground">Welcome</span>
-        </div>
         <h2 className="text-lg font-bold text-foreground">
           {user?.name || 'Candidate'}
         </h2>

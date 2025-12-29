@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { Briefcase, ChevronDown, LogOut, Menu, User, X } from 'lucide-react';
+import { Briefcase, ChevronDown, LogOut, Menu, User, X, Crown } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -79,7 +79,7 @@ const Header = () => {
                   isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
                 )}
               >
-                Dashboard
+                Overview
               </Link>
               {user.role === 'recruiter' && (
                 <Link
@@ -96,8 +96,18 @@ const Header = () => {
           )}
         </nav>
 
-        {/* Desktop Auth Section */}
         <div className="hidden md:flex items-center gap-4">
+          {isAuthenticated && user?.role === 'candidate' && (
+            <Button
+              variant="default"
+              size="sm"
+              className="gap-2 bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white border-0"
+              onClick={() => navigate('/candidate/upgrade')}
+            >
+              <Crown className="h-4 w-4" />
+              Upgrade
+            </Button>
+          )}
           <NotificationDropdown />
           {isAuthenticated && user ? (
             <DropdownMenu>
