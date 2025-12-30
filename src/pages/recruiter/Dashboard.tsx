@@ -6,6 +6,7 @@ import CVManagementView from '@/components/recruiter/views/CVManagementView';
 import ReportsView from '@/components/recruiter/views/ReportsView';
 import SettingsView from '@/components/recruiter/views/SettingsView';
 import PlansView from '@/components/recruiter/views/PlansView';
+import ProposedCVsView from '@/components/recruiter/views/ProposedCVsView';
 
 const RecruiterDashboard = () => {
   const [activeTab, setActiveTab] = useState('reports');
@@ -18,6 +19,8 @@ const RecruiterDashboard = () => {
         return <JobsView />;
       case 'cvs':
         return <CVManagementView />;
+      case 'proposed':
+        return <ProposedCVsView />;
       case 'settings':
         return <SettingsView />;
       case 'plans':

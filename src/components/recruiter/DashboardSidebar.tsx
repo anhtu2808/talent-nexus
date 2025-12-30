@@ -5,7 +5,8 @@ import {
     Settings,
     BarChart,
     LogOut,
-    CreditCard
+    CreditCard,
+    Sparkles
 } from 'lucide-react';
 import { useSubscription } from '@/contexts/SubscriptionContext';
 
@@ -31,6 +32,11 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             id: 'cvs',
             label: 'CVs',
             icon: FileText,
+        },
+        {
+            id: 'proposed',
+            label: 'Proposed CVs',
+            icon: Sparkles,
         },
         {
             id: 'plans',
