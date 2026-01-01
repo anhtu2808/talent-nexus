@@ -1,19 +1,18 @@
-import { 
-  LayoutDashboard, 
-  Users, 
-  Activity, 
-  Settings, 
-  Shield,
-  FileText,
-  BarChart3,
-  LogOut,
-  ChevronLeft,
-  Briefcase,
-  Building
-} from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import {
+  Activity,
+  BarChart3,
+  Briefcase,
+  Building,
+  ChevronLeft,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Shield,
+  Users
+} from "lucide-react";
 
 interface AdminSidebarProps {
   collapsed: boolean;
@@ -27,6 +26,7 @@ const navItems = [
   { title: "Company Management", url: "/admin/companies", icon: Building },
   { title: "Transactions", url: "/admin/transactions", icon: FileText },
   { title: "Pricing", url: "/admin/pricing", icon: BarChart3 },
+  { title: "Subscriptions", url: "/admin/subscriptions", icon: Activity },
 ];
 
 export function AdminSidebar({ collapsed, onToggle }: AdminSidebarProps) {

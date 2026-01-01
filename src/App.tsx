@@ -10,6 +10,7 @@ import { AdminLayout } from "./pages/admin/AdminLayout";
 import CompanyManagement from "./pages/admin/CompanyManagement";
 import AdminDashboard from "./pages/admin/Dashboard";
 import JobManagement from "./pages/admin/JobManagement";
+import PricingManagement from "./pages/admin/PricingManagement";
 import TransactionManagement from "./pages/admin/Transactions";
 import UserManagement from "./pages/admin/UserManagement";
 import Auth from "./pages/Auth";
@@ -18,15 +19,15 @@ import Applications from "./pages/candidate/Applications";
 import CVAnalysis from "./pages/candidate/CVAnalysis";
 import CVManager from "./pages/candidate/CVManager";
 import CandidateDashboard from "./pages/candidate/Dashboard";
-import UpgradeAccount from "./pages/candidate/UpgradeAccount";
-import Payment from "./pages/candidate/Payment";
 import Notifications from "./pages/candidate/Notifications";
+import Payment from "./pages/candidate/Payment";
 import {
   JobInvitations,
   Profile,
   Settings,
   Subscriptions,
 } from "./pages/candidate/PlaceholderPages";
+import UpgradeAccount from "./pages/candidate/UpgradeAccount";
 import Companies from "./pages/Companies";
 import CompanyDetail from "./pages/CompanyDetail";
 import Index from "./pages/Index";
@@ -40,10 +41,10 @@ import RecruiterVerification from "./pages/recruiter/Verification";
 import VerifyCompany from "./pages/recruiter/VerifyCompany";
 import VerifyLicense from "./pages/recruiter/VerifyLicense";
 import VerifyPhone from "./pages/recruiter/VerifyPhone";
-import PricingManagement from "./pages/admin/PricingManagement";
 
 
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
+import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
 
 const queryClient = new QueryClient();
 const App = () => (
@@ -93,6 +94,7 @@ const App = () => (
                   <Route path="companies" element={<CompanyManagement />} />
                   <Route path="transactions" element={<TransactionManagement />} />
                   <Route path="pricing" element={<PricingManagement />} />
+                  <Route path="subscriptions" element={<SubscriptionManagement />} />
                 </Route>
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
