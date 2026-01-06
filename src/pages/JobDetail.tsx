@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { Link, useParams, useLocation } from 'react-router-dom';
+import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow, format } from 'date-fns';
 import { toast } from 'sonner';
 import {
@@ -114,6 +114,7 @@ const JobDetail = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogMode, setDialogMode] = useState<'check' | 'apply'>('check');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const navigate = useNavigate();
 
   // Combine application data with candidate and CV
   const applicants = applications.map(app => {
@@ -276,10 +277,14 @@ const JobDetail = () => {
       <Header />
 
       <main className="flex-1 container py-8">
-        <Link to="/jobs" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6 transition-colors">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6 transition-colors bg-transparent border-none p-0 cursor-pointer"
+        >
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Back to Jobs
-        </Link>
+          Back
+        </button>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
