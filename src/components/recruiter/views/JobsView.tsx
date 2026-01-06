@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
@@ -77,9 +78,16 @@ const JobsView = () => {
     const [locationFilter, setLocationFilter] = useState("all");
 
     // Local state for jobs to simulate updates
-    const [recruiterJobs, setRecruiterJobs] = useState(
-        mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2')
-    );
+    const [recruiterJobs, setRecruiterJobs] = useState(() => {
+        const jobs = mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2');
+        // Auto-close expired jobs
+        return jobs.map(job => {
+            if (job.isActive && job.deadline && new Date(job.deadline) < new Date()) {
+                return { ...job, isActive: false };
+            }
+            return job;
+        });
+    });
 
     // Derived state for filtered jobs
     const filteredJobs = recruiterJobs.filter(job => {
@@ -136,8 +144,21 @@ const JobsView = () => {
         }));
     };
 
+    const handleCloseJob = (jobId: string) => {
+        setRecruiterJobs(prev => prev.map(job => {
+            if (job.id === jobId) {
+                if (!job.isActive) return job; // Already closed/inactive
+                toast.success('Job closed successfully');
+                return { ...job, isActive: false };
+            }
+            return job;
+        }));
+    };
+
+    const navigate = useNavigate();
+
     const handleViewDetails = (job: Job) => {
-        setViewingJob(job);
+        navigate(`/jobs/${job.id}`, { state: { role: 'recruiter' } });
     };
 
     return (
@@ -599,7 +620,12 @@ const JobsView = () => {
                                         <DropdownMenuItem onClick={() => handleToggleStatus(job.id)}>
                                             {job.isActive ? 'Pause' : 'Resume'}
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-red-500">Close Job</DropdownMenuItem>
+                                        <DropdownMenuItem
+                                            className="text-red-500"
+                                            onClick={() => handleCloseJob(job.id)}
+                                        >
+                                            Close Job
+                                        </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
                             </div>

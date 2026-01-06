@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog';
-import { mockCVs, mockJobs } from '@/data/mockData';
+import { mockCVs, mockJobs, mockApplications, mockCandidateProfiles } from '@/data/mockData';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -26,15 +26,31 @@ import {
   FileText,
   Loader2,
   MapPin,
-  Upload
+  Upload,
+  User
 } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 
 const JobDetail = () => {
   const { id } = useParams();
+  const location = useLocation();
   const { toast } = useToast();
   const job = mockJobs.find(j => j.id === id);
+  const isRecruiterView = location.state?.role === 'recruiter';
+
+  // Get applicants if in recruiter view
+  const jobApplications = isRecruiterView
+    ? mockApplications.filter(app => app.jobId === id)
+    : [];
+
+  const applicants = jobApplications.map(app => {
+    const candidate = mockCandidateProfiles.find(c => c.id === app.candidateId);
+    return {
+      ...app,
+      candidate
+    };
+  }).filter(app => app.candidate);
   const [selectedCV, setSelectedCV] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -211,205 +227,242 @@ const JobDetail = () => {
           {/* Sidebar CTA */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-6">
-              <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
-                <h3 className="font-semibold text-lg mb-4">Interested in this job?</h3>
-                <p className="text-muted-foreground text-sm mb-6">
-                  Check how well your profile matches this position before applying.
-                </p>
-
-                <Dialog open={isDialogOpen} onOpenChange={(open) => {
-                  setIsDialogOpen(open);
-                  if (!open) resetState();
-                }}>
-                  <div className="space-y-3">
-                    <Button
-                      className="w-full relative overflow-hidden group"
-                      size="lg"
-                      variant="accent"
-                      onClick={() => {
-                        setDialogMode('check');
-                        setIsDialogOpen(true);
-                      }}
-                    >
-                      <span className="relative z-10 flex items-center justify-center gap-2">
-                        <CheckCircle className="w-5 h-5" />
-                        Check Match
-                      </span>
-                      {/* Detailed gradient effect/shimmer could go here if we wanted extra "pop" */}
-                    </Button>
-
-                    <Button
-                      className="w-full"
-                      size="lg"
-                      variant="outline"
-                      onClick={() => {
-                        setDialogMode('apply');
-                        setIsDialogOpen(true);
-                      }}
-                    >
-                      Apply Now
-                    </Button>
-                  </div>
-
-                  <DialogContent className={cn(
-                    "overflow-hidden p-0",
-                    showDetailedAnalysis ? "max-w-5xl" : "max-w-3xl"
-                  )}>
-                    {showDetailedAnalysis && matchScore !== null ? (
-                      <CVMatchAnalysis
-                        job={job}
-                        matchScore={matchScore}
-                        onClose={() => setIsDialogOpen(false)}
-                        onApply={() => {
-                          toast({
-                            title: "Application Submitted",
-                            description: `You have successfully applied for ${job.title}`,
-                          });
-                          setIsDialogOpen(false);
-                          resetState();
-                        }}
-                      />
+              {isRecruiterView ? (
+                <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+                  <h3 className="font-semibold text-lg mb-4">Applicants ({applicants.length})</h3>
+                  <div className="space-y-4">
+                    {applicants.length === 0 ? (
+                      <p className="text-muted-foreground text-sm">No applicants yet.</p>
                     ) : (
-                      <>
-                        <DialogHeader className="p-6 pb-0">
-                          <DialogTitle>
-                            {dialogMode === 'check' ? 'Compare CV with Job Description' : 'Apply for this Position'}
-                          </DialogTitle>
-                          <DialogDescription>
-                            {dialogMode === 'check'
-                              ? 'Select a CV to see how well you match this position.'
-                              : 'Select a CV to submit your application.'}
-                          </DialogDescription>
-                        </DialogHeader>
-
-                        <div className="p-6">
-                          {isAnalyzing && (
-                            <div className="flex flex-col items-center justify-center py-12">
-                              <Loader2 className="h-12 w-12 text-accent animate-spin mb-4" />
-                              <p className="text-lg font-medium">Analyzing your CV...</p>
-                              <p className="text-sm text-muted-foreground">Comparing skills and experience with JD</p>
+                      applicants.map((app) => (
+                        <div key={app.id} className="flex items-start gap-3 p-3 rounded-lg border bg-muted/20 hover:bg-muted/40 transition-colors">
+                          <div className="h-10 w-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold shrink-0 overflow-hidden">
+                            {app.candidate?.avatar ? (
+                              <img src={app.candidate.avatar} alt={app.candidate.name} className="h-full w-full object-cover" />
+                            ) : (
+                              <User className="h-5 w-5" />
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-medium text-sm truncate">{app.candidate?.name}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <Badge variant={
+                                app.matchScore >= 80 ? 'default' :
+                                  app.matchScore >= 60 ? 'secondary' : 'outline'
+                              } className="text-[10px] px-1.5 py-0">
+                                {app.matchScore}% Match
+                              </Badge>
+                              <span className="text-xs text-muted-foreground capitalize">{app.status}</span>
                             </div>
-                          )}
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Applied {formatDistanceToNow(app.appliedAt)} ago
+                            </p>
+                          </div>
+                        </div>
+                      ))
+                    )}
+                  </div>
+                </div>
+              ) : (
+                <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+                  <h3 className="font-semibold text-lg mb-4">Interested in this job?</h3>
+                  <p className="text-muted-foreground text-sm mb-6">
+                    Check how well your profile matches this position before applying.
+                  </p>
 
-                          {!isAnalyzing && (
-                            <div className="space-y-6">
-                              {/* Existing CVs */}
-                              {userCVs.length > 0 && (
-                                <div className="space-y-3">
-                                  <label className="text-sm font-medium text-foreground">
-                                    Select from your resumes
-                                  </label>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2">
-                                    {userCVs.map((cv) => (
-                                      <div
-                                        key={cv.id}
-                                        onClick={() => setSelectedCV(cv.id)}
-                                        className={cn(
-                                          "relative flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all hover:bg-muted/50",
-                                          selectedCV === cv.id ? "border-accent bg-accent/5" : "border-transparent bg-muted/30"
-                                        )}
-                                      >
-                                        {/* Left Preview Image mock */}
-                                        <div className="w-14 h-18 bg-background rounded border border-border flex items-center justify-center mr-3 shadow-sm shrink-0">
-                                          <FileText className="h-6 w-6 text-muted-foreground/50" />
-                                        </div>
+                  <Dialog open={isDialogOpen} onOpenChange={(open) => {
+                    setIsDialogOpen(open);
+                    if (!open) resetState();
+                  }}>
+                    <div className="space-y-3">
+                      <Button
+                        className="w-full relative overflow-hidden group"
+                        size="lg"
+                        variant="accent"
+                        onClick={() => {
+                          setDialogMode('check');
+                          setIsDialogOpen(true);
+                        }}
+                      >
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          <CheckCircle className="w-5 h-5" />
+                          Check Match
+                        </span>
+                      </Button>
 
-                                        <div className="flex-1 min-w-0">
-                                          <p className="font-medium truncate text-sm">{cv.fileName}</p>
-                                          <p className="text-xs text-muted-foreground">
-                                            Uploaded {formatDistanceToNow(cv.uploadedAt)} ago
-                                          </p>
-                                          {cv.atsScore && (
-                                            <Badge variant="secondary" className="mt-1 text-xs">
-                                              ATS Score: {cv.atsScore}
-                                            </Badge>
+                      <Button
+                        className="w-full"
+                        size="lg"
+                        variant="outline"
+                        onClick={() => {
+                          setDialogMode('apply');
+                          setIsDialogOpen(true);
+                        }}
+                      >
+                        Apply Now
+                      </Button>
+                    </div>
+
+                    <DialogContent className={cn(
+                      "overflow-hidden p-0",
+                      showDetailedAnalysis ? "max-w-5xl" : "max-w-3xl"
+                    )}>
+                      {showDetailedAnalysis && matchScore !== null ? (
+                        <CVMatchAnalysis
+                          job={job}
+                          matchScore={matchScore}
+                          onClose={() => setIsDialogOpen(false)}
+                          onApply={() => {
+                            toast({
+                              title: "Application Submitted",
+                              description: `You have successfully applied for ${job.title}`,
+                            });
+                            setIsDialogOpen(false);
+                            resetState();
+                          }}
+                        />
+                      ) : (
+                        <>
+                          <DialogHeader className="p-6 pb-0">
+                            <DialogTitle>
+                              {dialogMode === 'check' ? 'Compare CV with Job Description' : 'Apply for this Position'}
+                            </DialogTitle>
+                            <DialogDescription>
+                              {dialogMode === 'check'
+                                ? 'Select a CV to see how well you match this position.'
+                                : 'Select a CV to submit your application.'}
+                            </DialogDescription>
+                          </DialogHeader>
+
+                          <div className="p-6">
+                            {isAnalyzing && (
+                              <div className="flex flex-col items-center justify-center py-12">
+                                <Loader2 className="h-12 w-12 text-accent animate-spin mb-4" />
+                                <p className="text-lg font-medium">Analyzing your CV...</p>
+                                <p className="text-sm text-muted-foreground">Comparing skills and experience with JD</p>
+                              </div>
+                            )}
+
+                            {!isAnalyzing && (
+                              <div className="space-y-6">
+                                {/* Existing CVs */}
+                                {userCVs.length > 0 && (
+                                  <div className="space-y-3">
+                                    <label className="text-sm font-medium text-foreground">
+                                      Select from your resumes
+                                    </label>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2">
+                                      {userCVs.map((cv) => (
+                                        <div
+                                          key={cv.id}
+                                          onClick={() => setSelectedCV(cv.id)}
+                                          className={cn(
+                                            "relative flex items-center p-3 rounded-lg border-2 cursor-pointer transition-all hover:bg-muted/50",
+                                            selectedCV === cv.id ? "border-accent bg-accent/5" : "border-transparent bg-muted/30"
+                                          )}
+                                        >
+                                          {/* Left Preview Image mock */}
+                                          <div className="w-14 h-18 bg-background rounded border border-border flex items-center justify-center mr-3 shadow-sm shrink-0">
+                                            <FileText className="h-6 w-6 text-muted-foreground/50" />
+                                          </div>
+
+                                          <div className="flex-1 min-w-0">
+                                            <p className="font-medium truncate text-sm">{cv.fileName}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                              Uploaded {formatDistanceToNow(cv.uploadedAt)} ago
+                                            </p>
+                                            {cv.atsScore && (
+                                              <Badge variant="secondary" className="mt-1 text-xs">
+                                                ATS Score: {cv.atsScore}
+                                              </Badge>
+                                            )}
+                                          </div>
+
+                                          {selectedCV === cv.id && (
+                                            <div className="absolute top-2 right-2 text-accent">
+                                              <CheckCircle className="h-5 w-5" />
+                                            </div>
                                           )}
                                         </div>
+                                      ))}
+                                    </div>
+                                  </div>
+                                )}
 
-                                        {selectedCV === cv.id && (
-                                          <div className="absolute top-2 right-2 text-accent">
-                                            <CheckCircle className="h-5 w-5" />
-                                          </div>
-                                        )}
-                                      </div>
-                                    ))}
+                                {/* Upload Choice */}
+                                <div className="space-y-3">
+                                  <div className="flex items-center gap-3">
+                                    <span className={cn("h-px flex-1 bg-border", userCVs.length > 0 ? "" : "hidden")} />
+                                    <span className={cn("text-xs text-muted-foreground font-medium uppercase", userCVs.length > 0 ? "" : "hidden")}>Or</span>
+                                    <span className={cn("h-px flex-1 bg-border", userCVs.length > 0 ? "" : "hidden")} />
+                                  </div>
+
+                                  <div
+                                    onClick={() => fileInputRef.current?.click()}
+                                    className={cn(
+                                      "border-2 border-dashed border-border rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-accent hover:bg-accent/5 transition-all outline-none focus:ring-2 focus:ring-accent",
+                                      selectedCV === 'new-upload-id' ? "border-accent bg-accent/5" : ""
+                                    )}
+                                  >
+                                    <input
+                                      ref={fileInputRef}
+                                      type="file"
+                                      accept=".pdf,.docx"
+                                      className="hidden"
+                                      onChange={handleFileUpload}
+                                    />
+                                    {isUploading ? (
+                                      <Loader2 className="h-8 w-8 text-accent animate-spin mb-2" />
+                                    ) : (
+                                      <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                                    )}
+                                    <p className="font-medium">
+                                      {isUploading ? "Uploading..." : "Upload a new CV"}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground mt-1">
+                                      PDF or DOCX up to 5MB
+                                    </p>
                                   </div>
                                 </div>
-                              )}
-
-                              {/* Upload Choice */}
-                              <div className="space-y-3">
-                                <div className="flex items-center gap-3">
-                                  <span className={cn("h-px flex-1 bg-border", userCVs.length > 0 ? "" : "hidden")} />
-                                  <span className={cn("text-xs text-muted-foreground font-medium uppercase", userCVs.length > 0 ? "" : "hidden")}>Or</span>
-                                  <span className={cn("h-px flex-1 bg-border", userCVs.length > 0 ? "" : "hidden")} />
-                                </div>
-
-                                <div
-                                  onClick={() => fileInputRef.current?.click()}
-                                  className={cn(
-                                    "border-2 border-dashed border-border rounded-xl p-6 flex flex-col items-center justify-center text-center cursor-pointer hover:border-accent hover:bg-accent/5 transition-all outline-none focus:ring-2 focus:ring-accent",
-                                    selectedCV === 'new-upload-id' ? "border-accent bg-accent/5" : ""
-                                  )}
-                                >
-                                  <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept=".pdf,.docx"
-                                    className="hidden"
-                                    onChange={handleFileUpload}
-                                  />
-                                  {isUploading ? (
-                                    <Loader2 className="h-8 w-8 text-accent animate-spin mb-2" />
-                                  ) : (
-                                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                                  )}
-                                  <p className="font-medium">
-                                    {isUploading ? "Uploading..." : "Upload a new CV"}
-                                  </p>
-                                  <p className="text-sm text-muted-foreground mt-1">
-                                    PDF or DOCX up to 5MB
-                                  </p>
-                                </div>
                               </div>
-                            </div>
-                          )}
-                        </div>
-
-                        {!isAnalyzing && (
-                          <DialogFooter className="p-6 pt-0">
-                            <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-                            {dialogMode === 'check' ? (
-                              <Button
-                                variant="accent"
-                                disabled={!selectedCV}
-                                onClick={handleCheckMatch}
-                              >
-                                Analyze Match
-                              </Button>
-                            ) : (
-                              <Button
-                                variant="accent"
-                                disabled={!selectedCV || isUploading}
-                                onClick={handleApply}
-                              >
-                                {isUploading ? (
-                                  <>
-                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                                    Applying...
-                                  </>
-                                ) : (
-                                  "Submit Application"
-                                )}
-                              </Button>
                             )}
-                          </DialogFooter>
-                        )}
-                      </>
-                    )}
-                  </DialogContent>
-                </Dialog>
-              </div>
+                          </div>
+
+                          {!isAnalyzing && (
+                            <DialogFooter className="p-6 pt-0">
+                              <Button variant="outline" onClick={() => setIsDialogOpen(false)}>Cancel</Button>
+                              {dialogMode === 'check' ? (
+                                <Button
+                                  variant="accent"
+                                  disabled={!selectedCV}
+                                  onClick={handleCheckMatch}
+                                >
+                                  Analyze Match
+                                </Button>
+                              ) : (
+                                <Button
+                                  variant="accent"
+                                  disabled={!selectedCV || isUploading}
+                                  onClick={handleApply}
+                                >
+                                  {isUploading ? (
+                                    <>
+                                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                      Applying...
+                                    </>
+                                  ) : (
+                                    "Submit Application"
+                                  )}
+                                </Button>
+                              )}
+                            </DialogFooter>
+                          )}
+                        </>
+                      )}
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
 
               {/* Recruitment Info */}
               <Card className="p-6">
