@@ -7,7 +7,8 @@ import {
     FileText,
     Home,
     LogOut,
-    Settings
+    Settings,
+    Sparkles
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
@@ -34,6 +35,11 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             id: 'cvs',
             label: 'CVs',
             icon: FileText,
+        },
+        {
+            id: 'proposed',
+            label: 'Proposed CVs',
+            icon: Sparkles,
         },
         {
             id: 'plans',
