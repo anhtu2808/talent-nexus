@@ -15,7 +15,8 @@ import {
     FileText,
     Eye,
     Calendar,
-    Lock
+    Lock,
+    ArrowUpDown
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -42,6 +43,7 @@ const CVManagementView = () => {
     const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
     const [applications, setApplications] = useState<Application[]>(mockApplications);
     const [viewingCV, setViewingCV] = useState<CV | null>(null);
+    const [sortOption, setSortOption] = useState<string>('date-desc');
 
     // Interview scheduling state
     const [schedulerOpen, setSchedulerOpen] = useState(false);
@@ -137,8 +139,35 @@ const CVManagementView = () => {
             return true;
         });
 
+        // Apply sorting
+        if (viewMode === 'list') {
+            return [...apps].sort((a, b) => {
+                const candidateA = mockCandidateProfiles.find(c => c.id === a.candidateId);
+                const candidateB = mockCandidateProfiles.find(c => c.id === b.candidateId);
+
+                switch (sortOption) {
+                    case 'date-desc':
+                        return new Date(b.appliedAt).getTime() - new Date(a.appliedAt).getTime();
+                    case 'date-asc':
+                        return new Date(a.appliedAt).getTime() - new Date(b.appliedAt).getTime();
+                    case 'match-desc':
+                        return (b.matchScore || 0) - (a.matchScore || 0);
+                    case 'match-asc':
+                        return (a.matchScore || 0) - (b.matchScore || 0);
+                    case 'name-asc':
+                        return (candidateA?.name || '').localeCompare(candidateB?.name || '');
+                    case 'name-desc':
+                        return (candidateB?.name || '').localeCompare(candidateA?.name || '');
+                    case 'status':
+                        return a.status.localeCompare(b.status);
+                    default:
+                        return 0;
+                }
+            });
+        }
+
         return apps;
-    }, [applications, selectedJob, filters, recruiterJobs]);
+    }, [applications, selectedJob, filters, recruiterJobs, sortOption, viewMode]);
 
     const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
         setApplications(prev => prev.map(app => {
@@ -240,6 +269,26 @@ const CVManagementView = () => {
                             </p>
                         </div>
                         <div className="flex items-center gap-2">
+                            {viewMode === 'list' && (
+                                <div className="mr-2">
+                                    <Select value={sortOption} onValueChange={setSortOption}>
+                                        <SelectTrigger className="w-[180px] h-8 text-xs">
+                                            <ArrowUpDown className="h-3 w-3 mr-2" />
+                                            <SelectValue placeholder="Sort by" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="date-desc">Newest First</SelectItem>
+                                            <SelectItem value="date-asc">Oldest First</SelectItem>
+                                            <SelectItem value="match-desc">Highest Match Score</SelectItem>
+                                            <SelectItem value="match-asc">Lowest Match Score</SelectItem>
+                                            <SelectItem value="name-asc">Candidate Name (A-Z)</SelectItem>
+                                            <SelectItem value="name-desc">Candidate Name (Z-A)</SelectItem>
+                                            <SelectItem value="status">Status</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+                            )}
+
                             <Button
                                 variant={viewMode === 'kanban' ? 'default' : 'outline'}
                                 size="sm"

@@ -23,7 +23,7 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     const menuItems = [
         {
             id: 'reports',
-            label: 'Recruitment report',
+            label: 'Recruitment overview',
             icon: BarChart,
         },
         {
