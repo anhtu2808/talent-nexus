@@ -5,10 +5,10 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
 import { mockCVs } from '@/data/mockData';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -21,12 +21,22 @@ import {
   Upload
 } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 const CVManager = () => {
+  const { isAuthenticated } = useAuth();
+  const navigate = useNavigate();
   const [cvs, setCvs] = useState(mockCVs);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+
+  const handleUploadClick = () => {
+    if (!isAuthenticated) {
+      navigate('/auth?mode=login');
+      return;
+    }
+    setUploadDialogOpen(true);
+  };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -64,12 +74,10 @@ const CVManager = () => {
         </div>
 
         <Dialog open={uploadDialogOpen} onOpenChange={setUploadDialogOpen}>
-          <DialogTrigger asChild>
-            <Button variant="accent">
-              <Upload className="h-4 w-4 mr-2" />
-              Upload New CV
-            </Button>
-          </DialogTrigger>
+          <Button variant="accent" onClick={handleUploadClick}>
+            <Upload className="h-4 w-4 mr-2" />
+            Upload New CV
+          </Button>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>Upload Your CV</DialogTitle>
@@ -165,7 +173,7 @@ const CVManager = () => {
           <p className="text-muted-foreground mb-6 max-w-sm mx-auto">
             Upload your CV to apply for jobs and get AI-powered feedback on how to improve it.
           </p>
-          <Button variant="accent" onClick={() => setUploadDialogOpen(true)}>
+          <Button variant="accent" onClick={handleUploadClick}>
             <Plus className="h-4 w-4 mr-2" />
             Upload Your First CV
           </Button>

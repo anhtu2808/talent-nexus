@@ -16,11 +16,13 @@ import {
   AlertCircle,
   ChevronDown,
   ChevronUp,
-  FileText
+  FileText,
+  Lock
 } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 
 // React PDF Viewer imports
 import { Viewer, Worker } from '@react-pdf-viewer/core';
@@ -37,6 +39,8 @@ const resumePdfUrl = '/sample-cv.pdf';
 
 const CVAnalysis = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { tier } = useSubscription();
 
   // Mock Data mimicking "Resume Worded" structure
   const overallScore = 72;
@@ -212,17 +216,38 @@ const CVAnalysis = () => {
                 </HoverCardTrigger>
                 <HoverCardContent className="w-80 z-50 pointer-events-auto">
                   <div className="flex justify-between space-x-4">
-                    <div className="space-y-1">
+                    <div className="space-y-1 w-full">
                       <h4 className="text-sm font-semibold flex items-center gap-2">
                         <Sparkles className={cn("h-4 w-4", iconColor)} />
                         AI Suggestion
                       </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {finding.message}
-                      </p>
-                      <div className="flex items-center pt-2">
-                        <Button size="sm" variant="outline" className="h-7 text-xs">Fixed</Button>
-                      </div>
+
+                      {tier === 'free' ? (
+                        <div className="relative mt-2">
+                          <p className="text-sm text-muted-foreground blur-md select-none opacity-50">
+                            {finding.message}
+                          </p>
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              className="h-7 text-xs gap-1.5 shadow-sm bg-background/80 hover:bg-background backdrop-blur-sm"
+                              onClick={() => navigate('/candidate/upgrade')}
+                            >
+                              <Lock className="w-3 h-3" /> Upgrade
+                            </Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <>
+                          <p className="text-sm text-muted-foreground">
+                            {finding.message}
+                          </p>
+                          <div className="flex items-center pt-2">
+                            <Button size="sm" variant="outline" className="h-7 text-xs">Fixed</Button>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
                 </HoverCardContent>
@@ -335,34 +360,73 @@ const CVAnalysis = () => {
 
                       {/* Expanded Content for Category */}
                       {selectedCategory?.id === cat.id && (
-                        <div className="p-4 bg-red-50/30 border-t border-red-100 space-y-4">
+                        <div className="p-4 bg-red-50/30 border-t border-red-100 space-y-4 relative">
                           <p className="text-sm text-slate-600 leading-relaxed px-1">
                             {cat.description}
                           </p>
-                          <div className="space-y-3">
-                            {cat.issues.map((issue: any, idx: number) => (
-                              <div key={idx} className="bg-white p-4 rounded-lg border border-border shadow-sm">
-                                <div className="flex items-start gap-3">
-                                  {issue.status === 'success' && <div className="p-1.5 bg-green-100 text-green-600 rounded-full mt-0.5 shrink-0"><CheckCircle2 className="h-4 w-4" /></div>}
-                                  {issue.status === 'warning' && <div className="p-1.5 bg-amber-100 text-amber-600 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-4 w-4" /></div>}
-                                  {issue.status === 'error' && <div className="p-1.5 bg-red-100 text-red-600 rounded-full mt-0.5 shrink-0"><XCircle className="h-4 w-4" /></div>}
 
-                                  <div className="flex-1 min-w-0">
-                                    <h4 className="font-semibold text-sm mb-1 text-slate-900 leading-snug">{issue.title}</h4>
-                                    <p className="text-sm text-slate-600 leading-relaxed mb-3">
-                                      {issue.description}
-                                    </p>
+                          {tier === 'free' ? (
+                            <div className="relative">
+                              {/* Blurred Content Placeholder */}
+                              <div className="blur-sm select-none opacity-50 space-y-3 pointer-events-none">
+                                {[1, 2, 3].map((_, idx) => (
+                                  <div key={idx} className="bg-white p-4 rounded-lg border border-border shadow-sm">
+                                    <div className="flex items-start gap-3">
+                                      <div className="p-1.5 bg-slate-100 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-4 w-4 text-slate-400" /></div>
+                                      <div className="flex-1 min-w-0">
+                                        <div className="h-4 bg-slate-200 rounded w-2/3 mb-2"></div>
+                                        <div className="h-3 bg-slate-100 rounded w-full mb-1"></div>
+                                        <div className="h-3 bg-slate-100 rounded w-4/5"></div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
 
-                                    <div className="flex justify-start">
-                                      <Button variant="outline" size="sm" className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50">
-                                        Fix this issue <ChevronDown className="h-3 w-3 ml-1" />
-                                      </Button>
+                              {/* Premium Overlay */}
+                              <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-4 z-10">
+                                <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg border border-purple-100 max-w-xs">
+                                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                                    {/* BarChart icon replacement or similar */}
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-600"><line x1="12" x2="12" y1="20" y2="10" /><line x1="18" x2="18" y1="20" y2="4" /><line x1="6" x2="6" y1="20" y2="16" /></svg>
+                                  </div>
+                                  <h4 className="font-bold text-slate-900 mb-2">Detailed Reports is a Premium Feature</h4>
+                                  <p className="text-xs text-muted-foreground mb-4">Upgrade to Premium to access detailed analytics, trends, and recruitment insights.</p>
+                                  <Button
+                                    onClick={() => navigate('/candidate/upgrade')}
+                                    className="w-full bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white border-0"
+                                  >
+                                    Upgrade to Premium
+                                  </Button>
+                                </div>
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="space-y-3">
+                              {cat.issues.map((issue: any, idx: number) => (
+                                <div key={idx} className="bg-white p-4 rounded-lg border border-border shadow-sm">
+                                  <div className="flex items-start gap-3">
+                                    {issue.status === 'success' && <div className="p-1.5 bg-green-100 text-green-600 rounded-full mt-0.5 shrink-0"><CheckCircle2 className="h-4 w-4" /></div>}
+                                    {issue.status === 'warning' && <div className="p-1.5 bg-amber-100 text-amber-600 rounded-full mt-0.5 shrink-0"><AlertCircle className="h-4 w-4" /></div>}
+                                    {issue.status === 'error' && <div className="p-1.5 bg-red-100 text-red-600 rounded-full mt-0.5 shrink-0"><XCircle className="h-4 w-4" /></div>}
+
+                                    <div className="flex-1 min-w-0">
+                                      <h4 className="font-semibold text-sm mb-1 text-slate-900 leading-snug">{issue.title}</h4>
+                                      <p className="text-sm text-slate-600 leading-relaxed mb-3">
+                                        {issue.description}
+                                      </p>
+
+                                      <div className="flex justify-start">
+                                        <Button variant="outline" size="sm" className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50">
+                                          Fix this issue <ChevronDown className="h-3 w-3 ml-1" />
+                                        </Button>
+                                      </div>
                                     </div>
                                   </div>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
+                              ))}
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -428,9 +492,23 @@ const CVAnalysis = () => {
 
               {/* Optimize Button (Footer) */}
               <div className="p-4 border-t border-border bg-slate-50">
-                <Button size="lg" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm font-semibold">
-                  <Sparkles className="h-4 w-4 mr-2" /> Optimize CV
-                </Button>
+                {tier === 'free' ? (
+                  <Button
+                    size="lg"
+                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 shadow-sm font-semibold border border-slate-200"
+                    onClick={() => navigate('/candidate/upgrade')}
+                  >
+                    <Lock className="h-4 w-4 mr-2" /> Unlock CV Optimization
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm font-semibold"
+                    onClick={handleOptimize}
+                  >
+                    <Sparkles className="h-4 w-4 mr-2" /> Optimize CV
+                  </Button>
+                )}
               </div>
 
             </div>
