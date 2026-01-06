@@ -1,13 +1,15 @@
 import { Button } from '@/components/ui/button';
-import {
-    Briefcase,
-    FileText,
-    Settings,
-    BarChart,
-    LogOut,
-    CreditCard
-} from 'lucide-react';
 import { useSubscription } from '@/contexts/SubscriptionContext';
+import {
+    BarChart,
+    Briefcase,
+    CreditCard,
+    FileText,
+    Home,
+    LogOut,
+    Settings
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface SidebarProps {
     activeTab: string;
@@ -16,6 +18,7 @@ interface SidebarProps {
 
 export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     const { tier, togglePlan } = useSubscription();
+    const navigate = useNavigate();
     const menuItems = [
         {
             id: 'reports',
@@ -47,6 +50,14 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     return (
         <div className="w-64 bg-card border-r border-border h-[calc(100vh-64px)] sticky top-16 flex flex-col">
             <div className="p-4">
+                <Button
+                    variant="ghost"
+                    className="w-full justify-start mb-4 text-muted-foreground hover:text-foreground"
+                    onClick={() => navigate('/')}
+                >
+                    <Home className="h-4 w-4 mr-2" />
+                    Home
+                </Button>
                 {menuItems.map((item) => (
                     <Button
                         key={item.id}

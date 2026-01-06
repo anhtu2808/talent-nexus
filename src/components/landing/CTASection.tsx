@@ -34,7 +34,7 @@ const CTASection = () => {
                   Real-time application tracking
                 </li>
               </ul>
-              <Link to="/auth?mode=register&role=candidate">
+              <Link to="/candidate/cv-manager">
                 <Button variant="hero" size="lg">
                   Upload Your CV
                   <ArrowRight className="h-4 w-4 ml-2" />
