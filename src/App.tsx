@@ -23,10 +23,10 @@ import Notifications from "./pages/candidate/Notifications";
 import Payment from "./pages/candidate/Payment";
 import {
   JobInvitations,
-  Profile,
   Settings,
   Subscriptions,
 } from "./pages/candidate/PlaceholderPages";
+import Profile from "./pages/candidate/Profile";
 import UpgradeAccount from "./pages/candidate/UpgradeAccount";
 import Companies from "./pages/Companies";
 import CompanyDetail from "./pages/CompanyDetail";

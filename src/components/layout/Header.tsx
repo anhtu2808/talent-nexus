@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
-import { Briefcase, ChevronDown, LogOut, Menu, User, X, Crown } from 'lucide-react';
+import { Bell, Briefcase, ChevronDown, Crown, FileText, LayoutGrid, LogOut, Mail, Menu, Settings, User, X } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 
@@ -50,51 +50,86 @@ const Header = () => {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center gap-6">
-          <Link
-            to="/jobs"
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-foreground",
-              isActive('/jobs') ? "text-accent" : "text-muted-foreground"
-            )}
-          >
-            All Jobs
-          </Link>
-          <Link
-            to="/companies"
-            className={cn(
-              "text-sm font-medium transition-colors hover:text-foreground",
-              isActive('/companies') ? "text-accent" : "text-muted-foreground"
-            )}
-          >
-            Companies
-          </Link>
+        {!location.pathname.startsWith('/recruiter/dashboard') && (
+          <nav className="hidden md:flex items-center gap-6">
+            <Link
+              to="/"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-foreground",
+                isActive('/') ? "text-accent" : "text-muted-foreground"
+              )}
+            >
+              Home
+            </Link>
+            <Link
+              to="/jobs"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-foreground",
+                isActive('/jobs') ? "text-accent" : "text-muted-foreground"
+              )}
+            >
+              All Jobs
+            </Link>
+            <Link
+              to="/companies"
+              className={cn(
+                "text-sm font-medium transition-colors hover:text-foreground",
+                isActive('/companies') ? "text-accent" : "text-muted-foreground"
+              )}
+            >
+              Companies
+            </Link>
 
-          {isAuthenticated && user && (
-            <>
+            {!isAuthenticated && (
               <Link
-                to={getDashboardLink()}
+                to="/candidate/cv-manager"
                 className={cn(
                   "text-sm font-medium transition-colors hover:text-foreground",
-                  isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
+                  isActive('/candidate/cv-manager') ? "text-accent" : "text-muted-foreground"
                 )}
               >
-                Overview
+                CV Score
               </Link>
-              {user.role === 'recruiter' && (
-                <Link
-                  to="/recruiter/team"
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-foreground",
-                    isActive('/recruiter/team') ? "text-accent" : "text-muted-foreground"
-                  )}
-                >
-                  Team
-                </Link>
-              )}
-            </>
-          )}
-        </nav>
+            )}
+
+            {isAuthenticated && user && (
+              <>
+                {user.role === 'candidate' ? (
+                  <Link
+                    to="/candidate/cv-manager"
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-foreground",
+                      isActive('/candidate/cv-manager') ? "text-accent" : "text-muted-foreground"
+                    )}
+                  >
+                    CV Score
+                  </Link>
+                ) : (
+                  <Link
+                    to={getDashboardLink()}
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-foreground",
+                      isActive(getDashboardLink()) ? "text-accent" : "text-muted-foreground"
+                    )}
+                  >
+                    {user.role === 'recruiter' ? 'HR Dashboard' : 'Overview'}
+                  </Link>
+                )}
+                {user.role === 'recruiter' && (
+                  <Link
+                    to="/recruiter/team"
+                    className={cn(
+                      "text-sm font-medium transition-colors hover:text-foreground",
+                      isActive('/recruiter/team') ? "text-accent" : "text-muted-foreground"
+                    )}
+                  >
+                    Team
+                  </Link>
+                )}
+              </>
+            )}
+          </nav>
+        )}
 
         <div className="hidden md:flex items-center gap-4">
           {isAuthenticated && user?.role === 'candidate' && (
@@ -131,10 +166,45 @@ const Header = () => {
                 </div>
                 <DropdownMenuSeparator />
 
-                <DropdownMenuItem onClick={() => navigate('/profile')}>
-                  <User className="mr-2 h-4 w-4" />
-                  Profile
-                </DropdownMenuItem>
+                {user.role === 'candidate' ? (
+                  <>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/dashboard')}>
+                      <LayoutGrid className="mr-2 h-4 w-4" />
+                      Overview
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/cv-manager')}>
+                      <FileText className="mr-2 h-4 w-4" />
+                      CV Attachment
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/profile')}>
+                      <User className="mr-2 h-4 w-4" />
+                      Profile
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/applications')}>
+                      <Briefcase className="mr-2 h-4 w-4" />
+                      My Jobs
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/job-invitations')}>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Job Invitation
+                      <span className="ml-auto rounded-full bg-muted px-2 py-0.5 text-xs">0</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/notifications')}>
+                      <Bell className="mr-2 h-4 w-4" />
+                      Notifications
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => navigate('/candidate/settings')}>
+                      <Settings className="mr-2 h-4 w-4" />
+                      Settings
+                    </DropdownMenuItem>
+                  </>
+                ) : (
+                  <DropdownMenuItem onClick={() => navigate('/profile')}>
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </DropdownMenuItem>
+                )}
+
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleLogout} className="text-destructive focus:text-destructive">
                   <LogOut className="mr-2 h-4 w-4" />
@@ -173,6 +243,15 @@ const Header = () => {
       )}>
         <div className="container py-4 space-y-4">
           <nav className="flex flex-col gap-2">
+            <Link
+              to="/"
+              className={cn(
+                "px-3 py-2 text-sm font-medium transition-colors hover:text-foreground hover:bg-muted rounded-lg",
+                isActive('/') ? "text-accent" : "text-muted-foreground"
+              )}
+            >
+              Home
+            </Link>
             <Link
               to="/jobs"
               className={cn(

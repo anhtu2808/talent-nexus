@@ -119,7 +119,7 @@ const Footer = () => {
 
         <div className="border-t border-primary-foreground/10 mt-8 pt-8 text-center">
           <p className="text-sm text-primary-foreground/50">
-            © {new Date().getFullYear()} SmartRecruit. All rights reserved. Built with ❤️ by FPT University Students.
+            © {new Date().getFullYear()} SmartRecruit. All rights reserved. Built by FPT University Students.
           </p>
         </div>
       </div>

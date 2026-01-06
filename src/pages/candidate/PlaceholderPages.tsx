@@ -1,7 +1,7 @@
 import PlaceholderPage from './PlaceholderPage';
 
 
-export const Profile = () => <PlaceholderPage title="Profile Settings" />;
+
 export const JobInvitations = () => <PlaceholderPage title="Job Invitations" />;
 export const Subscriptions = () => <PlaceholderPage title="Email Subscriptions" />;
 export const Notifications = () => <PlaceholderPage title="Notifications" />;
