@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; // 1. Import useNavigate
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,7 @@ const jobs = [
 
 export default function AdminJobs() {
   const [searchQuery, setSearchQuery] = useState("");
+  const navigate = useNavigate(); // 2. Khởi tạo navigate
 
   const filteredJobs = jobs.filter(job =>
     job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -51,7 +53,7 @@ export default function AdminJobs() {
 
   return (
     <div className="space-y-6">
-      {/* 1. Impactful Stat Cards */}
+      {/* 1. Stat Cards giữ nguyên */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
         <StatCard label="Total Jobs" value="1,234" color="text-[#0F2238]" icon={<Briefcase />} />
         <StatCard label="Active" value="892" color="text-[#38B65F]" icon={<Play />} />
@@ -59,7 +61,7 @@ export default function AdminJobs() {
         <StatCard label="Flagged" value="12" color="text-red-500" icon={<Flag />} />
       </div>
 
-      {/* 2. Synchronized Filter Bar */}
+      {/* 2. Filter Bar giữ nguyên */}
       <Card className="bg-white border-none shadow-sm rounded-2xl mb-6 overflow-hidden text-left">
         <CardContent className="p-6 flex flex-col md:flex-row gap-4 items-center">
           <div className="relative flex-1 group w-full">
@@ -153,10 +155,15 @@ export default function AdminJobs() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="rounded-xl shadow-xl w-48 border-slate-100">
-                          <DropdownMenuItem className="gap-2 font-semibold text-sm">
+                          {/* 3. Thêm onClick navigate tại đây */}
+                          <DropdownMenuItem 
+                            className="gap-2 font-semibold text-sm cursor-pointer"
+                            onClick={() => navigate(`/admin/jobs/${job.id}`)}
+                          >
                             <Eye size={14} /> View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem className="gap-2 font-semibold text-sm">
+                          
+                          <DropdownMenuItem className="gap-2 font-semibold text-sm cursor-pointer">
                             <Pause size={14} /> Pause Listing
                           </DropdownMenuItem>
                           <DropdownMenuSeparator />
@@ -177,6 +184,7 @@ export default function AdminJobs() {
   );
 }
 
+// StatCard Component giữ nguyên
 function StatCard({ label, value, color, icon }: { label: string, value: string, color: string, icon: React.ReactNode }) {
   return (
     <Card className="bg-white border-none shadow-sm rounded-2xl overflow-hidden">

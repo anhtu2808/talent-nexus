@@ -1,6 +1,6 @@
 import { useState } from "react";
-// Giả định bạn đã cài đặt component Tabs từ shadcn/ui
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -39,13 +39,12 @@ const users = [
 export default function UserManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
+  const navigate = useNavigate();
 
-  // Logic lọc dữ liệu kết hợp cả Search và Tabs
   const filteredUsers = users.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           user.email.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesTab = activeTab === "all" || user.role.toLowerCase() === activeTab.toLowerCase();
-    
     return matchesSearch && matchesTab;
   });
 
@@ -63,18 +62,10 @@ export default function UserManagement() {
       <Tabs defaultValue="all" className="w-full" onValueChange={setActiveTab}>
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-6">
           <TabsList className="bg-slate-100/50 p-1 rounded-xl border border-slate-200">
-            <TabsTrigger value="all" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-[#38B65F] data-[state=active]:shadow-sm">
-              All Users
-            </TabsTrigger>
-            <TabsTrigger value="candidate" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-blue-500">
-              Candidates
-            </TabsTrigger>
-            <TabsTrigger value="recruiter" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-[#38B65F]">
-              Recruiters
-            </TabsTrigger>
-            <TabsTrigger value="admin" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-red-500">
-              Admins
-            </TabsTrigger>
+            <TabsTrigger value="all" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-[#38B65F] data-[state=active]:shadow-sm">All Users</TabsTrigger>
+            <TabsTrigger value="candidate" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-blue-500">Candidates</TabsTrigger>
+            <TabsTrigger value="recruiter" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-[#38B65F]">Recruiters</TabsTrigger>
+            <TabsTrigger value="admin" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-red-500">Admins</TabsTrigger>
           </TabsList>
 
           <div className="flex items-center gap-3 w-full md:w-auto">
@@ -132,9 +123,7 @@ export default function UserManagement() {
                                     user.role === "Admin" ? "bg-red-100 text-red-600" :
                                     user.role === "Recruiter" ? "bg-blue-100 text-blue-600" :
                                     "bg-slate-100 text-slate-500"
-                                  )}>
-                                    {user.role}
-                                  </Badge>
+                                  )}>{user.role}</Badge>
                                 )}
                               </div>
                               <p className="text-xs text-slate-400">{user.email}</p>
@@ -178,15 +167,14 @@ export default function UserManagement() {
                           </div>
                         </td>
                         <td className="py-4 px-6 text-right">
-                          <UserActionDropdown />
+                          {/* ĐÃ SỬA: Truyền userId vào component */}
+                          <UserActionDropdown userId={user.id} />
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td colSpan={5} className="py-12 text-center text-slate-400 font-medium">
-                        No users found in this category.
-                      </td>
+                      <td colSpan={5} className="py-12 text-center text-slate-400 font-medium">No users found.</td>
                     </tr>
                   )}
                 </tbody>
@@ -199,7 +187,7 @@ export default function UserManagement() {
   );
 }
 
-// Các sub-components để code gọn gàng hơn
+// Sub-components
 function StatCard({ label, value, color, icon }: { label: string, value: string, color: string, icon: React.ReactNode }) {
   return (
     <Card className="bg-white border-none shadow-sm rounded-2xl overflow-hidden hover:shadow-md transition-shadow">
@@ -209,16 +197,17 @@ function StatCard({ label, value, color, icon }: { label: string, value: string,
             <p className={cn("text-3xl font-black mb-1", color)}>{value}</p>
             <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{label}</p>
           </div>
-          <div className={cn("p-2.5 rounded-xl bg-slate-50", color)}>
-            {icon}
-          </div>
+          <div className={cn("p-2.5 rounded-xl bg-slate-50", color)}>{icon}</div>
         </div>
       </CardContent>
     </Card>
   );
 }
 
-function UserActionDropdown() {
+// ĐÃ SỬA: Thêm tham số userId và định nghĩa kiểu dữ liệu (Props)
+function UserActionDropdown({ userId }: { userId: number | string }) {
+  const navigate = useNavigate();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -227,14 +216,17 @@ function UserActionDropdown() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="rounded-xl shadow-xl w-48 border-slate-100">
-        <DropdownMenuItem className="gap-2 font-semibold text-sm">
+        <DropdownMenuItem 
+          className="gap-2 font-semibold text-sm cursor-pointer"
+          onClick={() => navigate(`/admin/users/${userId}`)}
+        >
           <Eye className="w-4 h-4 text-slate-400" /> View Profile
         </DropdownMenuItem>
-        <DropdownMenuItem className="gap-2 font-semibold text-sm">
+        <DropdownMenuItem className="gap-2 font-semibold text-sm cursor-pointer">
           <Mail className="w-4 h-4 text-slate-400" /> Send Email
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="gap-2 font-semibold text-sm text-red-500 focus:text-red-500 focus:bg-red-50">
+        <DropdownMenuItem className="gap-2 font-semibold text-sm text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer">
           <Trash2 className="w-4 h-4" /> Delete Account
         </DropdownMenuItem>
       </DropdownMenuContent>

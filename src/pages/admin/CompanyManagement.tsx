@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,17 +32,17 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 const companies = [
-  { id: 1, name: "TechCorp Inc", industry: "Information Technology", email: "hr@techcorp.com", website: "techcorp.io", location: "San Francisco, CA", status: "Verified", jobCount: 45, joined: "Nov 15, 2024" },
-  { id: 2, name: "Global Hire", industry: "Recruitment", email: "contact@globalhire.com", website: "globalhire.com", location: "London, UK", status: "Verified", jobCount: 128, joined: "Oct 20, 2024" },
-  { id: 3, name: "StartupXYZ", industry: "Fintech", email: "jobs@startupxyz.com", website: "startupxyz.vn", location: "Ha Noi, VN", status: "Pending", jobCount: 8, joined: "Dec 5, 2024" },
-  { id: 4, name: "CloudFirst", industry: "Cloud Services", email: "admin@cloudfirst.net", website: "cloudfirst.net", location: "Remote", status: "Verified", jobCount: 34, joined: "Sep 12, 2024" },
-  { id: 5, name: "Design Studio", industry: "Creative", email: "hello@design.co", website: "design.co", location: "HCM City, VN", status: "Suspended", jobCount: 0, joined: "Aug 30, 2024" },
+  { id: "1", name: "TechCorp Inc", industry: "Information Technology", email: "hr@techcorp.com", website: "techcorp.io", location: "San Francisco, CA", status: "Verified", jobCount: 45, joined: "Nov 15, 2024" },
+  { id: "2", name: "Global Hire", industry: "Recruitment", email: "contact@globalhire.com", website: "globalhire.com", location: "London, UK", status: "Verified", jobCount: 128, joined: "Oct 20, 2024" },
+  { id: "3", name: "StartupXYZ", industry: "Fintech", email: "jobs@startupxyz.com", website: "startupxyz.vn", location: "Ha Noi, VN", status: "Pending", jobCount: 8, joined: "Dec 5, 2024" },
+  { id: "4", name: "CloudFirst", industry: "Cloud Services", email: "admin@cloudfirst.net", website: "cloudfirst.net", location: "Remote", status: "Verified", jobCount: 34, joined: "Sep 12, 2024" },
+  { id: "5", name: "Design Studio", industry: "Creative", email: "hello@design.co", website: "design.co", location: "HCM City, VN", status: "Suspended", jobCount: 0, joined: "Aug 30, 2024" },
 ];
 
 export default function CompanyManagement() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
-
+  const navigate = useNavigate();
   const filteredCompanies = companies.filter(company => {
     const matchesSearch = company.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           company.industry.toLowerCase().includes(searchQuery.toLowerCase());
@@ -51,10 +52,9 @@ export default function CompanyManagement() {
 
   return (
     <div className="space-y-6 text-left">
-      {/* 1. Impactful Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard label="Total Companies" value="842" color="text-[#0F2238]" icon={<Building2 className="w-5 h-5" />} />
-        <StatCard label="Verified" value="790" color="text-[#38B65F]" icon={<ShieldCheck className="w-5 h-5" />} />
+        <StatCard label="Verified Partners" value="790" color="text-[#38B65F]" icon={<ShieldCheck className="w-5 h-5" />} />
         <StatCard label="Pending Approval" value="12" color="text-amber-500" icon={<Clock className="w-5 h-5" />} />
       </div>
 
@@ -63,7 +63,7 @@ export default function CompanyManagement() {
         <div className="flex flex-col lg:flex-row justify-between items-center gap-4 mb-6">
           <TabsList className="bg-slate-100/50 p-1 rounded-xl border border-slate-200">
             <TabsTrigger value="all" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:shadow-sm">
-              All Companies
+              All Organizations
             </TabsTrigger>
             <TabsTrigger value="verified" className="rounded-lg font-bold px-6 data-[state=active]:bg-white data-[state=active]:text-[#38B65F]">
               Verified
@@ -92,7 +92,6 @@ export default function CompanyManagement() {
           </div>
         </div>
 
-        {/* 3. Company Data Table */}
         <Card className="bg-white border-none shadow-sm rounded-2xl overflow-hidden">
           <CardContent className="p-0">
             <div className="overflow-x-auto">
@@ -112,11 +111,9 @@ export default function CompanyManagement() {
                       <tr key={company.id} className="hover:bg-slate-50/50 transition-colors group">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3 text-left">
-                            <Avatar className="h-10 w-10 border-2 border-white shadow-sm rounded-xl">
-                              <AvatarFallback className="bg-[#38B65F]/10 text-[#38B65F] font-bold rounded-xl text-xs">
-                                {company.name.substring(0, 2).toUpperCase()}
-                              </AvatarFallback>
-                            </Avatar>
+                            <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center border-2 border-white shadow-sm">
+                                <Building2 size={18} className="text-slate-400" />
+                            </div>
                             <div>
                               <p className="font-bold text-sm text-[#0F2238] group-hover:text-[#38B65F] transition-colors">
                                 {company.name}
@@ -160,23 +157,26 @@ export default function CompanyManagement() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="rounded-xl shadow-xl w-52 border-slate-100">
-                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5">
+                              <DropdownMenuItem 
+                                className="gap-2 font-semibold text-sm py-2.5 cursor-pointer"
+                                onClick={() => navigate(`/admin/companies/${company.id}`)}
+                              >
                                 <Eye size={15} className="text-slate-400" /> View Company Profile
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5">
+                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5 cursor-pointer">
                                 <Globe size={15} className="text-slate-400" /> Visit Website
                               </DropdownMenuItem>
-                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5">
-                                <Mail size={15} className="text-slate-400" /> Message Admin
+                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5 cursor-pointer">
+                                <Mail size={15} className="text-slate-400" /> Message HR Manager
                               </DropdownMenuItem>
                               <DropdownMenuSeparator />
                               {company.status === "Pending" && (
-                                <DropdownMenuItem className="gap-2 font-bold text-sm py-2.5 text-[#38B65F] focus:text-[#38B65F] focus:bg-green-50">
+                                <DropdownMenuItem className="gap-2 font-bold text-sm py-2.5 text-[#38B65F] focus:text-[#38B65F] focus:bg-green-50 cursor-pointer">
                                   <CheckCircle2 size={15} /> Approve Registration
                                 </DropdownMenuItem>
                               )}
-                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5 text-red-500 focus:text-red-500 focus:bg-red-50">
-                                <Trash2 size={15} /> Remove Organization
+                              <DropdownMenuItem className="gap-2 font-semibold text-sm py-2.5 text-red-500 focus:text-red-500 focus:bg-red-50 cursor-pointer">
+                                <Trash2 size={15} /> Terminate Organization
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -188,7 +188,7 @@ export default function CompanyManagement() {
                       <td colSpan={5} className="py-20 text-center">
                         <div className="flex flex-col items-center gap-2">
                           <Building2 className="w-10 h-10 text-slate-200" />
-                          <p className="text-slate-400 font-medium">No companies found in this category.</p>
+                          <p className="text-slate-400 font-medium">No organizations found in this category.</p>
                         </div>
                       </td>
                     </tr>
@@ -203,7 +203,6 @@ export default function CompanyManagement() {
   );
 }
 
-// Helper Component
 function StatCard({ label, value, color, icon }: { label: string, value: string, color: string, icon: React.ReactNode }) {
   return (
     <Card className="bg-white border-none shadow-sm rounded-2xl overflow-hidden group hover:shadow-md transition-all duration-300">

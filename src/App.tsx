@@ -41,10 +41,12 @@ import RecruiterVerification from "./pages/recruiter/Verification";
 import VerifyCompany from "./pages/recruiter/VerifyCompany";
 import VerifyLicense from "./pages/recruiter/VerifyLicense";
 import VerifyPhone from "./pages/recruiter/VerifyPhone";
-
-
+import UserDetail from "./pages/admin/UserDetail";
 import { SubscriptionProvider } from "@/contexts/SubscriptionContext";
 import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
+import AdminJobDetail from "./pages/admin/JobDetail";
+import AdminCompanyDetail from "./pages/admin/CompanyDetail";
+import TransactionDetail from "./pages/admin/TransactionDetail";
 
 const queryClient = new QueryClient();
 const App = () => (
@@ -90,9 +92,13 @@ const App = () => (
                   <Route index element={<AdminDashboard />} />
                   <Route path="dashboard" element={<AdminDashboard />} />
                   <Route path="users" element={<UserManagement />} />
+                  <Route path="users/:id" element={<UserDetail />} />
                   <Route path="jobs" element={<JobManagement />} />
+                  <Route path="jobs/:id" element={<AdminJobDetail />} />
                   <Route path="companies" element={<CompanyManagement />} />
+                  <Route path="companies/:id" element={<AdminCompanyDetail />} />
                   <Route path="transactions" element={<TransactionManagement />} />
+                  <Route path="transactions/:id" element={<TransactionDetail />} />
                   <Route path="pricing" element={<PricingManagement />} />
                   <Route path="subscriptions" element={<SubscriptionManagement />} />
                 </Route>

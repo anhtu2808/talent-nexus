@@ -3,6 +3,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   Search, Download, CreditCard, Receipt, 
@@ -20,6 +21,7 @@ const transactions = [
 
 export default function TransactionManagement() {
   const [activeTab, setActiveTab] = useState("all");
+  const navigate = useNavigate();
 
   const filteredTransactions = transactions.filter(tx => 
     activeTab === "all" || 
@@ -138,9 +140,14 @@ export default function TransactionManagement() {
                       </div>
                     </td>
                     <td className="py-4 px-6 text-right">
-                      <Button variant="ghost" size="sm" className="font-bold text-[#38B65F] hover:bg-[#38B65F]/10">
-                        Details
-                      </Button>
+                      <Button 
+  variant="ghost" 
+  size="sm" 
+  className="font-bold text-[#38B65F]"
+  onClick={() => navigate(`/admin/transactions/${tx.id}`)}
+>
+  Details
+</Button>
                     </td>
                   </tr>
                 ))}
