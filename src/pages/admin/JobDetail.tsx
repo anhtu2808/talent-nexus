@@ -7,9 +7,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ChevronLeft, Building2, MapPin, Briefcase, Calendar, 
   Users, Mail, Phone, Globe, User, ShieldCheck, 
-  AlertCircle, FileText, Trash2, PauseCircle, CheckCircle
+  AlertCircle, FileText, Trash2, PauseCircle, CheckCircle, Download, Eye
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 // Dữ liệu mẫu mở rộng với thông tin Công ty và Người đăng
@@ -44,8 +51,8 @@ const mockJobs = [
       avatar: ""
     },
     applicants: [
-      { id: "A1", name: "Alice Nguyen", status: "Shortlisted", appliedDate: "Dec 5, 2024" },
-      { id: "A2", name: "Bob Tran", status: "Applied", appliedDate: "Dec 6, 2024" }
+      { id: "A1", name: "Alice Nguyen", status: "Shortlisted", appliedDate: "Dec 5, 2024", cvUrl: "/sample-cv.pdf" },
+      { id: "A2", name: "Bob Tran", status: "Applied", appliedDate: "Dec 6, 2024", cvUrl: "/sample-cv.pdf" }
     ]
   },
   { 
@@ -296,7 +303,40 @@ export default function AdminJobDetail() {
                       </td>
                       <td className="px-6 py-4 text-xs font-medium text-slate-400">{applicant.appliedDate}</td>
                       <td className="px-6 py-4 text-right">
-                        <Button variant="ghost" size="sm" className="text-[#38B65F] font-bold">View CV</Button>
+                        
+                        {/* TÍCH HỢP XEM CV TẠI ĐÂY */}
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <Button variant="ghost" size="sm" className="text-[#38B65F] font-bold">
+                              <Eye size={14} className="mr-1" /> View CV
+                            </Button>
+                          </DialogTrigger>
+                          <DialogContent className="max-w-4xl h-[90vh] flex flex-col p-0 overflow-hidden rounded-2xl border-none">
+                            <DialogHeader className="p-4 border-b bg-white">
+                              <div className="flex items-center justify-between pr-8">
+                                <DialogTitle className="flex items-center gap-2 text-[#0F2238]">
+                                  <FileText className="w-5 h-5 text-blue-500" />
+                                  CV - {applicant.name}
+                                </DialogTitle>
+                                <a 
+                                  href={applicant.cvUrl} 
+                                  download 
+                                  className="text-xs flex items-center gap-1 font-bold text-slate-500 hover:text-[#38B65F]"
+                                >
+                                  <Download size={14} /> Download PDF
+                                </a>
+                              </div>
+                            </DialogHeader>
+                            <div className="flex-1 bg-slate-100 p-4 overflow-auto">
+                              <iframe 
+                                src={`${applicant.cvUrl}#toolbar=0`} 
+                                className="w-full h-full rounded-lg shadow-lg bg-white"
+                                title={`CV of ${applicant.name}`}
+                              />
+                            </div>
+                          </DialogContent>
+                        </Dialog>
+
                       </td>
                     </tr>
                   ))}

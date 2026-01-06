@@ -28,14 +28,14 @@ const mockCompanies = [
     description: "TechCorp is a leading provider of AI-driven enterprise solutions, focusing on scalable cloud infrastructure and intelligent automation.",
     size: "500-1000 Employees",
     recruiters: [
-      { name: "Sarah Jenkins", email: "s.jenkins@techcorp.io", role: "HR Manager", status: "Active" },
-      { name: "Michael Ross", email: "m.ross@techcorp.io", role: "Technical Recruiter", status: "Active" },
-      { name: "Jessica Pearson", email: "j.pearson@techcorp.io", role: "Head of Talent", status: "Active" }
+      { id: 1,name: "Sarah Jenkins", email: "s.jenkins@techcorp.io", role: "HR Manager", status: "Active" },
+      { id: 1 ,name: "Michael Ross", email: "m.ross@techcorp.io", role: "Technical Recruiter", status: "Active" },
+      { id: 1, name: "Jessica Pearson", email: "j.pearson@techcorp.io", role: "Head of Talent", status: "Active" }
     ],
     activeJobs: [
-      { id: "J01", title: "Senior React Developer", applicants: 45, type: "Full-time" },
-      { id: "J02", title: "Cloud Architect (AWS)", applicants: 28, type: "Contract" },
-      { id: "J03", title: "AI Research Engineer", applicants: 67, type: "Full-time" }
+      { id: 1, title: "Senior React Developer", applicants: 45, type: "Full-time" },
+      { id: 1, title: "Cloud Architect (AWS)", applicants: 28, type: "Contract" },
+      { id: 1, title: "AI Research Engineer", applicants: 67, type: "Full-time" }
     ]
   },
   { 
@@ -55,7 +55,7 @@ const mockCompanies = [
       { name: "Harvey Specter", email: "h.specter@startupxyz.com", role: "CEO & Founder", status: "Active" }
     ],
     activeJobs: [
-      { id: "J04", title: "Lead Blockchain Developer", applicants: 12, type: "Full-time" }
+      { id: 1, title: "Lead Blockchain Developer", applicants: 12, type: "Full-time" }
     ]
   }
 ];
@@ -201,82 +201,96 @@ export default function AdminCompanyDetail() {
 
         {/* TEAM TAB: List Recruiters */}
         <TabsContent value="team">
-          <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
-             <CardHeader className="border-b border-slate-50 bg-slate-50/50 px-6 py-4">
-                <CardTitle className="text-sm font-bold uppercase tracking-widest text-[#0F2238]">Associated Recruitment Officers</CardTitle>
-             </CardHeader>
-             <CardContent className="p-0">
-                <table className="w-full text-left">
-                   <thead className="bg-slate-50/30 text-[10px] uppercase font-black text-slate-400">
-                      <tr>
-                        <th className="px-6 py-4 tracking-widest">Full Name</th>
-                        <th className="px-6 py-4 tracking-widest">Position</th>
-                        <th className="px-6 py-4 tracking-widest">Platform Status</th>
-                        <th className="px-6 py-4 text-right tracking-widest">Management</th>
-                      </tr>
-                   </thead>
-                   <tbody className="divide-y divide-slate-50">
-                      {company.recruiters.map((hr, idx) => (
-                        <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
-                          <td className="px-6 py-4">
-                             <div className="flex flex-col">
-                                <span className="text-sm font-bold text-[#0F2238]">{hr.name}</span>
-                                <span className="text-[11px] text-slate-400 font-medium">{hr.email}</span>
-                             </div>
-                          </td>
-                          <td className="px-6 py-4 text-xs font-bold text-slate-500">{hr.role}</td>
-                          <td className="px-6 py-4">
-                             <Badge className="bg-green-50 text-green-600 border-none text-[10px] uppercase font-black tracking-tighter">● {hr.status}</Badge>
-                          </td>
-                          <td className="px-6 py-4 text-right">
-                             <Button variant="ghost" size="sm" className="text-slate-400 font-bold hover:text-[#38B65F]">Audit User</Button>
-                          </td>
-                        </tr>
-                      ))}
-                   </tbody>
-                </table>
-             </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* JOBS TAB: List Postings */}
-        <TabsContent value="jobs">
-          <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+        <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
             <CardHeader className="border-b border-slate-50 bg-slate-50/50 px-6 py-4">
-              <CardTitle className="text-sm font-bold uppercase tracking-widest text-[#0F2238]">Organization Job Listings</CardTitle>
+               <CardTitle className="text-sm font-bold uppercase tracking-widest text-[#0F2238]">Associated Recruitment Officers</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
                <table className="w-full text-left">
                   <thead className="bg-slate-50/30 text-[10px] uppercase font-black text-slate-400">
                      <tr>
-                        <th className="px-6 py-4 tracking-widest">Job Title</th>
-                        <th className="px-6 py-4 tracking-widest">Contract Type</th>
-                        <th className="px-6 py-4 tracking-widest">Pipeline</th>
-                        <th className="px-6 py-4 text-right tracking-widest">Action</th>
+                       <th className="px-6 py-4 tracking-widest">Full Name</th>
+                       <th className="px-6 py-4 tracking-widest">Position</th>
+                       <th className="px-6 py-4 tracking-widest">Platform Status</th>
+                       <th className="px-6 py-4 text-right tracking-widest">Management</th>
                      </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-50">
-                     {company.activeJobs.map(job => (
-                        <tr key={job.id} className="hover:bg-slate-50/50 transition-colors">
-                           <td className="px-6 py-4 text-sm font-bold text-[#0F2238]">{job.title}</td>
-                           <td className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">{job.type}</td>
-                           <td className="px-6 py-4">
-                              <div className="flex items-center gap-1.5 text-[#38B65F] font-black text-xs">
-                                 <Users size={12}/> {job.applicants} Applied
-                              </div>
-                           </td>
-                           <td className="px-6 py-4 text-right">
-                              <Button variant="ghost" size="sm" className="text-[#38B65F] font-bold" onClick={() => navigate(`/admin/jobs/${job.id}`)}>
-                                 <ExternalLink size={14} className="mr-1"/> Inspect JD
-                              </Button>
-                           </td>
-                        </tr>
+                     {company.recruiters.map((hr, idx) => (
+                       <tr key={idx} className="hover:bg-slate-50/50 transition-colors">
+                         <td className="px-6 py-4">
+                            <div className="flex flex-col">
+                               <span className="text-sm font-bold text-[#0F2238]">{hr.name}</span>
+                               <span className="text-[11px] text-slate-400 font-medium">{hr.email}</span>
+                            </div>
+                         </td>
+                         <td className="px-6 py-4 text-xs font-bold text-slate-500">{hr.role}</td>
+                         <td className="px-6 py-4">
+                            <Badge className="bg-green-50 text-green-600 border-none text-[10px] uppercase font-black tracking-tighter">● {hr.status}</Badge>
+                         </td>
+                         <td className="px-6 py-4 text-right">
+                            {/* CẬP NHẬT: Điều hướng tới trang chi tiết User */}
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-slate-400 font-bold hover:text-[#38B65F] hover:bg-[#38B65F]/5"
+                              onClick={() => navigate(`/admin/users/${hr.id}`)} // Hoặc dùng ID nếu có
+                            >
+                              Audit User
+                            </Button>
+                         </td>
+                       </tr>
                      ))}
                   </tbody>
                </table>
             </CardContent>
-          </Card>
-        </TabsContent>
+         </Card>
+      </TabsContent>
+
+      {/* JOBS TAB: Cập nhật điều hướng Inspect JD */}
+      <TabsContent value="jobs">
+        <Card className="border-none shadow-sm rounded-2xl bg-white overflow-hidden">
+          <CardHeader className="border-b border-slate-50 bg-slate-50/50 px-6 py-4">
+            <CardTitle className="text-sm font-bold uppercase tracking-widest text-[#0F2238]">Organization Job Listings</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+             <table className="w-full text-left">
+                <thead className="bg-slate-50/30 text-[10px] uppercase font-black text-slate-400">
+                   <tr>
+                      <th className="px-6 py-4 tracking-widest">Job Title</th>
+                      <th className="px-6 py-4 tracking-widest">Contract Type</th>
+                      <th className="px-6 py-4 tracking-widest">Pipeline</th>
+                      <th className="px-6 py-4 text-right tracking-widest">Action</th>
+                   </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50">
+                   {company.activeJobs.map(job => (
+                      <tr key={job.id} className="hover:bg-slate-50/50 transition-colors">
+                         <td className="px-6 py-4 text-sm font-bold text-[#0F2238]">{job.title}</td>
+                         <td className="px-6 py-4 text-xs font-bold text-slate-500 uppercase">{job.type}</td>
+                         <td className="px-6 py-4">
+                            <div className="flex items-center gap-1.5 text-[#38B65F] font-black text-xs">
+                               <Users size={12}/> {job.applicants} Applied
+                            </div>
+                         </td>
+                         <td className="px-6 py-4 text-right">
+                            {/* CẬP NHẬT: Điều hướng tới trang chi tiết Job */}
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              className="text-[#38B65F] font-bold hover:bg-[#38B65F]/5" 
+                              onClick={() => navigate(`/admin/jobs/${job.id}`)}
+                            >
+                               <ExternalLink size={14} className="mr-1"/> Inspect JD
+                            </Button>
+                         </td>
+                      </tr>
+                   ))}
+                </tbody>
+             </table>
+          </CardContent>
+        </Card>
+      </TabsContent>
       </Tabs>
     </div>
   );
