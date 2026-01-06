@@ -18,8 +18,8 @@ export const mockJobs: Job[] = [
       'Excellent problem-solving skills'
     ],
     skills: ['React', 'TypeScript', 'Redux', 'GraphQL', 'Node.js'],
-    postedAt: new Date('2024-01-15'),
-    deadline: new Date('2024-02-28'),
+    postedAt: new Date('2026-01-02'),
+    deadline: new Date('2026-02-28'),
     recruiterId: 'r1',
     applicantCount: 45,
     isActive: true,
@@ -43,10 +43,11 @@ export const mockJobs: Job[] = [
       'Banking/fintech experience is a plus'
     ],
     skills: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'AWS'],
-    postedAt: new Date('2024-01-18'),
+    postedAt: new Date('2025-12-01'),
+    deadline: new Date('2025-12-31'), // Expired
     recruiterId: 'r2',
     applicantCount: 32,
-    isActive: true,
+    isActive: true, // Should be auto-closed
     views: 890,
     clickToApply: 98
   },
@@ -67,7 +68,7 @@ export const mockJobs: Job[] = [
       'Published research is a plus'
     ],
     skills: ['Python', 'TensorFlow', 'PyTorch', 'NLP', 'Computer Vision'],
-    postedAt: new Date('2024-01-20'),
+    postedAt: new Date('2026-01-05'),
     recruiterId: 'r1',
     applicantCount: 28,
     isActive: true,
@@ -91,7 +92,7 @@ export const mockJobs: Job[] = [
       'Understanding of security best practices'
     ],
     skills: ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'CI/CD'],
-    postedAt: new Date('2024-01-22'),
+    postedAt: new Date('2026-01-04'),
     recruiterId: 'r2',
     applicantCount: 19,
     isActive: true,
@@ -115,7 +116,7 @@ export const mockJobs: Job[] = [
       'B2B SaaS experience is a plus'
     ],
     skills: ['Product Strategy', 'Agile', 'Data Analysis', 'User Research', 'Roadmapping'],
-    postedAt: new Date('2024-01-25'),
+    postedAt: new Date('2026-01-03'),
     recruiterId: 'r1',
     applicantCount: 56,
     isActive: true,
@@ -139,7 +140,7 @@ export const mockJobs: Job[] = [
       'ISTQB certification is a plus'
     ],
     skills: ['Selenium', 'Cypress', 'JavaScript', 'API Testing', 'Jest'],
-    postedAt: new Date('2024-01-28'),
+    postedAt: new Date('2026-01-01'),
     recruiterId: 'r2',
     applicantCount: 23,
     isActive: true,
@@ -156,7 +157,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Nguyen Van A',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=NV&background=0F2238&color=fff',
-    createdAt: new Date('2024-01-10'),
+    createdAt: new Date('2025-11-10'),
     phone: '0901234567',
     location: 'Ho Chi Minh City',
     expectedSalary: '$3,000 - $4,000',
@@ -174,7 +175,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Tran Thi B',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=TT&background=38B65F&color=fff',
-    createdAt: new Date('2024-01-12'),
+    createdAt: new Date('2025-11-12'),
     phone: '0912345678',
     location: 'Ha Noi',
     expectedSalary: '$2,500 - $3,500',
@@ -192,7 +193,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Le Van C',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=LV&background=6366f1&color=fff',
-    createdAt: new Date('2024-01-14'),
+    createdAt: new Date('2025-11-14'),
     phone: '0923456789',
     location: 'Da Nang',
     expectedSalary: '$4,000 - $5,500',
@@ -211,7 +212,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Pham Thi D',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=PD&background=f59e0b&color=fff',
-    createdAt: new Date('2024-01-16'),
+    createdAt: new Date('2025-11-16'),
     phone: '0934567890',
     location: 'Ho Chi Minh City',
     expectedSalary: '$2,000 - $2,500',
@@ -229,7 +230,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Hoang Van E',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=HE&background=ec4899&color=fff',
-    createdAt: new Date('2024-01-18'),
+    createdAt: new Date('2025-11-18'),
     phone: '0945678901',
     location: 'Ha Noi',
     expectedSalary: '$3,500 - $4,500',
@@ -247,7 +248,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Vu Thi F',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=VF&background=14b8a6&color=fff',
-    createdAt: new Date('2024-01-20'),
+    createdAt: new Date('2025-11-20'),
     phone: '0956789012',
     location: 'Remote',
     expectedSalary: '$2,800 - $3,500',
@@ -265,7 +266,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Dinh Van G',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=DG&background=8b5cf6&color=fff',
-    createdAt: new Date('2024-01-22'),
+    createdAt: new Date('2025-11-22'),
     phone: '0967890123',
     location: 'Ho Chi Minh City',
     expectedSalary: '$1,500 - $2,000',
@@ -283,7 +284,7 @@ export const mockCandidateProfiles: CandidateProfile[] = [
     name: 'Bu Thi H',
     role: 'candidate',
     avatar: 'https://ui-avatars.com/api/?name=BH&background=ef4444&color=fff',
-    createdAt: new Date('2024-01-24'),
+    createdAt: new Date('2025-11-24'),
     phone: '0978901234',
     location: 'Da Nang',
     expectedSalary: '$3,000 - $4,000',
@@ -308,9 +309,11 @@ export const mockApplications: Application[] = [
     candidateId: 'c1',
     cvId: 'cv1',
     status: 'new',
-    appliedAt: new Date('2024-01-20'),
+    appliedAt: new Date('2026-01-01'),
     matchScore: 85,
-    viewedAt: new Date('2024-01-21'),
+    viewedAt: undefined,
+    contactedAt: undefined,
+    interviewDate: undefined,
     notes: [
       {
         id: 'n1',
@@ -327,12 +330,12 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c2',
     cvId: 'cv2',
-    status: 'interviewing',
-    appliedAt: new Date('2024-01-18'),
+    status: 'viewed',
+    appliedAt: new Date('2025-12-15'),
     matchScore: 88,
-    viewedAt: new Date('2024-01-19'),
-    contactedAt: new Date('2024-01-20'),
-    interviewDate: new Date('2024-02-01'),
+    viewedAt: new Date('2025-12-16'),
+    contactedAt: undefined,
+    interviewDate: undefined,
     notes: [
       {
         id: 'n2',
@@ -397,9 +400,12 @@ export const mockApplications: Application[] = [
     candidateId: 'c6',
     cvId: 'cv6',
     status: 'rejected',
-    appliedAt: new Date('2024-01-19'),
+    candidateId: 'c6',
+    cvId: 'cv5',
+    status: 'rejected',
+    appliedAt: new Date('2026-01-03'),
     matchScore: 45,
-    viewedAt: new Date('2024-01-20'),
+    viewedAt: new Date('2026-01-05'),
     rejectionReason: 'Insufficient experience with React ecosystem'
   },
   {
@@ -408,7 +414,7 @@ export const mockApplications: Application[] = [
     candidateId: 'c7',
     cvId: 'cv7',
     status: 'new',
-    appliedAt: new Date('2024-01-27'),
+    appliedAt: new Date('2026-01-05'),
     matchScore: 72
   },
   {
@@ -417,11 +423,11 @@ export const mockApplications: Application[] = [
     candidateId: 'c8',
     cvId: 'cv8',
     status: 'hired',
-    appliedAt: new Date('2024-01-15'),
+    appliedAt: new Date('2025-12-05'),
     matchScore: 90,
-    viewedAt: new Date('2024-01-16'),
-    contactedAt: new Date('2024-01-17'),
-    interviewDate: new Date('2024-01-25'),
+    viewedAt: new Date('2025-12-06'),
+    contactedAt: new Date('2025-12-07'),
+    interviewDate: new Date('2025-12-15'),
     notes: [
       {
         id: 'n5',
@@ -429,7 +435,7 @@ export const mockApplications: Application[] = [
         authorId: 'r1',
         authorName: 'HR Manager',
         content: 'Outstanding performance in all rounds. Extended offer.',
-        createdAt: new Date('2024-01-28')
+        createdAt: new Date('2025-12-18')
       }
     ]
   },
@@ -439,7 +445,7 @@ export const mockApplications: Application[] = [
     candidateId: 'c2',
     cvId: 'cv2',
     status: 'new',
-    appliedAt: new Date('2024-01-22'),
+    appliedAt: new Date('2025-12-22'),
     matchScore: 92
   },
   {
@@ -448,11 +454,11 @@ export const mockApplications: Application[] = [
     candidateId: 'c3',
     cvId: 'cv3',
     status: 'interviewing',
-    appliedAt: new Date('2024-01-25'),
+    appliedAt: new Date('2026-01-04'),
     matchScore: 95,
-    viewedAt: new Date('2024-01-26'),
-    contactedAt: new Date('2024-01-27'),
-    interviewDate: new Date('2024-02-05')
+    viewedAt: new Date('2026-01-05'),
+    contactedAt: new Date('2026-01-05'),
+    interviewDate: new Date('2026-02-05')
   }
 ];
 
@@ -462,7 +468,7 @@ export const mockCVs: CV[] = [
     candidateId: 'c1',
     fileName: 'nguyen_van_a_resume.pdf',
     fileUrl: '/uploads/cv1.pdf',
-    uploadedAt: new Date('2024-01-15'),
+    uploadedAt: new Date('2025-12-30'),
     atsScore: 85,
     parsedData: {
       name: 'Nguyen Van A',
@@ -506,7 +512,7 @@ export const mockCVs: CV[] = [
     candidateId: 'c2',
     fileName: 'tran_thi_b_cv.pdf',
     fileUrl: '/uploads/cv2.pdf',
-    uploadedAt: new Date('2024-02-10'),
+    uploadedAt: new Date('2025-12-31'),
     atsScore: 88,
     parsedData: {
       name: 'Tran Thi B',
@@ -536,7 +542,7 @@ export const mockCVs: CV[] = [
     candidateId: 'c3',
     fileName: 'le_van_c_resume.pdf',
     fileUrl: '/uploads/cv3.pdf',
-    uploadedAt: new Date('2024-03-05'),
+    uploadedAt: new Date('2026-01-03'),
     atsScore: 92,
     parsedData: {
       name: 'Le Van C',
@@ -572,7 +578,7 @@ export const mockCVs: CV[] = [
     candidateId: 'c4',
     fileName: 'pham_thi_d_cv.pdf',
     fileUrl: '/uploads/cv4.pdf',
-    uploadedAt: new Date('2024-01-28'),
+    uploadedAt: new Date('2025-12-28'),
     atsScore: 70,
     parsedData: {
       name: 'Pham Thi D',
