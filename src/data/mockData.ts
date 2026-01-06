@@ -303,6 +303,7 @@ export const mockCandidates = mockCandidateProfiles;
 
 // Extended applications with notes
 export const mockApplications: Application[] = [
+  // Original Applications
   {
     id: 'a1',
     jobId: '1',
@@ -361,7 +362,7 @@ export const mockApplications: Application[] = [
     candidateId: 'c3',
     cvId: 'cv3',
     status: 'new',
-    appliedAt: new Date('2024-01-25'),
+    appliedAt: new Date('2025-12-25'),
     matchScore: 92
   },
   {
@@ -370,7 +371,7 @@ export const mockApplications: Application[] = [
     candidateId: 'c4',
     cvId: 'cv4',
     status: 'new',
-    appliedAt: new Date('2024-01-26'),
+    appliedAt: new Date('2025-12-26'),
     matchScore: 65
   },
   {
@@ -379,10 +380,10 @@ export const mockApplications: Application[] = [
     candidateId: 'c5',
     cvId: 'cv5',
     status: 'interviewing',
-    appliedAt: new Date('2024-01-22'),
+    appliedAt: new Date('2025-12-22'),
     matchScore: 78,
-    viewedAt: new Date('2024-01-23'),
-    contactedAt: new Date('2024-01-24'),
+    viewedAt: new Date('2025-12-23'),
+    contactedAt: new Date('2025-12-24'),
     notes: [
       {
         id: 'n4',
@@ -390,7 +391,7 @@ export const mockApplications: Application[] = [
         authorId: 'r1',
         authorName: 'HR Manager',
         content: 'Good DevOps background, but we need stronger frontend skills. Pending discussion.',
-        createdAt: new Date('2024-01-24')
+        createdAt: new Date('2025-12-24')
       }
     ]
   },
@@ -399,9 +400,6 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c6',
     cvId: 'cv6',
-    status: 'rejected',
-    candidateId: 'c6',
-    cvId: 'cv5',
     status: 'rejected',
     appliedAt: new Date('2026-01-03'),
     matchScore: 45,
@@ -459,6 +457,177 @@ export const mockApplications: Application[] = [
     viewedAt: new Date('2026-01-05'),
     contactedAt: new Date('2026-01-05'),
     interviewDate: new Date('2026-02-05')
+  },
+  // New Fake Applications for Better Visualization
+  // Job 1: Senior React Developer (More applicants)
+  {
+    id: 'a11',
+    jobId: '1',
+    candidateId: 'c2',
+    cvId: 'cv2',
+    status: 'screening',
+    appliedAt: new Date('2025-12-28'),
+    matchScore: 78
+  },
+  {
+    id: 'a12',
+    jobId: '1',
+    candidateId: 'c3',
+    cvId: 'cv3',
+    status: 'new',
+    appliedAt: new Date('2025-12-29'),
+    matchScore: 82
+  },
+  {
+    id: 'a13',
+    jobId: '1',
+    candidateId: 'c4',
+    cvId: 'cv4',
+    status: 'new',
+    appliedAt: new Date('2025-12-30'),
+    matchScore: 60
+  },
+  {
+    id: 'a14',
+    jobId: '1',
+    candidateId: 'c5',
+    cvId: 'cv5',
+    status: 'new',
+    appliedAt: new Date('2026-01-02'),
+    matchScore: 75
+  },
+  {
+    id: 'a15',
+    jobId: '1',
+    candidateId: 'c7',
+    cvId: 'cv7',
+    status: 'new',
+    appliedAt: new Date('2026-01-06'),
+    matchScore: 88
+  },
+
+  // Job 3: AI/ML Engineer
+  {
+    id: 'a20',
+    jobId: '3',
+    candidateId: 'c1',
+    cvId: 'cv1',
+    status: 'new',
+    appliedAt: new Date('2026-01-01'),
+    matchScore: 70
+  },
+  {
+    id: 'a21',
+    jobId: '3',
+    candidateId: 'c4',
+    cvId: 'cv4',
+    status: 'screening',
+    appliedAt: new Date('2026-01-02'),
+    matchScore: 65
+  },
+  {
+    id: 'a22',
+    jobId: '3',
+    candidateId: 'c5',
+    cvId: 'cv5',
+    status: 'new',
+    appliedAt: new Date('2026-01-03'),
+    matchScore: 85
+  },
+  {
+    id: 'a23',
+    jobId: '3',
+    candidateId: 'c6',
+    cvId: 'cv6',
+    status: 'new',
+    appliedAt: new Date('2026-01-05'),
+    matchScore: 80
+  },
+  {
+    id: 'a24',
+    jobId: '3',
+    candidateId: 'c2',
+    cvId: 'cv2',
+    status: 'new',
+    appliedAt: new Date('2025-12-29'),
+    matchScore: 75
+  },
+
+  // Job 5: Product Manager - Tech
+  {
+    id: 'a30',
+    jobId: '5',
+    candidateId: 'c1',
+    cvId: 'cv1',
+    status: 'new',
+    appliedAt: new Date('2025-12-27'),
+    matchScore: 60
+  },
+  {
+    id: 'a31',
+    jobId: '5',
+    candidateId: 'c6',
+    cvId: 'cv6',
+    status: 'screening',
+    appliedAt: new Date('2025-12-30'),
+    matchScore: 85
+  },
+  {
+    id: 'a32',
+    jobId: '5',
+    candidateId: 'c7',
+    cvId: 'cv7',
+    status: 'new',
+    appliedAt: new Date('2026-01-02'),
+    matchScore: 70
+  },
+  {
+    id: 'a33',
+    jobId: '5',
+    candidateId: 'c8',
+    cvId: 'cv8',
+    status: 'interviewing',
+    appliedAt: new Date('2026-01-03'),
+    matchScore: 90
+  },
+
+  // Job 2: Full Stack Java (Expired but needs data)
+  {
+    id: 'a40',
+    jobId: '2',
+    candidateId: 'c1',
+    cvId: 'cv1',
+    status: 'rejected',
+    appliedAt: new Date('2025-12-10'),
+    matchScore: 50
+  },
+  {
+    id: 'a41',
+    jobId: '2',
+    candidateId: 'c5',
+    cvId: 'cv5',
+    status: 'offered',
+    appliedAt: new Date('2025-12-15'),
+    matchScore: 95
+  },
+  // Job 4: DevOps
+  {
+    id: 'a50',
+    jobId: '4',
+    candidateId: 'c5',
+    cvId: 'cv5',
+    status: 'hired',
+    appliedAt: new Date('2025-12-20'),
+    matchScore: 98
+  },
+  {
+    id: 'a51',
+    jobId: '4',
+    candidateId: 'c3',
+    cvId: 'cv3',
+    status: 'new',
+    appliedAt: new Date('2026-01-05'),
+    matchScore: 70
   }
 ];
 
