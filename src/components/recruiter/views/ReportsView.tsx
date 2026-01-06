@@ -108,22 +108,6 @@ const ReportsView = () => {
                     colorClass="text-blue-600 dark:text-blue-400"
                 />
                 <MetricCard
-                    title="Open Jobs"
-                    value={activeJobsCount}
-                    icon={Briefcase}
-                    trend="+2 new this week"
-                    bgClass="bg-purple-100 dark:bg-purple-900/20"
-                    colorClass="text-purple-600 dark:text-purple-400"
-                />
-                <MetricCard
-                    title="Avg Recruitment Ratio"
-                    value="18%"
-                    icon={PieChartIcon}
-                    trend="+1.5% improvement"
-                    bgClass="bg-orange-100 dark:bg-orange-900/20"
-                    colorClass="text-orange-600 dark:text-orange-400"
-                />
-                <MetricCard
                     title="New Applicants Today"
                     value={newApplicantsToday || 3} // Fallback to 3 for demo if 0
                     icon={FileText}
@@ -138,14 +122,6 @@ const ReportsView = () => {
                     trend="Busy day"
                     bgClass="bg-pink-100 dark:bg-pink-900/20"
                     colorClass="text-pink-600 dark:text-pink-400"
-                />
-                <MetricCard
-                    title="Offer Acceptance Rate"
-                    value={`${offerAcceptanceRate}%`}
-                    icon={CheckCircle2}
-                    trend="+2% vs target"
-                    bgClass="bg-emerald-100 dark:bg-emerald-900/20"
-                    colorClass="text-emerald-600 dark:text-emerald-400"
                 />
             </div>
 
