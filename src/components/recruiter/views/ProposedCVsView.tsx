@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import {
     Dialog,
@@ -14,9 +13,15 @@ import {
 } from '@/components/ui/dialog';
 import { mockJobs, mockCandidates, mockApplications, mockCVs } from '@/data/mockData';
 import { Job, CandidateProfile, CV } from '@/types';
-import { Sparkles, Briefcase, Star, UserCheck, ArrowRight, Mail, FileText, Download, User } from 'lucide-react';
+import { Sparkles, Briefcase, Star, UserCheck, ArrowRight, Mail, FileText, User } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSubscription } from '@/contexts/SubscriptionContext';
+
+// React PDF Viewer imports
+import { Viewer, Worker } from '@react-pdf-viewer/core';
+import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
+import '@react-pdf-viewer/core/lib/styles/index.css';
+import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
 interface ProposedMatch {
     candidate: CandidateProfile;
@@ -28,13 +33,14 @@ interface ProposedMatch {
 
 const ProposedCVsView = () => {
     const { tier } = useSubscription();
+    // Create instance of default layout plugin
+    const defaultLayoutPluginInstance = defaultLayoutPlugin();
+
     // Local state for "invited" candidates to simulate action
     const [invitedMatches, setInvitedMatches] = useState<string[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<ProposedMatch | null>(null);
 
     const proposedMatches = useMemo(() => {
-        // ... (existing logic remains same, but we only calculate if premium to save resources? 
-        // actually optimization is not critical for mock data, but we suppress output if not premium)
         if (tier !== 'premium') return [];
 
         const matches: ProposedMatch[] = [];
@@ -174,7 +180,11 @@ const ProposedCVsView = () => {
                     const isInvited = invitedMatches.includes(matchId);
 
                     return (
-                        <Card key={matchId} className="flex flex-col group hover:shadow-md transition-all">
+                        <Card
+                            key={matchId}
+                            className="flex flex-col group hover:shadow-md transition-all cursor-pointer hover:border-primary/50"
+                            onClick={() => setSelectedMatch(match)}
+                        >
                             <CardHeader className="pb-3">
                                 <div className="flex justify-between items-start">
                                     <div className="flex items-center gap-3">
@@ -183,7 +193,7 @@ const ProposedCVsView = () => {
                                             <AvatarFallback>{match.candidate.name.substring(0, 2)}</AvatarFallback>
                                         </Avatar>
                                         <div>
-                                            <CardTitle className="text-base">{match.candidate.name}</CardTitle>
+                                            <CardTitle className="text-base group-hover:text-primary transition-colors">{match.candidate.name}</CardTitle>
                                             <CardDescription className="flex items-center gap-1">
                                                 <UserCheck className="h-3 w-3" />
                                                 {match.candidate.yearsOfExperience} years exp
@@ -216,12 +226,15 @@ const ProposedCVsView = () => {
                                     </ul>
                                 </div>
 
-                                <div className="pt-2 flex gap-2">
+                                <div className="pt-2">
                                     <Button
-                                        className="flex-1"
+                                        className="w-full"
                                         variant={isInvited ? "outline" : "default"}
                                         disabled={isInvited}
-                                        onClick={() => handleInvite(matchId)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleInvite(matchId);
+                                        }}
                                     >
                                         {isInvited ? (
                                             <>
@@ -234,9 +247,6 @@ const ProposedCVsView = () => {
                                                 Invite
                                             </>
                                         )}
-                                    </Button>
-                                    <Button variant="ghost" size="icon" title="View Profile" onClick={() => setSelectedMatch(match)}>
-                                        <ArrowRight className="h-4 w-4" />
                                     </Button>
                                 </div>
                             </CardContent>
@@ -342,26 +352,21 @@ const ProposedCVsView = () => {
                                         </div>
                                     </div>
                                 </TabsContent>
-                                <TabsContent value="cv" className="h-[400px]">
+                                <TabsContent value="cv" className="h-[600px] mt-0 border rounded-md overflow-hidden bg-slate-50">
                                     {selectedMatch && getCandidateCV(selectedMatch.candidate.id) ? (
-                                        <div className="h-full flex flex-col items-center justify-center border-2 border-dashed rounded-lg bg-card p-8 text-center">
-                                            <div className="bg-primary/10 p-4 rounded-full mb-4">
-                                                <FileText className="h-10 w-10 text-primary" />
-                                            </div>
-                                            <h3 className="text-lg font-semibold mb-1">
-                                                {getCandidateCV(selectedMatch.candidate.id)?.fileName}
-                                            </h3>
-                                            <p className="text-muted-foreground text-sm mb-6 max-w-xs mx-auto">
-                                                This is a mock application. In production, this would render the PDF viewer.
-                                            </p>
-                                            <Button>
-                                                <Download className="h-4 w-4 mr-2" />
-                                                Download CV
-                                            </Button>
+                                        <div className="h-full w-full">
+                                            <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
+                                                <Viewer
+                                                    fileUrl={getCandidateCV(selectedMatch.candidate.id)?.fileUrl || '/sample-cv.pdf'}
+                                                    plugins={[defaultLayoutPluginInstance]}
+                                                    defaultScale={1.2}
+                                                />
+                                            </Worker>
                                         </div>
                                     ) : (
-                                        <div className="h-full flex items-center justify-center text-muted-foreground">
-                                            No CV document found for this candidate.
+                                        <div className="h-full flex items-center justify-center text-muted-foreground flex-col gap-2">
+                                            <FileText className="h-10 w-10 text-muted-foreground/50" />
+                                            <span>No CV document found for this candidate.</span>
                                         </div>
                                     )}
                                 </TabsContent>
