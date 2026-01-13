@@ -34,10 +34,11 @@ const ApplicationDetail = () => {
 
   // Mock timeline steps
   const steps = [
-    { id: 'pending', label: 'Applied', date: application.appliedAt, completed: true },
-    { id: 'reviewing', label: 'Under Review', date: new Date(application.appliedAt.getTime() + 86400000), completed: ['reviewing', 'interview', 'shortlisted', 'offered', 'rejected'].includes(application.status) },
+    { id: 'applied', label: 'Applied', date: application.appliedAt, completed: true },
+    { id: 'in_review', label: 'In Review', date: new Date(application.appliedAt.getTime() + 86400000), completed: ['in_review', 'interview', 'offered', 'rejected'].includes(application.status) },
     { id: 'interview', label: 'Interview', date: new Date(application.appliedAt.getTime() + 86400000 * 3), completed: ['interview', 'offered', 'rejected'].includes(application.status) },
-    { id: 'offered', label: 'Final Decision', date: new Date(application.appliedAt.getTime() + 86400000 * 7), completed: ['offered', 'rejected'].includes(application.status) }
+    { id: 'offered', label: 'Offered', date: new Date(application.appliedAt.getTime() + 86400000 * 7), completed: ['offered'].includes(application.status) },
+    { id: 'rejected', label: 'Rejected', date: new Date(application.appliedAt.getTime() + 86400000 * 7), completed: ['rejected'].includes(application.status) }
   ];
 
   // Mock activity log
@@ -61,7 +62,7 @@ const ApplicationDetail = () => {
       color: 'text-blue-500'
     },
     // Add more based on status...
-    ...(application.status !== 'new' ? [{
+    ...(application.status !== 'applied' ? [{
       id: 3,
       type: 'status_change',
       title: 'Status Updated to Reviewing',

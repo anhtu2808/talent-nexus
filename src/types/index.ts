@@ -1,6 +1,6 @@
 export type UserRole = 'candidate' | 'recruiter' | 'admin';
 
-export type ApplicationStatus = 'new' | 'viewed' | 'screening' | 'interviewing' | 'negotiating' | 'offered' | 'hired' | 'rejected';
+export type ApplicationStatus = 'applied' | 'in_review' | 'interview' | 'offered' | 'rejected';
 
 export interface User {
   id: string;
@@ -106,6 +106,7 @@ export interface Education {
   degree: string;
   institution: string;
   year: string;
+  institutionLogo?: string;
 }
 
 export interface AuthState {
@@ -116,12 +117,9 @@ export interface AuthState {
 
 // Pipeline stage configuration - Extended with new stages
 export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: string }[] = [
-  { key: 'new', label: 'New', color: 'bg-blue-500' },
-  { key: 'viewed', label: 'Viewed', color: 'bg-indigo-500' },
-  { key: 'screening', label: 'Screening', color: 'bg-purple-500' },
-  { key: 'interviewing', label: 'Interviewing', color: 'bg-amber-500' },
-  { key: 'negotiating', label: 'Negotiating', color: 'bg-orange-500' },
+  { key: 'applied', label: 'Applied', color: 'bg-blue-500' },
+  { key: 'in_review', label: 'In Review', color: 'bg-purple-500' },
+  { key: 'interview', label: 'Interview', color: 'bg-amber-500' },
   { key: 'offered', label: 'Offered', color: 'bg-emerald-500' },
-  { key: 'hired', label: 'Hired', color: 'bg-green-600' },
   { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
 ];

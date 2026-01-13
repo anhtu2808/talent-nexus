@@ -523,7 +523,7 @@ const CVManagementView = () => {
                     jobId={selectedJob}
                     jobTitle={selectedJobData?.title || 'Job'}
                     onBooked={() => {
-                        handleStatusChange(selectedCandidateForBooking.applicationId, 'interviewing');
+                        handleStatusChange(selectedCandidateForBooking.applicationId, 'interview');
                     }}
                 />
             )}

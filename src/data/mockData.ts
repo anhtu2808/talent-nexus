@@ -309,7 +309,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c1',
     cvId: 'cv1',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-01'),
     matchScore: 85,
     viewedAt: undefined,
@@ -331,7 +331,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c2',
     cvId: 'cv2',
-    status: 'viewed',
+    status: 'in_review',
     appliedAt: new Date('2025-12-15'),
     matchScore: 88,
     viewedAt: new Date('2025-12-16'),
@@ -361,7 +361,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c3',
     cvId: 'cv3',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-25'),
     matchScore: 92
   },
@@ -370,7 +370,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c4',
     cvId: 'cv4',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-26'),
     matchScore: 65
   },
@@ -379,7 +379,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c5',
     cvId: 'cv5',
-    status: 'interviewing',
+    status: 'interview',
     appliedAt: new Date('2025-12-22'),
     matchScore: 78,
     viewedAt: new Date('2025-12-23'),
@@ -411,7 +411,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c7',
     cvId: 'cv7',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-05'),
     matchScore: 72
   },
@@ -420,7 +420,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c8',
     cvId: 'cv8',
-    status: 'hired',
+    status: 'offered',
     appliedAt: new Date('2025-12-05'),
     matchScore: 90,
     viewedAt: new Date('2025-12-06'),
@@ -442,7 +442,7 @@ export const mockApplications: Application[] = [
     jobId: '2',
     candidateId: 'c2',
     cvId: 'cv2',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-22'),
     matchScore: 92
   },
@@ -451,7 +451,7 @@ export const mockApplications: Application[] = [
     jobId: '3',
     candidateId: 'c3',
     cvId: 'cv3',
-    status: 'interviewing',
+    status: 'interview',
     appliedAt: new Date('2026-01-04'),
     matchScore: 95,
     viewedAt: new Date('2026-01-05'),
@@ -465,7 +465,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c2',
     cvId: 'cv2',
-    status: 'screening',
+    status: 'in_review',
     appliedAt: new Date('2025-12-28'),
     matchScore: 78
   },
@@ -474,7 +474,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c3',
     cvId: 'cv3',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-29'),
     matchScore: 82
   },
@@ -483,7 +483,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c4',
     cvId: 'cv4',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-30'),
     matchScore: 60
   },
@@ -492,7 +492,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c5',
     cvId: 'cv5',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-02'),
     matchScore: 75
   },
@@ -501,7 +501,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c7',
     cvId: 'cv7',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-06'),
     matchScore: 88
   },
@@ -512,7 +512,7 @@ export const mockApplications: Application[] = [
     jobId: '3',
     candidateId: 'c1',
     cvId: 'cv1',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-01'),
     matchScore: 70
   },
@@ -521,7 +521,7 @@ export const mockApplications: Application[] = [
     jobId: '3',
     candidateId: 'c4',
     cvId: 'cv4',
-    status: 'screening',
+    status: 'in_review',
     appliedAt: new Date('2026-01-02'),
     matchScore: 65
   },
@@ -530,7 +530,7 @@ export const mockApplications: Application[] = [
     jobId: '3',
     candidateId: 'c5',
     cvId: 'cv5',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-03'),
     matchScore: 85
   },
@@ -539,7 +539,7 @@ export const mockApplications: Application[] = [
     jobId: '3',
     candidateId: 'c6',
     cvId: 'cv6',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-05'),
     matchScore: 80
   },
@@ -548,7 +548,7 @@ export const mockApplications: Application[] = [
     jobId: '3',
     candidateId: 'c2',
     cvId: 'cv2',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-29'),
     matchScore: 75
   },
@@ -559,7 +559,7 @@ export const mockApplications: Application[] = [
     jobId: '5',
     candidateId: 'c1',
     cvId: 'cv1',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2025-12-27'),
     matchScore: 60
   },
@@ -568,7 +568,7 @@ export const mockApplications: Application[] = [
     jobId: '5',
     candidateId: 'c6',
     cvId: 'cv6',
-    status: 'screening',
+    status: 'in_review',
     appliedAt: new Date('2025-12-30'),
     matchScore: 85
   },
@@ -577,7 +577,7 @@ export const mockApplications: Application[] = [
     jobId: '5',
     candidateId: 'c7',
     cvId: 'cv7',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-02'),
     matchScore: 70
   },
@@ -586,7 +586,7 @@ export const mockApplications: Application[] = [
     jobId: '5',
     candidateId: 'c8',
     cvId: 'cv8',
-    status: 'interviewing',
+    status: 'interview',
     appliedAt: new Date('2026-01-03'),
     matchScore: 90
   },
@@ -616,7 +616,7 @@ export const mockApplications: Application[] = [
     jobId: '4',
     candidateId: 'c5',
     cvId: 'cv5',
-    status: 'hired',
+    status: 'offered',
     appliedAt: new Date('2025-12-20'),
     matchScore: 98
   },
@@ -625,7 +625,7 @@ export const mockApplications: Application[] = [
     jobId: '4',
     candidateId: 'c3',
     cvId: 'cv3',
-    status: 'new',
+    status: 'applied',
     appliedAt: new Date('2026-01-05'),
     matchScore: 70
   }

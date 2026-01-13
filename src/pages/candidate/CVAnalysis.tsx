@@ -244,7 +244,7 @@ const CVAnalysis = () => {
                             {finding.message}
                           </p>
                           <div className="flex items-center pt-2">
-                            <Button size="sm" variant="outline" className="h-7 text-xs">Fixed</Button>
+                            <Button size="sm" variant="outline" className="h-7 text-xs">Fixed (Re-generated)</Button>
                           </div>
                         </>
                       )}
