@@ -9,6 +9,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/contexts/SubscriptionContext';
 import { mockCVs } from '@/data/mockData';
 import { formatDistanceToNow } from 'date-fns';
 import {
@@ -26,6 +27,7 @@ import { toast } from 'sonner';
 
 const CVManager = () => {
   const { isAuthenticated } = useAuth();
+  const { tier } = useSubscription(); // Use the dev mode subscription state
   const navigate = useNavigate();
   const [cvs, setCvs] = useState(mockCVs);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -35,6 +37,25 @@ const CVManager = () => {
       navigate('/auth?mode=login');
       return;
     }
+
+    const isPremium = tier === 'premium';
+    const limit = isPremium ? 5 : 1;
+
+    if (cvs.length >= limit) {
+      if (!isPremium) {
+        toast.error('Free plan is limited to 1 CV', {
+          description: 'Upgrade to Premium to upload up to 5 CVs',
+          action: {
+            label: 'Upgrade',
+            onClick: () => navigate('/candidate/upgrade')
+          }
+        });
+      } else {
+        toast.error(`You have reached the maximum limit of ${limit} CVs`);
+      }
+      return;
+    }
+
     setUploadDialogOpen(true);
   };
 
