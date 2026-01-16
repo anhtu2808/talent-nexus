@@ -27,7 +27,7 @@ import { toast } from 'sonner';
 
 const CVManager = () => {
   const { isAuthenticated } = useAuth();
-  const { tier, atsScoringUsage, incrementATSScoring, LIMITS } = useSubscription(); // Use the dev mode subscription state
+  const { tier } = useSubscription(); // Use the dev mode subscription state
   const navigate = useNavigate();
   const [cvs, setCvs] = useState(mockCVs);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -45,7 +45,7 @@ const CVManager = () => {
     if (cvs.length >= limit) {
       if (!isPremium) {
         toast.error('Storage limit reached', {
-          description: 'Free plan is limited to 1 stored CV. Delete an existing CV to upload a new one.',
+          description: `Free plan is limited to ${limit} stored CV. Delete an existing CV to upload a new one.`,
           action: {
             label: 'Upgrade',
             onClick: () => navigate('/candidate/upgrade')
@@ -54,18 +54,6 @@ const CVManager = () => {
       } else {
         toast.error(`You have reached the maximum limit of ${limit} CVs`);
       }
-      return;
-    }
-
-    // Check ATS Scoring Usage Limit
-    if (!isPremium && atsScoringUsage >= LIMITS.FREE.ATS_SCORING) {
-      toast.error('ATS Scoring limit reached', {
-        description: `You have used all ${LIMITS.FREE.ATS_SCORING} free ATS scores.`,
-        action: {
-          label: 'Upgrade',
-          onClick: () => navigate('/candidate/upgrade')
-        }
-      });
       return;
     }
 
@@ -89,11 +77,7 @@ const CVManager = () => {
       setTimeout(() => {
         setCvs([newCV, ...cvs]);
         setUploadDialogOpen(false);
-        // Increment usage for free users
-        if (tier !== 'premium') {
-          incrementATSScoring();
-        }
-        toast.success('CV uploaded & scored successfully! AI analysis complete.');
+        toast.success('CV uploaded successfully! AI is analyzing...');
       }, 1000);
     }
   };

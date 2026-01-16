@@ -83,7 +83,7 @@ import { useAuth } from '@/contexts/AuthContext';
 const JobDetail = () => {
   const { id } = useParams();
   const location = useLocation();
-  const { tier, matchScoringUsage, incrementMatchScoring, LIMITS } = useSubscription();
+  const { tier } = useSubscription();
   const { user } = useAuth();
 
   // State initialization
@@ -244,32 +244,13 @@ const JobDetail = () => {
 
   const handleCheckMatch = () => {
     if (!selectedCV) return;
-
-    // Check Match Scoring Limit
-    if (tier !== 'premium' && matchScoringUsage >= LIMITS.FREE.MATCH_SCORING) {
-      toast.error('Match Scoring limit reached', {
-        description: `You have used your ${LIMITS.FREE.MATCH_SCORING} free Match Score analysis.`,
-        action: {
-          label: 'Upgrade',
-          onClick: () => navigate('/candidate/upgrade')
-        }
-      });
-      return;
-    }
-
     setIsAnalyzing(true);
     setTimeout(() => {
       setIsAnalyzing(false);
       setMatchScore(Math.floor(Math.random() * 30) + 70);
       setShowDetailedAnalysis(true);
-
-      // Increment usage
-      if (tier !== 'premium') {
-        incrementMatchScoring();
-      }
     }, 2000);
   };
-
 
   const handleApply = () => {
     if (!selectedCV) return;
