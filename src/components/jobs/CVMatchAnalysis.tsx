@@ -144,7 +144,7 @@ const generateMockAnalysis = (job: Job): MatchItem[] => {
 
 const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisProps) => {
   const navigate = useNavigate();
-  const { tier } = useSubscription();
+  const { tier, matchScoringUsage, LIMITS } = useSubscription();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     skill: true,
     experience: true,
@@ -319,7 +319,7 @@ const CVMatchAnalysis = ({ job, matchScore, onClose, onApply }: CVMatchAnalysisP
                 {/* Category Items */}
                 {expandedSections[category] && (
                   <div className="relative">
-                    {tier === 'free' ? (
+                    {tier === 'free' && matchScoringUsage > LIMITS.FREE.MATCH_SCORING ? (
                       <>
                         <div className="divide-y divide-border blur-sm select-none opacity-50 pointer-events-none">
                           {[1, 2].map((_, idx) => (
