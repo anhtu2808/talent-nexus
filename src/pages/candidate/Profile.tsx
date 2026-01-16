@@ -137,7 +137,7 @@ const Profile = () => {
             <div className="relative">
               <Avatar className="w-32 h-32 border-4 border-gray-50 shadow-sm mx-auto md:mx-0">
                 <AvatarImage src={profile.avatar} className="object-cover" />
-                <AvatarFallback className="text-4xl bg-blue-50 text-blue-600">
+                <AvatarFallback className="text-4xl bg-green-50 text-green-600">
                   {profile.name?.charAt(0)}
                 </AvatarFallback>
               </Avatar>
@@ -150,7 +150,7 @@ const Profile = () => {
                 <MapPin className="w-4 h-4" />
                 <span>{profile.location}</span>
                 <span className="mx-2">•</span>
-                <span className="text-blue-600 font-medium">{(profile as any).openToWork !== false ? 'Open to work' : 'Closed'}</span>
+                <span className="text-green-600 font-medium">{(profile as any).openToWork !== false ? 'Open to work' : 'Closed'}</span>
               </div>
             </div>
           </div>
@@ -159,7 +159,7 @@ const Profile = () => {
               <Briefcase className="w-4 h-4" />
               Change Status
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 shadow-sm">
+            <Button className="bg-green-600 hover:bg-green-700 shadow-sm">
               Share Profile
             </Button>
           </div>
@@ -221,7 +221,7 @@ const Profile = () => {
               ) : (
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 text-gray-600">
-                    <div className="bg-blue-50 p-2 rounded-full text-blue-600">
+                    <div className="bg-green-50 p-2 rounded-full text-green-600">
                       <Mail className="w-4 h-4" />
                     </div>
                     <div className="overflow-hidden">
@@ -230,7 +230,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-gray-600">
-                    <div className="bg-blue-50 p-2 rounded-full text-blue-600">
+                    <div className="bg-green-50 p-2 rounded-full text-green-600">
                       <Phone className="w-4 h-4" />
                     </div>
                     <div>
@@ -239,7 +239,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-gray-600">
-                    <div className="bg-blue-50 p-2 rounded-full text-blue-600">
+                    <div className="bg-green-50 p-2 rounded-full text-green-600">
                       <MapPin className="w-4 h-4" />
                     </div>
                     <div>
@@ -248,7 +248,7 @@ const Profile = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-3 text-gray-600">
-                    <div className="bg-blue-50 p-2 rounded-full text-blue-600">
+                    <div className="bg-green-50 p-2 rounded-full text-green-600">
                       <DollarSign className="w-4 h-4" />
                     </div>
                     <div>

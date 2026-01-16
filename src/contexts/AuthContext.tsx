@@ -18,10 +18,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = useCallback(async (email: string, password: string, role: UserRole) => {
     setAuthState(prev => ({ ...prev, isLoading: true }));
-    
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     // Mock successful login - with specific IDs for each role
     const mockUser: User = {
       id: role === 'candidate' ? 'c1' : role === 'recruiter' ? 'r1' : 'admin1',
@@ -44,10 +44,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = useCallback(async (email: string, password: string, name: string, role: UserRole) => {
     setAuthState(prev => ({ ...prev, isLoading: true }));
-    
+
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
-    
+
     const mockUser: User = {
       id: Date.now().toString(),
       email,

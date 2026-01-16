@@ -25,7 +25,7 @@ const DashboardCVCard = () => {
 
             <Link
               to="/candidate/cv-manager"
-              className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 text-sm"
+              className="text-green-600 hover:text-green-700 font-medium flex items-center gap-1 text-sm"
             >
               Manage CV attachment <span className="text-lg">›</span>
             </Link>

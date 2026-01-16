@@ -37,7 +37,7 @@ const DashboardProfileCard = () => {
           <div className="pt-2">
             <Link
               to="/candidate/profile"
-              className="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1"
+              className="text-green-600 hover:text-green-700 font-medium flex items-center gap-1"
             >
               Update your profile <span className="text-lg">›</span>
             </Link>

@@ -35,7 +35,7 @@ const CompanyDetail = () => {
 
             <main className="flex-1 pb-20">
                 {/* Banner/Cover Image Concept */}
-                <div className="h-64 bg-gradient-to-r from-blue-600 to-indigo-700 relative">
+                <div className="h-64 bg-gradient-to-r from-green-600 to-green-900 relative">
                     <div className="absolute inset-0 bg-black/20" />
                     <div className="container h-full relative">
                         <Link to="/companies" className="absolute top-6 left-4 md:left-8 text-white/80 hover:text-white flex items-center gap-2 transition-colors">
@@ -72,7 +72,7 @@ const CompanyDetail = () => {
                                             </div>
 
                                             <div className="flex items-center gap-2 text-slate-700">
-                                                <Calendar className="w-4 h-4 text-blue-600" />
+                                                <Calendar className="w-4 h-4 text-green-600" />
                                                 <span className="font-medium">{company.workingTime}</span>
                                             </div>
                                         </div>
@@ -87,10 +87,10 @@ const CompanyDetail = () => {
                                         </div>
 
                                         <div className="flex flex-wrap gap-3">
-                                            <Button className="bg-blue-600 hover:bg-blue-700">
+                                            <Button variant="accent">
                                                 Follow Company
                                             </Button>
-                                            <Button variant="outline" className="border-blue-600 text-blue-600 hover:bg-blue-50">
+                                            <Button variant="outline" className="border-green-600 text-green-600 hover:bg-green-50">
                                                 Visit Website <LinkIcon className="ml-2 w-4 h-4" />
                                             </Button>
                                         </div>
@@ -103,29 +103,29 @@ const CompanyDetail = () => {
                                 <div className="flex items-center gap-8 border-b border-slate-200">
                                     <button
                                         onClick={() => setActiveTab('about')}
-                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'about' ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
+                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'about' ? 'text-green-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
                                     >
                                         About
                                         {activeTab === 'about' && (
-                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
+                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-600 rounded-t-full" />
                                         )}
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('reviews')}
-                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'reviews' ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
+                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'reviews' ? 'text-green-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
                                     >
                                         Reviews <Badge variant="secondary" className="ml-1 bg-slate-100 text-slate-600">{company.reviews}</Badge>
                                         {activeTab === 'reviews' && (
-                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
+                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-600 rounded-t-full" />
                                         )}
                                     </button>
                                     <button
                                         onClick={() => setActiveTab('jobs')}
-                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'jobs' ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
+                                        className={`pb-4 font-medium text-sm transition-all relative ${activeTab === 'jobs' ? 'text-green-600 font-bold' : 'text-slate-500 hover:text-slate-800'}`}
                                     >
                                         Jobs <Badge variant="secondary" className="ml-1 bg-slate-100 text-slate-600">{companyJobs.length}</Badge>
                                         {activeTab === 'jobs' && (
-                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-blue-600 rounded-t-full" />
+                                            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-green-600 rounded-t-full" />
                                         )}
                                     </button>
                                 </div>
@@ -136,7 +136,7 @@ const CompanyDetail = () => {
                                 <>
                                     <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-8">
                                         <h2 className="text-xl font-bold mb-6 flex items-center gap-2">
-                                            <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                            <span className="w-1 h-6 bg-green-600 rounded-full"></span>
                                             About Us
                                         </h2>
                                         <div className="prose max-w-none text-slate-600 mb-8">
@@ -148,14 +148,14 @@ const CompanyDetail = () => {
                                         {company.techStack ? (
                                             <div className="mt-8 border-t border-slate-100 pt-6">
                                                 <h3 className="text-xl font-bold flex items-center gap-2 text-slate-900 mb-6">
-                                                    <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                    <span className="w-1 h-6 bg-green-600 rounded-full"></span>
                                                     Our expertise
                                                 </h3>
 
                                                 <div className="mb-6">
                                                     <div className="flex flex-wrap gap-2">
                                                         {company.techStack.keySkills.map((skill, idx) => (
-                                                            <Badge key={idx} variant="outline" className="bg-white text-slate-600 border-slate-200 font-normal hover:border-blue-500 hover:text-blue-600 transition-colors px-3 py-1">
+                                                            <Badge key={idx} variant="outline" className="bg-white text-slate-600 border-slate-200 font-normal hover:border-green-500 hover:text-green-600 transition-colors px-3 py-1">
                                                                 {skill}
                                                             </Badge>
                                                         ))}
@@ -205,7 +205,7 @@ const CompanyDetail = () => {
                                         {company.reasonsToJoin && (
                                             <div className="mt-8 border-t border-slate-100 pt-6">
                                                 <h3 className="text-xl font-bold flex items-center gap-2 text-slate-900 mb-6">
-                                                    <span className="w-1 h-6 bg-blue-600 rounded-full"></span>
+                                                    <span className="w-1 h-6 bg-green-600 rounded-full"></span>
                                                     Why you will love working here
                                                 </h3>
                                                 <div className="grid grid-cols-1 gap-3">
@@ -227,7 +227,7 @@ const CompanyDetail = () => {
                                     {/* Map Section */}
                                     <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-4">
                                         <h2 className="text-lg font-bold mb-4 flex items-center gap-2">
-                                            <MapPin className="w-5 h-5 text-blue-600" />
+                                            <MapPin className="w-5 h-5 text-green-600" />
                                             Company Location
                                         </h2>
                                         <div className="bg-slate-100 h-80 rounded-lg flex items-center justify-center relative group cursor-pointer overflow-hidden">
@@ -361,10 +361,10 @@ const CompanyDetail = () => {
                                         <div className="grid grid-cols-1 gap-4">
                                             {companyJobs.map((job) => (
                                                 <Link to={`/jobs/${job.id}`} key={job.id} className="block group">
-                                                    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 hover:border-blue-500 hover:shadow-md transition-all">
+                                                    <div className="bg-white rounded-xl shadow-sm border border-slate-100 p-6 hover:border-green-500 hover:shadow-md transition-all">
                                                         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                                                             <div>
-                                                                <h4 className="font-bold text-lg text-slate-900 group-hover:text-blue-600 transition-colors mb-2">
+                                                                <h4 className="font-bold text-lg text-slate-900 group-hover:text-green-600 transition-colors mb-2">
                                                                     {job.title}
                                                                 </h4>
                                                                 <div className="flex flex-wrap items-center gap-4 text-slate-500 text-sm">
@@ -389,7 +389,7 @@ const CompanyDetail = () => {
                                                                 </div>
                                                             </div>
                                                             <div className="shrink-0">
-                                                                <Button className="w-full md:w-auto bg-blue-50 text-blue-600 hover:bg-blue-100 border-blue-200">
+                                                                <Button className="w-full md:w-auto bg-green-50 text-green-600 hover:bg-green-100 border-green-200">
                                                                     View Details
                                                                 </Button>
                                                             </div>
@@ -437,7 +437,7 @@ const CompanyDetail = () => {
                                     </div>
                                     <div className="flex items-center justify-between py-2 border-b border-slate-50">
                                         <span className="text-slate-500 text-sm">Website</span>
-                                        <a href="#" className="font-medium text-blue-600 hover:underline truncate max-w-[150px]">techvision.com</a>
+                                        <a href="#" className="font-medium text-green-600 hover:underline truncate max-w-[150px]">techvision.com</a>
                                     </div>
                                 </div>
                             </div>
@@ -453,8 +453,8 @@ const CompanyDetail = () => {
                                     {companyJobs.length > 0 ? (
                                         companyJobs.map((job) => (
                                             <Link to={`/jobs/${job.id}`} key={job.id} className="block group">
-                                                <div className="border border-slate-100 rounded-lg p-3 hover:border-blue-500 hover:shadow-sm transition-all bg-slate-50/50 hover:bg-white">
-                                                    <h4 className="font-semibold text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-1 mb-1">
+                                                <div className="border border-slate-100 rounded-lg p-3 hover:border-green-500 hover:shadow-sm transition-all bg-slate-50/50 hover:bg-white">
+                                                    <h4 className="font-semibold text-slate-800 group-hover:text-green-600 transition-colors line-clamp-1 mb-1">
                                                         {job.title}
                                                     </h4>
                                                     <div className="flex flex-col gap-1 text-xs text-slate-500">
@@ -465,7 +465,7 @@ const CompanyDetail = () => {
                                                             <span className="flex items-center gap-1">
                                                                 <MapPin className="w-3 h-3" /> {job.location.join(', ')}
                                                             </span>
-                                                            <span className="text-blue-600 opacity-0 group-hover:opacity-100 transition-opacity">Apply &rarr;</span>
+                                                            <span className="text-green-600 opacity-0 group-hover:opacity-100 transition-opacity">Apply &rarr;</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -480,7 +480,7 @@ const CompanyDetail = () => {
                                 </div>
 
                                 {companyJobs.length > 5 && (
-                                    <Button variant="ghost" className="w-full mt-4 text-sm text-blue-600 hover:text-blue-700">
+                                    <Button variant="ghost" className="w-full mt-4 text-sm text-green-600 hover:text-green-700">
                                         View All Jobs
                                     </Button>
                                 )}
