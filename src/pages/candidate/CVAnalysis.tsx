@@ -40,7 +40,7 @@ const resumePdfUrl = '/sample-cv.pdf';
 const CVAnalysis = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { tier } = useSubscription();
+  const { tier, fixCredits, decrementFixCredits } = useSubscription();
 
   // Mock Data mimicking "Resume Worded" structure
   const overallScore = 72;
@@ -222,7 +222,7 @@ const CVAnalysis = () => {
                         AI Suggestion
                       </h4>
 
-                      {tier === 'free' ? (
+                      {tier === 'free' && fixCredits <= 0 ? (
                         <div className="relative mt-2">
                           <p className="text-sm text-muted-foreground blur-md select-none opacity-50">
                             {finding.message}
@@ -244,7 +244,14 @@ const CVAnalysis = () => {
                             {finding.message}
                           </p>
                           <div className="flex items-center pt-2">
-                            <Button size="sm" variant="outline" className="h-7 text-xs">Fixed (Re-generated)</Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 text-xs"
+                              onClick={handleFixIssue}
+                            >
+                              Fixed (Re-generated)
+                            </Button>
                           </div>
                         </>
                       )}
@@ -271,7 +278,39 @@ const CVAnalysis = () => {
   }, [highlight, aiFindings]);
 
   const handleOptimize = () => {
-    toast.success("Optimizing your CV...");
+    if (fixCredits <= 0) {
+      toast.error('No Fix Credits remaining', {
+        description: 'Upgrade to Premium for 100 automatic fixes per month.',
+        action: {
+          label: 'Upgrade',
+          onClick: () => navigate('/candidate/upgrade')
+        }
+      });
+      return;
+    }
+
+    decrementFixCredits();
+    toast.success("Optimizing your CV...", {
+      description: `${fixCredits - 1} credits remaining.`
+    });
+  };
+
+  const handleFixIssue = () => {
+    if (fixCredits <= 0) {
+      toast.error('No Fix Credits remaining', {
+        description: 'Upgrade to Premium for 100 automatic fixes per month.',
+        action: {
+          label: 'Upgrade',
+          onClick: () => navigate('/candidate/upgrade')
+        }
+      });
+      return;
+    }
+
+    decrementFixCredits();
+    toast.success("Fixing issue...", {
+      description: `${fixCredits - 1} credits remaining.`
+    });
   };
 
   return (
@@ -365,7 +404,7 @@ const CVAnalysis = () => {
                             {cat.description}
                           </p>
 
-                          {tier === 'free' ? (
+                          {tier === 'free' && fixCredits <= 0 ? (
                             <div className="relative">
                               {/* Blurred Content Placeholder */}
                               <div className="blur-sm select-none opacity-50 space-y-3 pointer-events-none">
@@ -417,7 +456,12 @@ const CVAnalysis = () => {
                                       </p>
 
                                       <div className="flex justify-start">
-                                        <Button variant="outline" size="sm" className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50">
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50"
+                                          onClick={handleFixIssue}
+                                        >
                                           Fix this issue <ChevronDown className="h-3 w-3 ml-1" />
                                         </Button>
                                       </div>
@@ -492,22 +536,29 @@ const CVAnalysis = () => {
 
               {/* Optimize Button (Footer) */}
               <div className="p-4 border-t border-border bg-slate-50">
-                {tier === 'free' ? (
-                  <Button
-                    size="lg"
-                    className="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 shadow-sm font-semibold border border-slate-200"
-                    onClick={() => navigate('/candidate/upgrade')}
-                  >
-                    <Lock className="h-4 w-4 mr-2" /> Unlock CV Optimization
-                  </Button>
+                {tier === 'free' && fixCredits <= 0 ? (
+                  <div className="space-y-2">
+                    <Button
+                      size="lg"
+                      className="w-full bg-slate-100 hover:bg-slate-200 text-slate-500 shadow-sm font-semibold border border-slate-200"
+                      onClick={() => navigate('/candidate/upgrade')}
+                    >
+                      <Lock className="h-4 w-4 mr-2" /> Unlock CV Optimization
+                    </Button>
+                  </div>
                 ) : (
-                  <Button
-                    size="lg"
-                    className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm font-semibold"
-                    onClick={handleOptimize}
-                  >
-                    <Sparkles className="h-4 w-4 mr-2" /> Optimize CV
-                  </Button>
+                  <div className="space-y-2">
+                    <Button
+                      size="lg"
+                      className="w-full bg-indigo-600 hover:bg-indigo-700 text-white shadow-sm font-semibold"
+                      onClick={handleOptimize}
+                    >
+                      <Sparkles className="h-4 w-4 mr-2" /> Optimize CV
+                    </Button>
+                    <p className="text-xs text-center text-muted-foreground">
+                      {fixCredits} fix credits remaining this month
+                    </p>
+                  </div>
                 )}
               </div>
 

@@ -27,7 +27,7 @@ import { toast } from 'sonner';
 
 const CVManager = () => {
   const { isAuthenticated } = useAuth();
-  const { tier } = useSubscription(); // Use the dev mode subscription state
+  const { tier, atsScoringUsage, incrementATSScoring, LIMITS } = useSubscription(); // Use the dev mode subscription state
   const navigate = useNavigate();
   const [cvs, setCvs] = useState(mockCVs);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
@@ -41,10 +41,11 @@ const CVManager = () => {
     const isPremium = tier === 'premium';
     const limit = isPremium ? 5 : 1;
 
+    // Check Storage Limit
     if (cvs.length >= limit) {
       if (!isPremium) {
-        toast.error('Free plan is limited to 1 CV', {
-          description: 'Upgrade to Premium to upload up to 5 CVs',
+        toast.error('Storage limit reached', {
+          description: 'Free plan is limited to 1 stored CV. Delete an existing CV to upload a new one.',
           action: {
             label: 'Upgrade',
             onClick: () => navigate('/candidate/upgrade')
@@ -53,6 +54,18 @@ const CVManager = () => {
       } else {
         toast.error(`You have reached the maximum limit of ${limit} CVs`);
       }
+      return;
+    }
+
+    // Check ATS Scoring Usage Limit
+    if (!isPremium && atsScoringUsage >= LIMITS.FREE.ATS_SCORING) {
+      toast.error('ATS Scoring limit reached', {
+        description: `You have used all ${LIMITS.FREE.ATS_SCORING} free ATS scores.`,
+        action: {
+          label: 'Upgrade',
+          onClick: () => navigate('/candidate/upgrade')
+        }
+      });
       return;
     }
 
@@ -76,7 +89,11 @@ const CVManager = () => {
       setTimeout(() => {
         setCvs([newCV, ...cvs]);
         setUploadDialogOpen(false);
-        toast.success('CV uploaded successfully! AI is analyzing...');
+        // Increment usage for free users
+        if (tier !== 'premium') {
+          incrementATSScoring();
+        }
+        toast.success('CV uploaded & scored successfully! AI analysis complete.');
       }, 1000);
     }
   };
