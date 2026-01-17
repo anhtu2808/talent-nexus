@@ -15,8 +15,13 @@ import { toast } from 'sonner';
 const TeamManagementView = () => {
     const [teamMembers, setTeamMembers] = useState(mockRecruiters);
     const [searchTerm, setSearchTerm] = useState('');
-    const [isInviteOpen, setIsInviteOpen] = useState(false);
-    const [inviteEmail, setInviteEmail] = useState('');
+    const [isCreateOpen, setIsCreateOpen] = useState(false);
+    const [formData, setFormData] = useState({
+        name: '',
+        email: '',
+        password: '',
+        subRole: 'member' as 'manager' | 'member'
+    });
 
     // Mock limit from registration plan
     const ACCOUNT_LIMIT = 5;
@@ -26,29 +31,34 @@ const TeamManagementView = () => {
         member.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    const handleInvite = (e: React.FormEvent) => {
+    const handleCreateMember = (e: React.FormEvent) => {
         e.preventDefault();
         if (teamMembers.length >= ACCOUNT_LIMIT) {
             toast.error('Account limit reached. Please upgrade your plan to add more members.');
             return;
         }
 
-        // Mock invite logic
+        if (!formData.name || !formData.email || !formData.password) {
+            toast.error('Please fill in all fields');
+            return;
+        }
+
+        // Mock create logic
         const newMember = {
             id: `r${Date.now()}`,
-            email: inviteEmail,
-            name: inviteEmail.split('@')[0], // Placeholder name
+            email: formData.email,
+            name: formData.name,
             role: 'recruiter' as const,
-            subRole: 'member' as const,
+            subRole: formData.subRole,
             companyId: 'comp1',
             status: 'active' as const,
             createdAt: new Date()
         };
 
         setTeamMembers([...teamMembers, newMember]);
-        setInviteEmail('');
-        setIsInviteOpen(false);
-        toast.success(`Invitation sent to ${inviteEmail}`);
+        setFormData({ name: '', email: '', password: '', subRole: 'member' });
+        setIsCreateOpen(false);
+        toast.success(`Account created for ${formData.name}`);
     };
 
     const handleRemoveMember = (id: string) => {
@@ -73,36 +83,69 @@ const TeamManagementView = () => {
                     <div className="bg-muted px-3 py-1 rounded-md text-sm font-medium">
                         {teamMembers.length} / {ACCOUNT_LIMIT} Accounts Used
                     </div>
-                    <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
+                    <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
                         <DialogTrigger asChild>
                             <Button disabled={teamMembers.length >= ACCOUNT_LIMIT}>
                                 <UserPlus className="mr-2 h-4 w-4" />
-                                Invite Member
+                                Add Member
                             </Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
-                                <DialogTitle>Invite Team Member</DialogTitle>
+                                <DialogTitle>Create Team Member Account</DialogTitle>
                                 <DialogDescription>
-                                    Send an invitation email to add a new HR member to your team.
+                                    Create a new account for your HR team member. They can log in immediately with these credentials.
                                 </DialogDescription>
                             </DialogHeader>
-                            <form onSubmit={handleInvite}>
+                            <form onSubmit={handleCreateMember}>
                                 <div className="grid gap-4 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="name">Full Name</Label>
+                                        <Input
+                                            id="name"
+                                            placeholder="John Doe"
+                                            value={formData.name}
+                                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                            required
+                                        />
+                                    </div>
                                     <div className="grid gap-2">
                                         <Label htmlFor="email">Email address</Label>
                                         <Input
                                             id="email"
                                             type="email"
                                             placeholder="colleague@company.com"
-                                            value={inviteEmail}
-                                            onChange={(e) => setInviteEmail(e.target.value)}
+                                            value={formData.email}
+                                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                             required
                                         />
                                     </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="password">Password</Label>
+                                        <Input
+                                            id="password"
+                                            type="password"
+                                            placeholder="••••••••"
+                                            value={formData.password}
+                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            required
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="role">Role</Label>
+                                        <select
+                                            id="role"
+                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                            value={formData.subRole}
+                                            onChange={(e) => setFormData({ ...formData, subRole: e.target.value as 'manager' | 'member' })}
+                                        >
+                                            <option value="member">Member</option>
+                                            <option value="manager">Manager</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <DialogFooter>
-                                    <Button type="submit">Send Invitation</Button>
+                                    <Button type="submit">Create Account</Button>
                                 </DialogFooter>
                             </form>
                         </DialogContent>
