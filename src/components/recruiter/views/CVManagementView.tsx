@@ -31,11 +31,10 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 
-import { useSubscription } from '@/contexts/SubscriptionContext';
+
 
 const CVManagementView = () => {
     const { user } = useAuth();
-    const { tier } = useSubscription();
     // Initialize with 'all' by default or mockJobs[0]?.id if strict
     const [selectedJob, setSelectedJob] = useState<string>(
         mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2')[0]?.id || ''
@@ -328,7 +327,6 @@ const CVManagementView = () => {
                                 onAddNote={handleAddNote}
                                 onViewCV={handleViewCV}
                                 onScheduleInterview={handleScheduleInterview}
-                                tier={tier}
                             />
                         ) : (
                             <div className="space-y-4">
@@ -347,7 +345,6 @@ const CVManagementView = () => {
                                                 onAddNote={handleAddNote}
                                                 onViewCV={handleViewCV}
                                                 onScheduleInterview={handleScheduleInterview}
-                                                tier={tier}
                                             />
                                         );
                                     })
@@ -402,19 +399,7 @@ const CVManagementView = () => {
 
                         {/* ATS Analysis Panel - 1/3 width */}
                         <div className="bg-card p-6 overflow-y-auto h-full space-y-8 relative">
-                            {/* Premium Lock Overlay for Free Tier */}
-                            {tier === 'free' && (
-                                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
-                                    <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                                        <Lock className="h-8 w-8 text-primary" />
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-2">Premium Feature</h3>
-                                    <p className="text-muted-foreground mb-6">Detailed ATS analysis and scoring breakdown is available only on the Premium plan.</p>
-                                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
-                                        Upgrade to Unlock
-                                    </Button>
-                                </div>
-                            )}
+
 
                             <div>
                                 <h3 className="text-lg font-semibold mb-4">ATS Analysis</h3>

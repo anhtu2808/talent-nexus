@@ -1,6 +1,5 @@
 import { useState, useMemo } from 'react';
 import { BarChart as BarChartIcon, TrendingUp, Users, Briefcase, Calendar, Clock, CheckCircle2, FileText, PieChart as PieChartIcon, Search, Lock, Eye } from 'lucide-react';
-import { useSubscription } from '@/contexts/SubscriptionContext';
 import { Button } from '@/components/ui/button';
 import { mockApplications, mockJobs, mockCandidateProfiles, mockCVs } from '@/data/mockData';
 import { formatDistanceToNow, isSameDay, subDays, format, startOfDay } from 'date-fns';
@@ -33,7 +32,6 @@ import {
 import { CV } from '@/types';
 
 const ReportsView = () => {
-    const { tier } = useSubscription();
     const [selectedJobId, setSelectedJobId] = useState<string>('all');
     const [viewingCV, setViewingCV] = useState<CV | null>(null);
 
@@ -320,20 +318,6 @@ const ReportsView = () => {
                         </LineChart>
                     </ResponsiveContainer>
                 </div>
-                {tier === 'free' && (
-                    <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex flex-col items-center justify-center rounded-xl p-6">
-                        <div className="text-center max-w-sm space-y-4">
-                            <div className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 mb-2">
-                                <Lock className="h-6 w-6 text-primary" />
-                            </div>
-                            <h3 className="text-lg font-bold">Unlock Historical Data</h3>
-                            <p className="text-muted-foreground text-sm">Upgrade to Premium to view detailed historical trends and analytics.</p>
-                            <Button className="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white shadow-lg">
-                                Upgrade Plan
-                            </Button>
-                        </div>
-                    </div>
-                )}
             </div>
 
             {/* CV Viewer Dialog */}
@@ -360,16 +344,7 @@ const ReportsView = () => {
                             <iframe src="/sample-cv.pdf" className="w-full h-full" title="CV Preview" />
                         </div>
                         <div className="bg-card p-6 overflow-y-auto h-full space-y-8 relative">
-                            {tier === 'free' && (
-                                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
-                                    <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                                        <Lock className="h-8 w-8 text-primary" />
-                                    </div>
-                                    <h3 className="text-xl font-bold mb-2">Premium Feature</h3>
-                                    <p className="text-muted-foreground mb-6">Detailed ATS analysis is available only on the Premium plan.</p>
-                                    <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">Upgrade to Unlock</Button>
-                                </div>
-                            )}
+
                             {viewingCV && !viewingCV.atsBreakdown && (
                                 <div className="text-center py-8 text-muted-foreground">No detailed analysis available.</div>
                             )}
