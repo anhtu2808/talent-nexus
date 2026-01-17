@@ -8,9 +8,11 @@ import {
     Home,
     LogOut,
     Settings,
-    Sparkles
+    Sparkles,
+    Users
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface SidebarProps {
     activeTab: string;
@@ -19,6 +21,7 @@ interface SidebarProps {
 
 export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
     const { tier, togglePlan } = useSubscription();
+    const { user } = useAuth();
     const navigate = useNavigate();
     const menuItems = [
         {
@@ -31,6 +34,12 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             label: 'Jobs',
             icon: Briefcase,
         },
+        // Only show Team tab for managers
+        ...(user?.subRole === 'manager' ? [{
+            id: 'team',
+            label: 'Team',
+            icon: Users,
+        }] : []),
         {
             id: 'cvs',
             label: 'CVs',
@@ -40,11 +49,6 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             id: 'proposed',
             label: 'Proposed CVs',
             icon: Sparkles,
-        },
-        {
-            id: 'plans',
-            label: 'Plans & Billing',
-            icon: CreditCard,
         },
         {
             id: 'settings',

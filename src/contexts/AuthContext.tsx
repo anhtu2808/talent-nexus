@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useCallback } from 'react';
 import { User, UserRole, AuthState } from '@/types';
 
 interface AuthContextType extends AuthState {
-  login: (email: string, password: string, role: UserRole) => Promise<void>;
+  login: (email: string, password: string, role: UserRole, subRole?: 'manager' | 'member') => Promise<void>;
   register: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
   logout: () => void;
 }
@@ -16,7 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     isLoading: false
   });
 
-  const login = useCallback(async (email: string, password: string, role: UserRole) => {
+  const login = useCallback(async (email: string, password: string, role: UserRole, subRole?: 'manager' | 'member') => {
     setAuthState(prev => ({ ...prev, isLoading: true }));
 
     // Simulate API call
@@ -26,8 +26,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const mockUser: User = {
       id: role === 'candidate' ? 'c1' : role === 'recruiter' ? 'r1' : 'admin1',
       email,
-      name: role === 'candidate' ? 'Nguyen Van A' : role === 'recruiter' ? 'HR Manager' : 'Admin User',
+      name: role === 'candidate' ? 'Nguyen Van A' : role === 'recruiter' ? (subRole === 'manager' ? 'HR Manager' : 'HR Member') : 'Admin User',
       role,
+      subRole: role === 'recruiter' ? (subRole || 'manager') : undefined,
       avatar: `https://ui-avatars.com/api/?name=${encodeURIComponent(email.split('@')[0])}&background=0F2238&color=fff`,
       createdAt: new Date()
     };

@@ -7,6 +7,8 @@ import ReportsView from '@/components/recruiter/views/ReportsView';
 import SettingsView from '@/components/recruiter/views/SettingsView';
 import PlansView from '@/components/recruiter/views/PlansView';
 import ProposedCVsView from '@/components/recruiter/views/ProposedCVsView';
+import TeamManagementView from '@/components/recruiter/views/TeamManagementView';
+import { useAuth } from '@/contexts/AuthContext';
 
 const RecruiterDashboard = () => {
   const [activeTab, setActiveTab] = useState('reports');
@@ -25,6 +27,8 @@ const RecruiterDashboard = () => {
         return <SettingsView />;
       case 'plans':
         return <PlansView />;
+      case 'team':
+        return <TeamManagementView />;
       default:
         return <ReportsView />;
     }

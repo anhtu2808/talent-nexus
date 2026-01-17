@@ -7,8 +7,15 @@ export interface User {
   email: string;
   name: string;
   role: UserRole;
+  subRole?: 'manager' | 'member'; // Only applicable for 'recruiter' role
   avatar?: string;
   createdAt: Date;
+}
+
+export interface Recruiter extends User {
+  companyId: string;
+  subRole: 'manager' | 'member';
+  status: 'active' | 'inactive';
 }
 
 export interface CandidateProfile extends User {

@@ -6,8 +6,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth } from '@/contexts/AuthContext';
 
 const SettingsView = () => {
+    const { user } = useAuth();
     const [taxId, setTaxId] = useState("");
     const [companyName, setCompanyName] = useState("");
     const [internationalName, setInternationalName] = useState("");
@@ -42,18 +44,22 @@ const SettingsView = () => {
                     >
                         Personal information
                     </TabsTrigger>
-                    <TabsTrigger
-                        value="business-reg"
-                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
-                    >
-                        Business registration
-                    </TabsTrigger>
-                    <TabsTrigger
-                        value="company-info"
-                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
-                    >
-                        Company information
-                    </TabsTrigger>
+                    {user?.subRole === 'manager' && (
+                        <>
+                            <TabsTrigger
+                                value="business-reg"
+                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
+                            >
+                                Business registration
+                            </TabsTrigger>
+                            <TabsTrigger
+                                value="company-info"
+                                className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
+                            >
+                                Company information
+                            </TabsTrigger>
+                        </>
+                    )}
                 </TabsList>
 
                 <TabsContent value="personal" className="mt-6 space-y-4 max-w-2xl">
@@ -182,7 +188,7 @@ const SettingsView = () => {
                     </div>
                 </TabsContent>
             </Tabs>
-        </div>
+        </div >
     );
 };
 
