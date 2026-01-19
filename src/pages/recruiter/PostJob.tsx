@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -35,6 +35,8 @@ import { cn } from "@/lib/utils";
 const PostJob = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const location = useLocation();
+    const cloneData = location.state?.cloneData;
     const isEditing = !!id;
 
     const [loading, setLoading] = useState(false);
@@ -53,7 +55,7 @@ const PostJob = () => {
     const [skillsOpen, setSkillsOpen] = useState(false);
     const [skillSearch, setSkillSearch] = useState("");
 
-    // Load data if editing
+    // Load data if editing OR cloning
     useEffect(() => {
         if (isEditing && id) {
             const job = mockJobs.find(j => j.id === id);
@@ -69,8 +71,18 @@ const PostJob = () => {
                 toast.error("Job not found");
                 navigate('/recruiter/dashboard');
             }
+        } else if (cloneData) {
+            // Pre-fill from cloned job
+            setTitle(`${cloneData.title} (Copy)`); // Optional: append copy
+            setType(cloneData.type);
+            setSalary(cloneData.salary);
+            setLocationList(cloneData.location);
+            setDescription(cloneData.description);
+            setRequirements(cloneData.requirements.join('\n'));
+            setSkills(cloneData.skills || []);
+            toast.info("Job details cloned. Review and publish.");
         }
-    }, [isEditing, id, navigate]);
+    }, [isEditing, id, navigate, cloneData]);
 
     const handleSave = () => {
         if (!title || !salary || !description || locationList.length === 0) {

@@ -30,7 +30,8 @@ import {
   Phone,
   Mail,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Copy // Added Copy icon
 } from 'lucide-react';
 
 import {
@@ -136,12 +137,15 @@ const JobDetail = () => {
     );
   }
 
+
   // Handlers
   const handleEditClick = () => {
     navigate(`/recruiter/jobs/${id}/edit`);
   };
 
-
+  const handleCloneClick = () => {
+    navigate('/recruiter/jobs/post', { state: { cloneData: job } });
+  };
 
   const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
     setApplications(prev => prev.map(app => {
@@ -250,17 +254,26 @@ const JobDetail = () => {
                   <div>
                     <div className="flex items-center gap-2 mb-1">
                       <h1 className="text-2xl font-bold text-foreground">{job.title}</h1>
-                      {isRecruiterView && (
-                        <Button variant="outline" size="sm" className="h-7 text-xs ml-2" onClick={handleEditClick}>
-                          Edit Job
-                        </Button>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Building className="h-4 w-4" />
-                      <span className="font-medium">{job.company}</span>
-                    </div>
-                  </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Building className="h-4 w-4" />
+                        <span className="font-medium">{job.company}</span>
+                      </div>
+                      {
+                        isRecruiterView && (
+                          <div className="flex gap-2 ml-2">
+                            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleCloneClick}>
+                              <Copy className="h-3 w-3 mr-1" />
+                              Clone Job
+                            </Button>
+                            <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleEditClick}>
+                              Edit Job
+                            </Button>
+                          </div>
+                        )
+                      }
+
+                    </div >
+                  </div >
                 </div>
                 {!isRecruiterView && matchScore !== null && (
                   <Badge variant="outline" className={cn(
@@ -270,7 +283,7 @@ const JobDetail = () => {
                     {matchScore}% Match
                   </Badge>
                 )}
-              </div>
+              </div >
 
               <div className="flex flex-wrap gap-4 mb-8 pt-6 border-t border-border">
                 <div className="flex items-center gap-2 text-muted-foreground">
@@ -322,41 +335,43 @@ const JobDetail = () => {
                   </div>
                 </section>
               </div>
-            </div>
+            </div >
 
             {/* Applicants List (Recruiter View) */}
-            {isRecruiterView && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold">Applicants</h2>
-                  <Badge variant="secondary">{applicants.length}</Badge>
-                </div>
-
-                {applicants.length === 0 ? (
-                  <Card className="p-8 text-center text-muted-foreground">
-                    No applicants yet.
-                  </Card>
-                ) : (
-                  <div className="space-y-4">
-                    {applicants.map(app => (
-                      <ApplicantCard
-                        key={app.id}
-                        application={app}
-                        candidate={app.candidate}
-                        cv={app.cv}
-                        onStatusChange={handleStatusChange}
-                        onAddNote={handleAddNote}
-                        onViewCV={handleViewCV}
-                      />
-                    ))}
+            {
+              isRecruiterView && (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold">Applicants</h2>
+                    <Badge variant="secondary">{applicants.length}</Badge>
                   </div>
-                )}
-              </div>
-            )}
-          </div>
+
+                  {applicants.length === 0 ? (
+                    <Card className="p-8 text-center text-muted-foreground">
+                      No applicants yet.
+                    </Card>
+                  ) : (
+                    <div className="space-y-4">
+                      {applicants.map(app => (
+                        <ApplicantCard
+                          key={app.id}
+                          application={app}
+                          candidate={app.candidate}
+                          cv={app.cv}
+                          onStatusChange={handleStatusChange}
+                          onAddNote={handleAddNote}
+                          onViewCV={handleViewCV}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )
+            }
+          </div >
 
           {/* Sidebar CTA */}
-          <div className="lg:col-span-1">
+          < div className="lg:col-span-1" >
             <div className="sticky top-24 space-y-6">
               {!isRecruiterView ? (
                 <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
@@ -587,13 +602,13 @@ const JobDetail = () => {
                 </div>
               </Card>
             </div>
-          </div>
-        </div>
-      </main>
+          </div >
+        </div >
+      </main >
 
 
       {/* View CV Dialog (Copied from CVManagementView) */}
-      <Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
+      < Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
         <DialogContent className="max-w-7xl h-[90vh] p-0 overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card shrink-0">
             <div className="flex items-center gap-3">
@@ -709,10 +724,10 @@ const JobDetail = () => {
             </div>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       <Footer />
-    </div>
+    </div >
   );
 };
 
