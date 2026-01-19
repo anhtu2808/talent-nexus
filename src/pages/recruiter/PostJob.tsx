@@ -25,7 +25,7 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { ArrowLeft, Building, MapPin, DollarSign, Briefcase, Clock, Check, ChevronsUpDown, X, Plus } from 'lucide-react';
+import { ArrowLeft, Building, MapPin, DollarSign, Briefcase, Clock, Check, ChevronsUpDown, X, Plus, User, TrendingUp } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { toast } from 'sonner';
 import { mockJobs, cities, trendingSkills } from '@/data/mockData';
@@ -50,10 +50,64 @@ const PostJob = () => {
     const [requirements, setRequirements] = useState(''); // Text area for now, split by newlines
     const [skills, setSkills] = useState<string[]>([]);
 
+    // New Fields
+    const [level, setLevel] = useState('Middle');
+    const [experience, setExperience] = useState('1-3 years');
+    const [workingTime, setWorkingTime] = useState('Standard Office Hours (Mon-Fri)');
+    const [benefits, setBenefits] = useState<string[]>([]);
+
     // UI States
     const [locationOpen, setLocationOpen] = useState(false);
     const [skillsOpen, setSkillsOpen] = useState(false);
     const [skillSearch, setSkillSearch] = useState("");
+    const [benefitsOpen, setBenefitsOpen] = useState(false);
+    const [benefitSearch, setBenefitSearch] = useState("");
+    const [workingTimeOpen, setWorkingTimeOpen] = useState(false);
+    const [workingTimeSearch, setWorkingTimeSearch] = useState("");
+
+    // Mock Data Constants
+    // In a real app, these might come from an API or the company's profile
+    const COMPANY_ADDRESS = "123 Tech Park, Innovation Way, Silicon Valley, CA";
+
+    const EXPERIENCE_RANGES = [
+        "No experience",
+        "Less than 1 year",
+        "1-3 years",
+        "3-5 years",
+        "5-10 years",
+        "More than 10 years"
+    ];
+
+    const JOB_LEVELS = [
+        "Intern",
+        "Fresher",
+        "Junior",
+        "Middle",
+        "Senior",
+        "Team Leader",
+        "Manager",
+        "Director"
+    ];
+
+    const WORKING_TIMES = [
+        "Standard Office Hours (Mon-Fri)",
+        "Flexible Hours",
+        "Shift Work",
+        "Remote",
+        "Hybrid"
+    ];
+
+    const SUGGESTED_BENEFITS = [
+        "Health Insurance",
+        "13th Month Salary",
+        "Performance Bonus",
+        "Laptop Provided",
+        "Remote Work",
+        "Training & Development",
+        "Travel Opportunities",
+        "Team Building Activities",
+        "Free Snacks & Drinks"
+    ];
 
     // Load data if editing OR cloning
     useEffect(() => {
@@ -67,6 +121,8 @@ const PostJob = () => {
                 setDescription(job.description);
                 setRequirements(job.requirements.join('\n'));
                 setSkills(job.skills || []);
+                // Mock mapping for new fields if they existed on job object, otherwise default
+                // For now, these default or stay as initialized
             } else {
                 toast.error("Job not found");
                 navigate('/recruiter/dashboard');
@@ -80,6 +136,7 @@ const PostJob = () => {
             setDescription(cloneData.description);
             setRequirements(cloneData.requirements.join('\n'));
             setSkills(cloneData.skills || []);
+            // New fields would be copied here too if they existed on data
             toast.info("Job details cloned. Review and publish.");
         }
     }, [isEditing, id, navigate, cloneData]);
@@ -151,13 +208,26 @@ const PostJob = () => {
                                 </div>
                             </div>
 
-                            {/* Key Details Row */}
+                            {/* Key Details Row - EXPANDED */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pt-6 border-t border-border">
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <MapPin className="h-4 w-4 text-accent" />
-                                        Location
-                                    </Label>
+
+                                {/* Location */}
+                                <div className="space-y-2 md:col-span-2">
+                                    <div className="flex items-center justify-between">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            <MapPin className="h-4 w-4 text-accent" />
+                                            Location
+                                        </Label>
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-6 text-xs text-primary hover:text-primary/80"
+                                            onClick={() => setLocationList([COMPANY_ADDRESS])}
+                                            type="button"
+                                        >
+                                            Use Company Address
+                                        </Button>
+                                    </div>
                                     <Popover open={locationOpen} onOpenChange={setLocationOpen}>
                                         <PopoverTrigger asChild>
                                             <Button
@@ -172,7 +242,7 @@ const PostJob = () => {
                                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                             </Button>
                                         </PopoverTrigger>
-                                        <PopoverContent className="w-[300px] p-0" align="start">
+                                        <PopoverContent className="w-[400px] p-0" align="start">
                                             <Command>
                                                 <CommandInput placeholder="Search location..." />
                                                 <CommandList>
@@ -206,6 +276,7 @@ const PostJob = () => {
                                     </Popover>
                                 </div>
 
+                                {/* Salary Range */}
                                 <div className="space-y-2">
                                     <Label className="flex items-center gap-2 text-muted-foreground">
                                         <DollarSign className="h-4 w-4 text-accent" />
@@ -218,6 +289,7 @@ const PostJob = () => {
                                     />
                                 </div>
 
+                                {/* Employment Type */}
                                 <div className="space-y-2">
                                     <Label className="flex items-center gap-2 text-muted-foreground">
                                         <Briefcase className="h-4 w-4 text-accent" />
@@ -236,12 +308,105 @@ const PostJob = () => {
                                     </Select>
                                 </div>
 
+                                {/* Job Level */}
                                 <div className="space-y-2">
                                     <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <Clock className="h-4 w-4 text-accent" />
-                                        Posted
+                                        <TrendingUp className="h-4 w-4 text-accent" />
+                                        Job Position
                                     </Label>
-                                    <Input disabled value="Just now" className="bg-muted" />
+                                    <Select value={level} onValueChange={setLevel}>
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {JOB_LEVELS.map(lvl => (
+                                                <SelectItem key={lvl} value={lvl}>{lvl}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                {/* Experience */}
+                                <div className="space-y-2">
+                                    <Label className="flex items-center gap-2 text-muted-foreground">
+                                        <User className="h-4 w-4 text-accent" />
+                                        Experience
+                                    </Label>
+                                    <Select value={experience} onValueChange={setExperience}>
+                                        <SelectTrigger>
+                                            <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            {EXPERIENCE_RANGES.map(exp => (
+                                                <SelectItem key={exp} value={exp}>{exp}</SelectItem>
+                                            ))}
+                                        </SelectContent>
+                                    </Select>
+                                </div>
+
+                                {/* Working Time */}
+                                <div className="space-y-2 md:col-span-2">
+                                    <Label className="flex items-center gap-2 text-muted-foreground">
+                                        <Clock className="h-4 w-4 text-accent" />
+                                        Working Time
+                                    </Label>
+                                    <Popover open={workingTimeOpen} onOpenChange={setWorkingTimeOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                aria-expanded={workingTimeOpen}
+                                                className="w-full justify-between"
+                                            >
+                                                {workingTime || "Select working time..."}
+                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[400px] p-0">
+                                            <Command>
+                                                <CommandInput
+                                                    placeholder="Search or enter custom time..."
+                                                    value={workingTimeSearch}
+                                                    onValueChange={setWorkingTimeSearch}
+                                                />
+                                                <CommandList>
+                                                    <CommandEmpty>
+                                                        <button
+                                                            className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                setWorkingTime(workingTimeSearch);
+                                                                setWorkingTimeSearch("");
+                                                                setWorkingTimeOpen(false);
+                                                            }}
+                                                        >
+                                                            Use custom: "{workingTimeSearch}"
+                                                        </button>
+                                                    </CommandEmpty>
+                                                    <CommandGroup>
+                                                        {WORKING_TIMES.map((wt) => (
+                                                            <CommandItem
+                                                                key={wt}
+                                                                value={wt}
+                                                                onSelect={(currentValue) => {
+                                                                    setWorkingTime(currentValue);
+                                                                    setWorkingTimeOpen(false);
+                                                                }}
+                                                            >
+                                                                <Check
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        workingTime === wt ? "opacity-100" : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {wt}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
                                 </div>
                             </div>
 
@@ -265,6 +430,83 @@ const PostJob = () => {
                                         placeholder="- 3+ years of experience&#10;- Strong knowledge of React&#10;- Good communication skills"
                                         className="min-h-[150px]"
                                     />
+                                </section>
+
+                                <section className="space-y-3">
+                                    <Label className="text-lg font-semibold">Benefits</Label>
+                                    <Popover open={benefitsOpen} onOpenChange={setBenefitsOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                aria-expanded={benefitsOpen}
+                                                className="w-full justify-between h-auto min-h-[40px]"
+                                            >
+                                                {benefits.length > 0 ? (
+                                                    <div className="flex flex-wrap gap-1 py-1">
+                                                        {benefits.map((benefit) => (
+                                                            <Badge variant="secondary" key={benefit} className="mr-1">
+                                                                {benefit}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground">Select benefits...</span>
+                                                )}
+                                                <Plus className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[400px] p-0" align="start">
+                                            <Command>
+                                                <CommandInput
+                                                    placeholder="Search benefits..."
+                                                    value={benefitSearch}
+                                                    onValueChange={setBenefitSearch}
+                                                />
+                                                <CommandList>
+                                                    <CommandEmpty>
+                                                        <button
+                                                            className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                if (benefitSearch && !benefits.includes(benefitSearch)) {
+                                                                    setBenefits([...benefits, benefitSearch]);
+                                                                    setBenefitSearch("");
+                                                                }
+                                                            }}
+                                                        >
+                                                            Create "{benefitSearch}"
+                                                        </button>
+                                                    </CommandEmpty>
+                                                    <CommandGroup heading="Suggestions">
+                                                        {SUGGESTED_BENEFITS.map((benefit) => (
+                                                            <CommandItem
+                                                                key={benefit}
+                                                                value={benefit}
+                                                                onSelect={(currentValue) => {
+                                                                    // CommandItem lowercases values, so we match original or use current
+                                                                    const actualValue = SUGGESTED_BENEFITS.find(b => b.toLowerCase() === currentValue.toLowerCase()) || currentValue;
+                                                                    if (benefits.includes(actualValue)) {
+                                                                        setBenefits(benefits.filter(b => b !== actualValue));
+                                                                    } else {
+                                                                        setBenefits([...benefits, actualValue]);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Check
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        benefits.includes(benefit) ? "opacity-100" : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {benefit}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
                                 </section>
 
                                 <section className="space-y-3">
