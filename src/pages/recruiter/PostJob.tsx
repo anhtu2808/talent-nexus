@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -5,6 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
 import {
     Select,
     SelectContent,
@@ -55,6 +58,14 @@ const PostJob = () => {
     const [experience, setExperience] = useState('1-3 years');
     const [workingTime, setWorkingTime] = useState('Standard Office Hours (Mon-Fri)');
     const [benefits, setBenefits] = useState<string[]>([]);
+
+    const [weights, setWeights] = useState({
+        requirements: 40,
+        skills: 30,
+        experience: 20,
+        location: 10
+    });
+    const totalWeight = weights.requirements + weights.skills + weights.experience + weights.location;
 
     // UI States
     const [locationOpen, setLocationOpen] = useState(false);
@@ -147,6 +158,11 @@ const PostJob = () => {
             return;
         }
 
+        if (totalWeight !== 100) {
+            toast.error(`AI Match Weights must total 100 %.Current: ${totalWeight}% `);
+            return;
+        }
+
         setLoading(true);
 
         // Simulate API call
@@ -157,21 +173,17 @@ const PostJob = () => {
             } else {
                 toast.success("Job posted successfully!");
             }
-            navigate('/recruiter/dashboard'); // Go back to jobs list (which is default view in dashboard for now, or we can go to /jobs)
-            // Ideally we navigate to the specific Jobs tab in dashboard, but dashboard route defaults to first tab or uses state. 
-            // For now, let's assume we want to go back to wherever the jobs list is. 
-            // Since JobsView is a component inside Dashboard, we might need to rely on Dashboard default or context.
-            // Or arguably, if this is a "page", maybe we want to go to /recruiter/dashboard?tab=jobs? 
-            // The dashboard doesn't use query params for tabs yet, but defaults to 'overview'. 
-            // Users will find their way.
+            navigate('/recruiter/dashboard');
         }, 1000);
     };
 
     return (
         <div className="min-h-screen flex flex-col bg-muted/30">
+            {/* ... existing header/main ... */}
             <Header />
 
             <main className="flex-1 container py-8">
+                {/* ... Back button ... */}
                 <button
                     type="button"
                     onClick={() => navigate(-1)}
@@ -208,209 +220,281 @@ const PostJob = () => {
                                 </div>
                             </div>
 
-                            {/* Key Details Row - EXPANDED */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pt-6 border-t border-border">
-
-                                {/* Location */}
-                                <div className="space-y-2 md:col-span-2">
-                                    <div className="flex items-center justify-between">
-                                        <Label className="flex items-center gap-2 text-muted-foreground">
-                                            <MapPin className="h-4 w-4 text-accent" />
-                                            Location
-                                        </Label>
-                                        <Button
-                                            variant="ghost"
-                                            size="sm"
-                                            className="h-6 text-xs text-primary hover:text-primary/80"
-                                            onClick={() => setLocationList([COMPANY_ADDRESS])}
-                                            type="button"
-                                        >
-                                            Use Company Address
-                                        </Button>
+                            {/* Group 1: Role Definition (Location, Position, Experience) */}
+                            <div className="space-y-6 pt-6 border-t border-border">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                    <MapPin className="h-5 w-5 text-accent" />
+                                    Role Definition
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Location */}
+                                    <div className="space-y-2 md:col-span-2">
+                                        <div className="flex items-center justify-between">
+                                            <Label className="flex items-center gap-2 text-muted-foreground">
+                                                Location
+                                            </Label>
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-6 text-xs text-primary hover:text-primary/80"
+                                                onClick={() => setLocationList([COMPANY_ADDRESS])}
+                                                type="button"
+                                            >
+                                                Use Company Address
+                                            </Button>
+                                        </div>
+                                        <Popover open={locationOpen} onOpenChange={setLocationOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={locationOpen}
+                                                    className="w-full justify-between"
+                                                >
+                                                    {locationList.length > 0
+                                                        ? <span className="truncate">{locationList.join(', ')}</span>
+                                                        : "Select locations..."}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[400px] p-0" align="start">
+                                                <Command>
+                                                    <CommandInput placeholder="Search location..." />
+                                                    <CommandList>
+                                                        <CommandEmpty>No location found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {cities.map((city) => (
+                                                                <CommandItem
+                                                                    key={city}
+                                                                    value={city}
+                                                                    onSelect={(currentValue) => {
+                                                                        if (locationList.includes(currentValue)) {
+                                                                            setLocationList(locationList.filter(l => l !== currentValue));
+                                                                        } else {
+                                                                            setLocationList([...locationList, currentValue]);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            locationList.includes(city) ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {city}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
                                     </div>
-                                    <Popover open={locationOpen} onOpenChange={setLocationOpen}>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant="outline"
-                                                role="combobox"
-                                                aria-expanded={locationOpen}
-                                                className="w-full justify-between"
-                                            >
-                                                {locationList.length > 0
-                                                    ? <span className="truncate">{locationList.join(', ')}</span>
-                                                    : "Select locations..."}
-                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[400px] p-0" align="start">
-                                            <Command>
-                                                <CommandInput placeholder="Search location..." />
-                                                <CommandList>
-                                                    <CommandEmpty>No location found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        {cities.map((city) => (
-                                                            <CommandItem
-                                                                key={city}
-                                                                value={city}
-                                                                onSelect={(currentValue) => {
-                                                                    if (locationList.includes(currentValue)) {
-                                                                        setLocationList(locationList.filter(l => l !== currentValue));
-                                                                    } else {
-                                                                        setLocationList([...locationList, currentValue]);
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        locationList.includes(city) ? "opacity-100" : "opacity-0"
-                                                                    )}
-                                                                />
-                                                                {city}
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
 
-                                {/* Salary Range */}
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <DollarSign className="h-4 w-4 text-accent" />
-                                        Salary Range
-                                    </Label>
-                                    <Input
-                                        value={salary}
-                                        onChange={(e) => setSalary(e.target.value)}
-                                        placeholder="e.g. $2,000 - $4,000"
-                                    />
-                                </div>
+                                    {/* Job Level */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Job Position
+                                        </Label>
+                                        <Select value={level} onValueChange={setLevel}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {JOB_LEVELS.map(lvl => (
+                                                    <SelectItem key={lvl} value={lvl}>{lvl}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
 
-                                {/* Employment Type */}
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <Briefcase className="h-4 w-4 text-accent" />
-                                        Employment Type
-                                    </Label>
-                                    <Select value={type} onValueChange={setType}>
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="full-time">Full-time</SelectItem>
-                                            <SelectItem value="part-time">Part-time</SelectItem>
-                                            <SelectItem value="contract">Contract</SelectItem>
-                                            <SelectItem value="remote">Remote</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                {/* Job Level */}
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <TrendingUp className="h-4 w-4 text-accent" />
-                                        Job Position
-                                    </Label>
-                                    <Select value={level} onValueChange={setLevel}>
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {JOB_LEVELS.map(lvl => (
-                                                <SelectItem key={lvl} value={lvl}>{lvl}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                {/* Experience */}
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <User className="h-4 w-4 text-accent" />
-                                        Experience
-                                    </Label>
-                                    <Select value={experience} onValueChange={setExperience}>
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            {EXPERIENCE_RANGES.map(exp => (
-                                                <SelectItem key={exp} value={exp}>{exp}</SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                {/* Working Time */}
-                                <div className="space-y-2 md:col-span-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <Clock className="h-4 w-4 text-accent" />
-                                        Working Time
-                                    </Label>
-                                    <Popover open={workingTimeOpen} onOpenChange={setWorkingTimeOpen}>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant="outline"
-                                                role="combobox"
-                                                aria-expanded={workingTimeOpen}
-                                                className="w-full justify-between"
-                                            >
-                                                {workingTime || "Select working time..."}
-                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[400px] p-0">
-                                            <Command>
-                                                <CommandInput
-                                                    placeholder="Search or enter custom time..."
-                                                    value={workingTimeSearch}
-                                                    onValueChange={setWorkingTimeSearch}
-                                                />
-                                                <CommandList>
-                                                    <CommandEmpty>
-                                                        <button
-                                                            className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                setWorkingTime(workingTimeSearch);
-                                                                setWorkingTimeSearch("");
-                                                                setWorkingTimeOpen(false);
-                                                            }}
-                                                        >
-                                                            Use custom: "{workingTimeSearch}"
-                                                        </button>
-                                                    </CommandEmpty>
-                                                    <CommandGroup>
-                                                        {WORKING_TIMES.map((wt) => (
-                                                            <CommandItem
-                                                                key={wt}
-                                                                value={wt}
-                                                                onSelect={(currentValue) => {
-                                                                    setWorkingTime(currentValue);
-                                                                    setWorkingTimeOpen(false);
-                                                                }}
-                                                            >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        workingTime === wt ? "opacity-100" : "opacity-0"
-                                                                    )}
-                                                                />
-                                                                {wt}
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
+                                    {/* Experience */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Experience
+                                        </Label>
+                                        <Select value={experience} onValueChange={setExperience}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {EXPERIENCE_RANGES.map(exp => (
+                                                    <SelectItem key={exp} value={exp}>{exp}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="space-y-8">
+                            {/* Group 2: Compensation & Schedule (Salary, Type, Time) */}
+                            <div className="space-y-6 pt-6 border-t border-border">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                    <Briefcase className="h-5 w-5 text-accent" />
+                                    Work & Compensation
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Salary Range */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Salary Range
+                                        </Label>
+                                        <Input
+                                            value={salary}
+                                            onChange={(e) => setSalary(e.target.value)}
+                                            placeholder="e.g. $2,000 - $4,000"
+                                        />
+                                    </div>
+
+                                    {/* Employment Type */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Employment Type
+                                        </Label>
+                                        <Select value={type} onValueChange={setType}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="full-time">Full-time</SelectItem>
+                                                <SelectItem value="part-time">Part-time</SelectItem>
+                                                <SelectItem value="contract">Contract</SelectItem>
+                                                <SelectItem value="remote">Remote</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    {/* Working Time */}
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Working Time
+                                        </Label>
+                                        <Popover open={workingTimeOpen} onOpenChange={setWorkingTimeOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={workingTimeOpen}
+                                                    className="w-full justify-between"
+                                                >
+                                                    {workingTime || "Select working time..."}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[400px] p-0">
+                                                <Command>
+                                                    <CommandInput
+                                                        placeholder="Search or enter custom time..."
+                                                        value={workingTimeSearch}
+                                                        onValueChange={setWorkingTimeSearch}
+                                                    />
+                                                    <CommandList>
+                                                        <CommandEmpty>
+                                                            <button
+                                                                className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setWorkingTime(workingTimeSearch);
+                                                                    setWorkingTimeSearch("");
+                                                                    setWorkingTimeOpen(false);
+                                                                }}
+                                                            >
+                                                                Use custom: "{workingTimeSearch}"
+                                                            </button>
+                                                        </CommandEmpty>
+                                                        <CommandGroup>
+                                                            {WORKING_TIMES.map((wt) => (
+                                                                <CommandItem
+                                                                    key={wt}
+                                                                    value={wt}
+                                                                    onSelect={(currentValue) => {
+                                                                        setWorkingTime(currentValue);
+                                                                        setWorkingTimeOpen(false);
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            workingTime === wt ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {wt}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* AI Scoring Configuration */}
+                            <div className="space-y-6 pt-6 border-t border-border">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-lg font-semibold flex items-center gap-2">
+                                        <TrendingUp className="h-5 w-5 text-accent" />
+                                        AI Scoring Weights
+                                    </h3>
+                                    <Badge variant={totalWeight === 100 ? "default" : "destructive"}>
+                                        Total: {totalWeight}%
+                                    </Badge>
+                                </div>
+                                <p className="text-sm text-muted-foreground">
+                                    Configure how the AI prioritizes different criteria when scoring candidates. Total must equal 100%.
+                                </p>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-muted/20 rounded-lg">
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center">
+                                            <Label>Requirements ({weights.requirements}%)</Label>
+                                        </div>
+                                        <Slider
+                                            value={[weights.requirements]}
+                                            max={100}
+                                            step={5}
+                                            onValueChange={(val) => setWeights(prev => ({ ...prev, requirements: val[0] }))}
+                                        />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center">
+                                            <Label>Skills ({weights.skills}%)</Label>
+                                        </div>
+                                        <Slider
+                                            value={[weights.skills]}
+                                            max={100}
+                                            step={5}
+                                            onValueChange={(val) => setWeights(prev => ({ ...prev, skills: val[0] }))}
+                                        />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center">
+                                            <Label>Experience ({weights.experience}%)</Label>
+                                        </div>
+                                        <Slider
+                                            value={[weights.experience]}
+                                            max={100}
+                                            step={5}
+                                            onValueChange={(val) => setWeights(prev => ({ ...prev, experience: val[0] }))}
+                                        />
+                                    </div>
+                                    <div className="space-y-3">
+                                        <div className="flex justify-between items-center">
+                                            <Label>Location ({weights.location}%)</Label>
+                                        </div>
+                                        <Slider
+                                            value={[weights.location]}
+                                            max={100}
+                                            step={5}
+                                            onValueChange={(val) => setWeights(prev => ({ ...prev, location: val[0] }))}
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div className="space-y-8 pt-6 border-t border-border">
                                 <section className="space-y-3">
                                     <Label className="text-lg font-semibold">About the Role</Label>
                                     <Textarea
