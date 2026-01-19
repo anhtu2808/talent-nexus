@@ -28,6 +28,16 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { ArrowLeft, Building, MapPin, DollarSign, Briefcase, Clock, Check, ChevronsUpDown, X, Plus, User, TrendingUp } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { toast } from 'sonner';
@@ -66,6 +76,10 @@ const PostJob = () => {
         location: 10
     });
     const totalWeight = weights.requirements + weights.skills + weights.experience + weights.location;
+
+    // AI Match Settings
+    const [matchThreshold, setMatchThreshold] = useState(70);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
     // UI States
     const [locationOpen, setLocationOpen] = useState(false);
@@ -159,17 +173,32 @@ const PostJob = () => {
         }
 
         if (totalWeight !== 100) {
-            toast.error(`AI Match Weights must total 100 %.Current: ${totalWeight}% `);
+            toast.error(`AI Match Weights must total 100%. Current: ${totalWeight}%`);
             return;
         }
 
+        // If editing, show confirmation dialog
+        if (isEditing) {
+            setShowConfirmDialog(true);
+            return;
+        }
+
+        performSave();
+    };
+
+    const handleConfirmSave = () => {
+        setShowConfirmDialog(false);
+        performSave();
+    };
+
+    const performSave = () => {
         setLoading(true);
 
         // Simulate API call
         setTimeout(() => {
             setLoading(false);
             if (isEditing) {
-                toast.success("Job updated successfully!");
+                toast.success("Job closed and cloned successfully!");
             } else {
                 toast.success("Job posted successfully!");
             }
@@ -430,68 +459,7 @@ const PostJob = () => {
                                 </div>
                             </div>
 
-                            {/* AI Scoring Configuration */}
-                            <div className="space-y-6 pt-6 border-t border-border">
-                                <div className="flex items-center justify-between">
-                                    <h3 className="text-lg font-semibold flex items-center gap-2">
-                                        <TrendingUp className="h-5 w-5 text-accent" />
-                                        AI Scoring Weights
-                                    </h3>
-                                    <Badge variant={totalWeight === 100 ? "default" : "destructive"}>
-                                        Total: {totalWeight}%
-                                    </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground">
-                                    Configure how the AI prioritizes different criteria when scoring candidates. Total must equal 100%.
-                                </p>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-4 bg-muted/20 rounded-lg">
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <Label>Requirements ({weights.requirements}%)</Label>
-                                        </div>
-                                        <Slider
-                                            value={[weights.requirements]}
-                                            max={100}
-                                            step={5}
-                                            onValueChange={(val) => setWeights(prev => ({ ...prev, requirements: val[0] }))}
-                                        />
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <Label>Skills ({weights.skills}%)</Label>
-                                        </div>
-                                        <Slider
-                                            value={[weights.skills]}
-                                            max={100}
-                                            step={5}
-                                            onValueChange={(val) => setWeights(prev => ({ ...prev, skills: val[0] }))}
-                                        />
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <Label>Experience ({weights.experience}%)</Label>
-                                        </div>
-                                        <Slider
-                                            value={[weights.experience]}
-                                            max={100}
-                                            step={5}
-                                            onValueChange={(val) => setWeights(prev => ({ ...prev, experience: val[0] }))}
-                                        />
-                                    </div>
-                                    <div className="space-y-3">
-                                        <div className="flex justify-between items-center">
-                                            <Label>Location ({weights.location}%)</Label>
-                                        </div>
-                                        <Slider
-                                            value={[weights.location]}
-                                            max={100}
-                                            step={5}
-                                            onValueChange={(val) => setWeights(prev => ({ ...prev, location: val[0] }))}
-                                        />
-                                    </div>
-                                </div>
-                            </div>
 
 
                             <div className="space-y-8 pt-6 border-t border-border">
@@ -703,6 +671,98 @@ const PostJob = () => {
                                 </div>
                             </div>
 
+                            {/* AI Match Settings */}
+                            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h4 className="font-semibold flex items-center gap-2">
+                                        <TrendingUp className="h-4 w-4 text-accent" />
+                                        AI Match Settings
+                                    </h4>
+                                    <Badge variant={totalWeight === 100 ? "default" : "destructive"} className="text-xs">
+                                        {totalWeight}%
+                                    </Badge>
+                                </div>
+
+                                {/* Threshold Filter */}
+                                <div className="space-y-3 mb-6 p-3 bg-muted/30 rounded-lg">
+                                    <div className="flex justify-between items-center">
+                                        <Label className="text-sm">Match Threshold</Label>
+                                        <span className="text-sm font-medium text-accent">{matchThreshold}%</span>
+                                    </div>
+                                    <Slider
+                                        value={[matchThreshold]}
+                                        min={0}
+                                        max={100}
+                                        step={5}
+                                        onValueChange={(val) => setMatchThreshold(val[0])}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Only show candidates with match score ≥ {matchThreshold}%
+                                    </p>
+                                </div>
+
+                                {/* Scoring Weights */}
+                                <div className="space-y-4">
+                                    <p className="text-xs text-muted-foreground">
+                                        Configure scoring weights (total must equal 100%):
+                                    </p>
+                                    <div className="space-y-3">
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Requirements</Label>
+                                                <span className="text-xs font-medium">{weights.requirements}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.requirements]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, requirements: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Skills</Label>
+                                                <span className="text-xs font-medium">{weights.skills}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.skills]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, skills: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Experience</Label>
+                                                <span className="text-xs font-medium">{weights.experience}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.experience]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, experience: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Location</Label>
+                                                <span className="text-xs font-medium">{weights.location}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.location]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, location: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="bg-muted/50 rounded-xl p-6">
                                 <h4 className="font-medium mb-2">Pro Tips</h4>
                                 <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
@@ -715,6 +775,24 @@ const PostJob = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Confirmation Dialog for Edit Mode */}
+            <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận cập nhật</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Job này sẽ được close và clone ra 1 bản mới. Bạn có đồng ý hay không?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmSave}>
+                            Đồng ý
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };
