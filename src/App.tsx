@@ -47,6 +47,7 @@ import SubscriptionManagement from "./pages/admin/SubscriptionManagement";
 import AdminJobDetail from "./pages/admin/JobDetail";
 import AdminCompanyDetail from "./pages/admin/CompanyDetail";
 import TransactionDetail from "./pages/admin/TransactionDetail";
+import PostJob from "./pages/recruiter/PostJob";
 
 const queryClient = new QueryClient();
 const App = () => (
@@ -87,6 +88,8 @@ const App = () => (
                 <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
                 <Route path="/recruiter/verify/company" element={<VerifyCompany />} />
                 <Route path="/recruiter/verify/license" element={<VerifyLicense />} />
+                <Route path="/recruiter/jobs/post" element={<PostJob />} />
+                <Route path="/recruiter/jobs/:id/edit" element={<PostJob />} />
                 <Route path="/admin" element={<AdminLayout />}>
                   {/* Route mặc định khi vào /admin sẽ dẫn tới dashboard */}
                   <Route index element={<AdminDashboard />} />

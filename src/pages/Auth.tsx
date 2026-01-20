@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ShieldCheck } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole } from '@/types';
 import { ArrowLeft, Briefcase, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
@@ -23,6 +24,14 @@ const Auth = () => {
 
   const [activeTab, setActiveTab] = useState(initialMode === 'register' ? 'register' : 'login');
   const [selectedRole, setSelectedRole] = useState<UserRole>(initialRole);
+  const [recruiterSubRole, setRecruiterSubRole] = useState<'manager' | 'member'>('member');
+
+  // Force active tab to login if recruiter is selected (since they can't sign up here anymore)
+  useEffect(() => {
+    if (selectedRole === 'recruiter') {
+      setActiveTab('login');
+    }
+  }, [selectedRole]);
   const [showPassword, setShowPassword] = useState(false);
 
   const [loginData, setLoginData] = useState({ email: '', password: '' });
@@ -45,7 +54,7 @@ const Auth = () => {
     //   return;
     // }
     try {
-      await login(loginData.email, loginData.password, selectedRole);
+      await login(loginData.email, loginData.password, selectedRole, selectedRole === 'recruiter' ? recruiterSubRole : undefined);
       toast.success('Welcome back!');
     } catch {
       toast.error('Login failed. Please try again.');
@@ -168,12 +177,29 @@ const Auth = () => {
             {/* Auth Tabs */}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Sign In</TabsTrigger>
-                <TabsTrigger value="register">Sign Up</TabsTrigger>
+                <TabsTrigger value="login" className={selectedRole === 'recruiter' ? 'col-span-2' : ''}>Sign In</TabsTrigger>
+                {selectedRole !== 'recruiter' && (
+                  <TabsTrigger value="register">Sign Up</TabsTrigger>
+                )}
               </TabsList>
 
               <TabsContent value="login">
                 <form onSubmit={handleLogin} className="space-y-4">
+                  {selectedRole === 'recruiter' && (
+                    <div className="mb-4 p-4 bg-muted/30 rounded-lg border border-border/50">
+                      <Label className="text-sm font-medium mb-3 block">Account Type</Label>
+                      <RadioGroup defaultValue="member" value={recruiterSubRole} onValueChange={(v) => setRecruiterSubRole(v as 'manager' | 'member')} className="flex space-x-4">
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="member" id="r-member" />
+                          <Label htmlFor="r-member" className="font-normal cursor-pointer">Standard Account</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="manager" id="r-manager" />
+                          <Label htmlFor="r-manager" className="font-normal cursor-pointer">Manager Account</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <Label htmlFor="login-email">Email</Label>
                     <div className="relative">
@@ -221,6 +247,17 @@ const Auth = () => {
                         selectedRole === 'recruiter' ? 'Recruiter' : 'Administrator'
                     }
                   </Button>
+                  {selectedRole === 'recruiter' && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full mt-2"
+                      onClick={() => navigate('/recruiter/register')}
+                      disabled={isLoading}
+                    >
+                      Become our partner
+                    </Button>
+                  )}
                 </form>
               </TabsContent>
 
@@ -318,17 +355,6 @@ const Auth = () => {
                     {isLoading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     Create {selectedRole === 'candidate' ? 'Candidate' : 'Recruiter'} Account
                   </Button>
-                  {selectedRole === 'recruiter' && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      className="w-full mt-2"
-                      onClick={() => navigate('/recruiter/register')}
-                      disabled={isLoading}
-                    >
-                      Post your job now!
-                    </Button>
-                  )}
                 </form>
               </TabsContent>
             </Tabs>

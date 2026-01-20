@@ -15,7 +15,7 @@ import { mockJobs, mockCandidates, mockApplications, mockCVs } from '@/data/mock
 import { Job, CandidateProfile, CV } from '@/types';
 import { Sparkles, Briefcase, Star, UserCheck, ArrowRight, Mail, FileText, User } from 'lucide-react';
 import { toast } from 'sonner';
-import { useSubscription } from '@/contexts/SubscriptionContext';
+
 
 // React PDF Viewer imports
 import { Viewer, Worker } from '@react-pdf-viewer/core';
@@ -32,7 +32,6 @@ interface ProposedMatch {
 }
 
 const ProposedCVsView = () => {
-    const { tier } = useSubscription();
     // Create instance of default layout plugin
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
@@ -41,8 +40,6 @@ const ProposedCVsView = () => {
     const [selectedMatch, setSelectedMatch] = useState<ProposedMatch | null>(null);
 
     const proposedMatches = useMemo(() => {
-        if (tier !== 'premium') return [];
-
         const matches: ProposedMatch[] = [];
         const activeJobs = mockJobs.filter(j => j.isActive);
 
@@ -118,7 +115,7 @@ const ProposedCVsView = () => {
         });
 
         return matches.sort((a, b) => b.score - a.score);
-    }, [tier]); // Add tier dependency
+    }, []); // Remove tier dependency
 
     const handleInvite = (matchId: string) => {
         setInvitedMatches(prev => [...prev, matchId]);
@@ -129,38 +126,7 @@ const ProposedCVsView = () => {
         return mockCVs.find(cv => cv.candidateId === candidateId);
     };
 
-    if (tier !== 'premium') {
-        return (
-            <div className="flex flex-col items-center justify-center h-[60vh] text-center space-y-6">
-                <div className="p-6 rounded-full bg-primary/10">
-                    <Sparkles className="h-12 w-12 text-primary" />
-                </div>
-                <div className="max-w-md space-y-2">
-                    <h2 className="text-2xl font-bold tracking-tight">Unlock AI-Powered Candidate Matching</h2>
-                    <p className="text-muted-foreground">
-                        Get instant recommendations for top candidates that match your job requirements using our advanced AI algorithms.
-                    </p>
-                </div>
-                <div className="grid gap-4 w-full max-w-sm">
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
-                        <UserCheck className="h-5 w-5 text-green-500" />
-                        <span>Automated skill matching & scoring</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
-                        <Star className="h-5 w-5 text-yellow-500" />
-                        <span>High-potential candidate surfacing</span>
-                    </div>
-                    <div className="flex items-center gap-3 text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg">
-                        <Briefcase className="h-5 w-5 text-blue-500" />
-                        <span>Cross-application insights</span>
-                    </div>
-                </div>
-                <Button size="lg" className="w-full max-w-sm gap-2">
-                    Upgrade to Premium <ArrowRight className="h-4 w-4" />
-                </Button>
-            </div>
-        );
-    }
+
 
     return (
         <div className="space-y-6">

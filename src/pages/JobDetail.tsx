@@ -77,13 +77,13 @@ import ApplicantCard from '@/components/recruiter/ApplicantCard';
 
 import { mockCVs, mockJobs, mockApplications, mockCandidateProfiles, cities, trendingSkills } from '@/data/mockData';
 import { Job, ApplicationStatus, CV, CandidateProfile, Application } from '@/types';
-import { useSubscription } from '@/contexts/SubscriptionContext';
+
 import { useAuth } from '@/contexts/AuthContext';
 
 const JobDetail = () => {
   const { id } = useParams();
   const location = useLocation();
-  const { tier } = useSubscription();
+
   const { user } = useAuth();
 
   // State initialization
@@ -91,13 +91,7 @@ const JobDetail = () => {
   const [job, setJob] = useState<Job | undefined>(() => mockJobs.find(j => j.id === id));
   const isRecruiterView = location.state?.role === 'recruiter';
 
-  // Edit Job State
-  const [createJobOpen, setCreateJobOpen] = useState(false);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-  const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-  const [locationOpen, setLocationOpen] = useState(false);
-  const [skillsOpen, setSkillsOpen] = useState(false);
-  const [skillSearch, setSkillSearch] = useState("");
+
 
   // Applicant Management State
   const [applications, setApplications] = useState<Application[]>(() => {
@@ -144,55 +138,10 @@ const JobDetail = () => {
 
   // Handlers
   const handleEditClick = () => {
-    setSelectedLocations(job.location);
-    setSelectedSkills(job.skills || []);
-    setCreateJobOpen(true);
+    navigate(`/recruiter/jobs/${id}/edit`);
   };
 
-  const handleUpdateJob = (e: React.FormEvent) => {
-    e.preventDefault();
-    const form = e.target as HTMLFormElement;
 
-    // Helper to safely get value from form elements
-    const getValue = (name: string) => (form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement)?.value || '';
-
-    // Helper to get Select value (radix ui select uses hidden inputs but structure varies)
-    // Since we are using Uncontrolled components with defaultValues, we should rely on form submission or controlled state.
-    // But for simplicity in this "edit right away" scenario, let's grab values carefully.
-    // Actually, Radix Selects are tricky with native form submission if not fully controlled or using hidden inputs.
-    // The easiest way with the current copy-paste from JobsView is to trust it works or switch to controlled.
-    // JobsView uses defaultValue but doesn't show handleCreateJob implementation details for getting values for Selects.
-    // I'll make a best effort to get values by ID or assume standard form behavior, 
-    // but for Select, I might need to bind them to state or use the `onValueChange` if I want to be 100% sure.
-    // Let's use `getValue` for inputs/textareas. For Selects, I'll cheat a bit and assume defaults didn't change 
-    // OR better: use state for controlled inputs like I should have? 
-    // JobsView used `e.preventDefault` and `console.log`. 
-    // Let's try to query the DOM or reference refs if needed. 
-    // To be safe, I'll update the Selects to be controlled or at least capture their changes roughly.
-    // For now, I'll perform a basic update.
-
-    const title = getValue('job-title');
-    const salary = getValue('salary');
-    const description = getValue('description');
-    const requirementsRaw = getValue('requirements');
-
-    const updatedJob: Job = {
-      ...job,
-      title,
-      location: selectedLocations,
-      salary,
-      description,
-      requirements: requirementsRaw.split('\n').filter(Boolean),
-      skills: selectedSkills,
-      // Type is tricky without state, let's just keep it or try to find it. 
-      // In a real app we'd use React Hook Form or similar.
-      // For now, let's leave type as is if we can't easily grab it, or assume it's "full-time" for the demo if edited.
-    };
-
-    setJob(updatedJob);
-    setCreateJobOpen(false);
-    toast.success('Job updated successfully');
-  };
 
   const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
     setApplications(prev => prev.map(app => {
@@ -398,7 +347,6 @@ const JobDetail = () => {
                         onStatusChange={handleStatusChange}
                         onAddNote={handleAddNote}
                         onViewCV={handleViewCV}
-                        tier={tier}
                       />
                     ))}
                   </div>
@@ -643,243 +591,6 @@ const JobDetail = () => {
         </div>
       </main>
 
-      {/* Edit Job Dialog */}
-      <Dialog open={createJobOpen} onOpenChange={setCreateJobOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Edit Job Posting</DialogTitle>
-            <DialogDescription>
-              Update the details of your job listing.
-            </DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleUpdateJob} className="space-y-4 mt-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="job-title">Job Title *</Label>
-                <Input id="job-title" placeholder="e.g., Senior React Developer" defaultValue={job.title} required />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="job-type">Job Type *</Label>
-                <Select defaultValue={job.type} required>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="full-time">Full-time</SelectItem>
-                    <SelectItem value="part-time">Part-time</SelectItem>
-                    <SelectItem value="contract">Contract</SelectItem>
-                    <SelectItem value="remote">Remote</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>Location *</Label>
-                <Popover open={locationOpen} onOpenChange={setLocationOpen}>
-                  <PopoverTrigger asChild>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      role="combobox"
-                      aria-expanded={locationOpen}
-                      className="w-full justify-between h-auto min-h-10 py-2"
-                    >
-                      {selectedLocations.length > 0 ? (
-                        <div className="flex flex-wrap gap-1">
-                          {selectedLocations.map((loc) => (
-                            <Badge variant="secondary" key={loc} className="mr-1 mb-1">
-                              {loc}
-                              <div
-                                className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                                onKeyDown={(e) => {
-                                  if (e.key === "Enter") {
-                                    e.stopPropagation();
-                                    setSelectedLocations(selectedLocations.filter((l) => l !== loc));
-                                  }
-                                }}
-                                onMouseDown={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                }}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  setSelectedLocations(selectedLocations.filter((l) => l !== loc));
-                                }}
-                              >
-                                <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                              </div>
-                            </Badge>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground">Select locations...</span>
-                      )}
-                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[400px] p-0" align="start">
-                    <Command>
-                      <CommandInput placeholder="Search location..." />
-                      <CommandList>
-                        <CommandEmpty>No location found.</CommandEmpty>
-                        <CommandGroup>
-                          {cities.map((city) => (
-                            <CommandItem
-                              key={city}
-                              value={city}
-                              onSelect={(currentValue) => {
-                                if (!selectedLocations.includes(currentValue)) {
-                                  setSelectedLocations([...selectedLocations, currentValue]);
-                                }
-                              }}
-                            >
-                              <Check
-                                className={cn(
-                                  "mr-2 h-4 w-4",
-                                  selectedLocations.includes(city) ? "opacity-100" : "opacity-0"
-                                )}
-                              />
-                              {city}
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="salary">Salary Range *</Label>
-                <Input id="salary" placeholder="e.g., $2,000 - $4,000" defaultValue={job.salary} required />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Job Description *</Label>
-              <Textarea
-                id="description"
-                placeholder="Describe the role, responsibilities..."
-                className="min-h-32"
-                defaultValue={job.description}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="requirements">Requirements *</Label>
-              <Textarea
-                id="requirements"
-                placeholder="List the requirements (one per line)..."
-                className="min-h-24"
-                defaultValue={job.requirements.join('\n')}
-                required
-              />
-            </div>
-            <div className="space-y-2">
-              <Label>Required Skills *</Label>
-              <Popover open={skillsOpen} onOpenChange={setSkillsOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={skillsOpen}
-                    className="w-full justify-between h-auto min-h-10 py-2"
-                  >
-                    {selectedSkills.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {selectedSkills.map((skill) => (
-                          <Badge variant="secondary" key={skill} className="mr-1 mb-1">
-                            {skill}
-                            <div
-                              className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                              onKeyDown={(e) => {
-                                if (e.key === "Enter") {
-                                  e.stopPropagation();
-                                  setSelectedSkills(selectedSkills.filter((s) => s !== skill));
-                                }
-                              }}
-                              onMouseDown={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                              }}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                setSelectedSkills(selectedSkills.filter((s) => s !== skill));
-                              }}
-                            >
-                              <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                            </div>
-                          </Badge>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-muted-foreground">Select skills...</span>
-                    )}
-                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[400px] p-0" align="start">
-                  <Command>
-                    <CommandInput
-                      placeholder="Search skills..."
-                      value={skillSearch}
-                      onValueChange={setSkillSearch}
-                    />
-                    <CommandList>
-                      <CommandEmpty>
-                        <button
-                          className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            if (skillSearch && !selectedSkills.includes(skillSearch)) {
-                              setSelectedSkills([...selectedSkills, skillSearch]);
-                              setSkillSearch("");
-                            }
-                          }}
-                        >
-                          Create "{skillSearch}"
-                        </button>
-                      </CommandEmpty>
-                      <CommandGroup heading="Suggestions">
-                        {trendingSkills.map((skill) => (
-                          <CommandItem
-                            key={skill}
-                            value={skill}
-                            onSelect={(currentValue) => {
-                              const actualValue = trendingSkills.find(s => s.toLowerCase() === currentValue.toLowerCase()) || currentValue;
-                              if (!selectedSkills.includes(actualValue)) {
-                                setSelectedSkills([...selectedSkills, actualValue]);
-                              }
-                            }}
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 h-4 w-4",
-                                selectedSkills.includes(skill) ? "opacity-100" : "opacity-0"
-                              )}
-                            />
-                            {skill}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={() => setCreateJobOpen(false)}>
-                Cancel
-              </Button>
-              <Button type="submit" variant="accent">
-                Update Job
-              </Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
 
       {/* View CV Dialog (Copied from CVManagementView) */}
       <Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
@@ -914,18 +625,7 @@ const JobDetail = () => {
             </div>
 
             <div className="bg-card p-6 overflow-y-auto h-full space-y-8 relative">
-              {tier === 'free' && (
-                <div className="absolute inset-0 bg-background/80 backdrop-blur-sm z-10 flex flex-col items-center justify-center p-6 text-center">
-                  <div className="h-16 w-16 bg-primary/10 rounded-full flex items-center justify-center mb-4">
-                    <Lock className="h-8 w-8 text-primary" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2">Premium Feature</h3>
-                  <p className="text-muted-foreground mb-6">Detailed ATS analysis and scoring breakdown is available only on the Premium plan.</p>
-                  <Button className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-md">
-                    Upgrade to Unlock
-                  </Button>
-                </div>
-              )}
+
 
               <div>
                 <h3 className="text-lg font-semibold mb-4">ATS Analysis</h3>

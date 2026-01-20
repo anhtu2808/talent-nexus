@@ -6,7 +6,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useAuth } from '@/contexts/AuthContext';
-import { Briefcase, Building2, Link as LinkIcon, Lock, Mail, MapPin, Phone, User } from 'lucide-react';
+import { Briefcase, Building2, Link as LinkIcon, Lock, Mail, MapPin, Phone, User, FileText, Upload } from 'lucide-react';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
@@ -29,11 +29,20 @@ const RecruiterRegister = () => {
         city: '',
         district: '',
         // Terms
-        agreed: false
+        agreed: false,
+        // Additional
+        registrationDoc: null as File | null,
+        hrAccountCount: 1,
     });
 
     const handleChange = (field: string, value: any) => {
         setFormData(prev => ({ ...prev, [field]: value }));
+    };
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            setFormData(prev => ({ ...prev, registrationDoc: e.target.files![0] }));
+        }
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -254,6 +263,22 @@ const RecruiterRegister = () => {
                                     </div>
                                 </div>
 
+                                <div className="space-y-2">
+                                    <Label htmlFor="hrAccountCount">Desired number of HR accounts</Label>
+                                    <div className="relative">
+                                        <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                                        <Input
+                                            id="hrAccountCount"
+                                            type="number"
+                                            min={1}
+                                            placeholder="1"
+                                            className="pl-10"
+                                            value={formData.hrAccountCount}
+                                            onChange={(e) => handleChange('hrAccountCount', parseInt(e.target.value))}
+                                        />
+                                    </div>
+                                </div>
+
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-2">
                                         <Label htmlFor="city">Work Location <span className="text-red-500">*</span></Label>
@@ -290,6 +315,39 @@ const RecruiterRegister = () => {
                                             </SelectContent>
                                         </Select>
                                     </div>
+                                </div>
+                            </section>
+
+                            {/* Documentation Section */}
+                            <section className="space-y-4">
+                                <h3 className="text-lg font-semibold border-b pb-2">Business Documentation</h3>
+                                <div className="space-y-2">
+                                    <Label htmlFor="registrationDoc">Business Registration / Authorization Letter <span className="text-red-500">*</span></Label>
+                                    <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-6 flex flex-col items-center justify-center bg-muted/10 hover:bg-muted/20 transition-colors text-center cursor-pointer relative">
+                                        <Input
+                                            id="registrationDoc"
+                                            type="file"
+                                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                                            onChange={handleFileChange}
+                                            accept=".pdf,.doc,.docx,.jpg,.png"
+                                            required
+                                        />
+                                        {formData.registrationDoc ? (
+                                            <div className="flex items-center gap-2 text-accent">
+                                                <FileText className="h-8 w-8" />
+                                                <span className="font-medium">{formData.registrationDoc.name}</span>
+                                            </div>
+                                        ) : (
+                                            <>
+                                                <div className="p-3 bg-muted rounded-full mb-3">
+                                                    <Upload className="h-6 w-6 text-muted-foreground" />
+                                                </div>
+                                                <p className="text-sm font-medium">Click to upload or drag and drop</p>
+                                                <p className="text-xs text-muted-foreground mt-1">PDF, DOC, DOCX, JPG or PNG (MAX. 10MB)</p>
+                                            </>
+                                        )}
+                                    </div>
+                                    <p className="text-xs text-muted-foreground">Please provide a valid Business Registration Certificate or an Authorization Letter from the company.</p>
                                 </div>
                             </section>
 

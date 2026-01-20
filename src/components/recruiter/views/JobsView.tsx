@@ -60,16 +60,7 @@ import { cn } from "@/lib/utils";
 import { cities, trendingSkills } from "@/data/mockData";
 
 const JobsView = () => {
-    const [createJobOpen, setCreateJobOpen] = useState(false);
-    const [editingJob, setEditingJob] = useState<Job | null>(null);
     const [viewingJob, setViewingJob] = useState<Job | null>(null);
-
-    // Multi-select states
-    const [selectedLocations, setSelectedLocations] = useState<string[]>([]);
-    const [selectedSkills, setSelectedSkills] = useState<string[]>([]);
-    const [locationOpen, setLocationOpen] = useState(false);
-    const [skillsOpen, setSkillsOpen] = useState(false);
-    const [skillSearch, setSkillSearch] = useState("");
 
     // Filter states
     const [searchQuery, setSearchQuery] = useState("");
@@ -115,22 +106,8 @@ const JobsView = () => {
         return matchesSearch && matchesStatus && matchesType && matchesLocation;
     });
 
-    const handleCreateJob = (e: React.FormEvent) => {
-        e.preventDefault();
-        // Here you would typically gather all form data including selectedLocations and selectedSkills
-        console.log("Locations:", selectedLocations);
-        console.log("Skills:", selectedSkills);
-
-        setCreateJobOpen(false);
-        toast.success('Job posted successfully!');
-    };
-
     const handleEditJob = (job: Job) => {
-        setEditingJob(job);
-        // Location is now string[], so we use it directly
-        setSelectedLocations(job.location);
-        setSelectedSkills(job.skills || []);
-        setCreateJobOpen(true);
+        navigate(`/recruiter/jobs/${job.id}/edit`);
     };
 
     const handleToggleStatus = (jobId: string) => {
@@ -168,12 +145,7 @@ const JobsView = () => {
                     <h2 className="text-2xl font-bold tracking-tight">Recruitment Posts</h2>
                     <p className="text-muted-foreground">Manage your job postings</p>
                 </div>
-                <Button variant="accent" size="lg" onClick={() => {
-                    setEditingJob(null);
-                    setSelectedLocations([]);
-                    setSelectedSkills([]);
-                    setCreateJobOpen(true);
-                }}>
+                <Button variant="accent" size="lg" onClick={() => navigate('/recruiter/jobs/post')}>
                     <Plus className="h-4 w-4 mr-2" />
                     Post New Job
                 </Button>
@@ -253,245 +225,7 @@ const JobsView = () => {
                 </div>
             </div>
 
-            {/* Create/Edit Modal */}
-            <Dialog open={createJobOpen} onOpenChange={setCreateJobOpen}>
-                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
-                    <DialogHeader>
-                        <DialogTitle>{editingJob ? 'Edit Job Posting' : 'Create Job Posting'}</DialogTitle>
-                        <DialogDescription>
-                            {editingJob ? 'Update the details of your job listing.' : 'Fill in the details to create a new job listing. AI will help extract keywords for better matching.'}
-                        </DialogDescription>
-                    </DialogHeader>
-                    <form onSubmit={handleCreateJob} className="space-y-4 mt-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label htmlFor="job-title">Job Title *</Label>
-                                <Input id="job-title" placeholder="e.g., Senior React Developer" defaultValue={editingJob?.title} required />
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="job-type">Job Type *</Label>
-                                <Select defaultValue={editingJob?.type || undefined} required>
-                                    <SelectTrigger>
-                                        <SelectValue placeholder="Select type" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="full-time">Full-time</SelectItem>
-                                        <SelectItem value="part-time">Part-time</SelectItem>
-                                        <SelectItem value="contract">Contract</SelectItem>
-                                        <SelectItem value="remote">Remote</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <Label>Location *</Label>
-                                <Popover open={locationOpen} onOpenChange={setLocationOpen}>
-                                    <PopoverTrigger asChild>
-                                        <Button
-                                            type="button"
-                                            variant="outline"
-                                            role="combobox"
-                                            aria-expanded={locationOpen}
-                                            className="w-full justify-between h-auto min-h-10 py-2"
-                                        >
-                                            {selectedLocations.length > 0 ? (
-                                                <div className="flex flex-wrap gap-1">
-                                                    {selectedLocations.map((loc) => (
-                                                        <Badge variant="secondary" key={loc} className="mr-1 mb-1">
-                                                            {loc}
-                                                            <div
-                                                                className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                                                                onKeyDown={(e) => {
-                                                                    if (e.key === "Enter") {
-                                                                        e.stopPropagation();
-                                                                        setSelectedLocations(selectedLocations.filter((l) => l !== loc));
-                                                                    }
-                                                                }}
-                                                                onMouseDown={(e) => {
-                                                                    e.preventDefault();
-                                                                    e.stopPropagation();
-                                                                }}
-                                                                onClick={(e) => {
-                                                                    e.preventDefault();
-                                                                    e.stopPropagation();
-                                                                    setSelectedLocations(selectedLocations.filter((l) => l !== loc));
-                                                                }}
-                                                            >
-                                                                <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                                                            </div>
-                                                        </Badge>
-                                                    ))}
-                                                </div>
-                                            ) : (
-                                                <span className="text-muted-foreground">Select locations...</span>
-                                            )}
-                                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                        </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-[400px] p-0" align="start">
-                                        <Command>
-                                            <CommandInput placeholder="Search location..." />
-                                            <CommandList>
-                                                <CommandEmpty>No location found.</CommandEmpty>
-                                                <CommandGroup>
-                                                    {cities.map((city) => (
-                                                        <CommandItem
-                                                            key={city}
-                                                            value={city}
-                                                            onSelect={(currentValue) => {
-                                                                if (!selectedLocations.includes(currentValue)) {
-                                                                    setSelectedLocations([...selectedLocations, currentValue]);
-                                                                }
-                                                                // Don't close to allow multi select
-                                                            }}
-                                                        >
-                                                            <Check
-                                                                className={cn(
-                                                                    "mr-2 h-4 w-4",
-                                                                    selectedLocations.includes(city) ? "opacity-100" : "opacity-0"
-                                                                )}
-                                                            />
-                                                            {city}
-                                                        </CommandItem>
-                                                    ))}
-                                                </CommandGroup>
-                                            </CommandList>
-                                        </Command>
-                                    </PopoverContent>
-                                </Popover>
-                            </div>
-                            <div className="space-y-2">
-                                <Label htmlFor="salary">Salary Range *</Label>
-                                <Input id="salary" placeholder="e.g., $2,000 - $4,000" defaultValue={editingJob?.salary} required />
-                            </div>
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="description">Job Description *</Label>
-                            <Textarea
-                                id="description"
-                                placeholder="Describe the role, responsibilities..."
-                                className="min-h-32"
-                                defaultValue={editingJob?.description}
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="requirements">Requirements *</Label>
-                            <Textarea
-                                id="requirements"
-                                placeholder="List the requirements..."
-                                className="min-h-24"
-                                defaultValue={editingJob ? 'React, Node.js, TypeScript' : ''} // Mock placeholder
-                                required
-                            />
-                        </div>
-                        <div className="space-y-2">
-                            <Label>Required Skills *</Label>
-                            <Popover open={skillsOpen} onOpenChange={setSkillsOpen}>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        type="button"
-                                        variant="outline"
-                                        role="combobox"
-                                        aria-expanded={skillsOpen}
-                                        className="w-full justify-between h-auto min-h-10 py-2"
-                                    >
-                                        {selectedSkills.length > 0 ? (
-                                            <div className="flex flex-wrap gap-1">
-                                                {selectedSkills.map((skill) => (
-                                                    <Badge variant="secondary" key={skill} className="mr-1 mb-1">
-                                                        {skill}
-                                                        <div
-                                                            className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 cursor-pointer"
-                                                            onKeyDown={(e) => {
-                                                                if (e.key === "Enter") {
-                                                                    e.stopPropagation();
-                                                                    setSelectedSkills(selectedSkills.filter((s) => s !== skill));
-                                                                }
-                                                            }}
-                                                            onMouseDown={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                            }}
-                                                            onClick={(e) => {
-                                                                e.preventDefault();
-                                                                e.stopPropagation();
-                                                                setSelectedSkills(selectedSkills.filter((s) => s !== skill));
-                                                            }}
-                                                        >
-                                                            <X className="h-3 w-3 text-muted-foreground hover:text-foreground" />
-                                                        </div>
-                                                    </Badge>
-                                                ))}
-                                            </div>
-                                        ) : (
-                                            <span className="text-muted-foreground">Select skills...</span>
-                                        )}
-                                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-[400px] p-0" align="start">
-                                    <Command>
-                                        <CommandInput
-                                            placeholder="Search skills..."
-                                            value={skillSearch}
-                                            onValueChange={setSkillSearch}
-                                        />
-                                        <CommandList>
-                                            <CommandEmpty>
-                                                <button
-                                                    className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
-                                                    onClick={(e) => {
-                                                        e.preventDefault();
-                                                        if (skillSearch && !selectedSkills.includes(skillSearch)) {
-                                                            setSelectedSkills([...selectedSkills, skillSearch]);
-                                                            setSkillSearch("");
-                                                        }
-                                                    }}
-                                                >
-                                                    Create "{skillSearch}"
-                                                </button>
-                                            </CommandEmpty>
-                                            <CommandGroup heading="Suggestions">
-                                                {trendingSkills.map((skill) => (
-                                                    <CommandItem
-                                                        key={skill}
-                                                        value={skill}
-                                                        onSelect={(currentValue) => {
-                                                            // For skills, we use the raw value usually, nicely cased
-                                                            const actualValue = trendingSkills.find(s => s.toLowerCase() === currentValue.toLowerCase()) || currentValue;
-                                                            if (!selectedSkills.includes(actualValue)) {
-                                                                setSelectedSkills([...selectedSkills, actualValue]);
-                                                            }
-                                                        }}
-                                                    >
-                                                        <Check
-                                                            className={cn(
-                                                                "mr-2 h-4 w-4",
-                                                                selectedSkills.includes(skill) ? "opacity-100" : "opacity-0"
-                                                            )}
-                                                        />
-                                                        {skill}
-                                                    </CommandItem>
-                                                ))}
-                                            </CommandGroup>
-                                        </CommandList>
-                                    </Command>
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-                        <DialogFooter>
-                            <Button type="button" variant="outline" onClick={() => setCreateJobOpen(false)}>
-                                Cancel
-                            </Button>
-                            <Button type="submit" variant="accent">
-                                {editingJob ? 'Update Job' : 'Post Job'}
-                            </Button>
-                        </DialogFooter>
-                    </form>
-                </DialogContent>
-            </Dialog>
+
 
             {/* View Details Modal */}
             <Dialog open={!!viewingJob} onOpenChange={(open) => !open && setViewingJob(null)}>

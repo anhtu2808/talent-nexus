@@ -1,4 +1,4 @@
-import { Job, Application, CV, CandidateProfile, ApplicationNote } from '@/types';
+import { Job, Application, CV, CandidateProfile, ApplicationNote, Recruiter } from '@/types';
 
 export const mockJobs: Job[] = [
   {
@@ -1213,3 +1213,39 @@ export const mockJobInvitations: import('@/types').JobInvitation[] = [
     status: 'declined'
   }
 ];
+// Mock Recruiters for Team Management
+export const mockRecruiters: Recruiter[] = [
+  {
+    id: 'r1',
+    email: 'hr.manager@company.com',
+    name: 'Sarah Manager',
+    role: 'recruiter',
+    subRole: 'manager',
+    companyId: 'comp1',
+    status: 'active',
+    avatar: 'https://ui-avatars.com/api/?name=SM&background=0284c7&color=fff',
+    createdAt: new Date('2024-01-01')
+  },
+  {
+    id: 'r2',
+    email: 'hr.member1@company.com',
+    name: 'John Member',
+    role: 'recruiter',
+    subRole: 'member',
+    companyId: 'comp1',
+    status: 'active',
+    avatar: 'https://ui-avatars.com/api/?name=JM&background=0ea5e9&color=fff',
+    createdAt: new Date('2024-02-15')
+  },
+  {
+    id: 'r3',
+    email: 'hr.member2@company.com',
+    name: 'Emily Staff',
+    role: 'recruiter',
+    subRole: 'member',
+    companyId: 'comp1',
+    status: 'active',
+    createdAt: new Date('2024-03-20')
+  }
+];
+
