@@ -2,24 +2,19 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Search, MapPin, ChevronDown, Sparkles } from 'lucide-react';
-import { trendingSkills, cities } from '@/data/mockData';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Search, Sparkles } from 'lucide-react';
+import { trendingSkills } from '@/data/mockData';
+import { IndustrySelector } from '@/components/search/IndustrySelector';
 
 const HeroSection = () => {
   const [keyword, setKeyword] = useState('');
-  const [selectedCity, setSelectedCity] = useState('All Cities');
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const navigate = useNavigate();
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (keyword) params.set('q', keyword);
-    if (selectedCity !== 'All Cities') params.set('location', selectedCity);
+    if (selectedCategories.length > 0) params.set('categories', selectedCategories.join(','));
     navigate(`/jobs?${params.toString()}`);
   };
 
@@ -42,54 +37,39 @@ const HeroSection = () => {
           {/* Main Heading */}
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-primary-foreground mb-6 animate-slide-up">
             Find Your Dream
-            <span className="block text-accent mt-2">IT Job Today</span>
+            <span className="block text-accent mt-2">Job Today</span>
           </h1>
 
           <p className="text-lg md:text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s' }}>
-            Connect with top tech companies. Optimize your CV with AI. 
+            Connect with top tech companies. Optimize your CV with AI.
             Land your perfect role faster.
           </p>
 
           {/* Search Box */}
-          <div className="bg-card rounded-2xl p-3 shadow-xl max-w-3xl mx-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
-            <div className="flex flex-col md:flex-row gap-3">
-              {/* Location Dropdown */}
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="w-full md:w-48 justify-between text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4" />
-                      <span className="truncate">{selectedCity}</span>
-                    </div>
-                    <ChevronDown className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-48">
-                  {cities.map((city) => (
-                    <DropdownMenuItem
-                      key={city}
-                      onClick={() => setSelectedCity(city)}
-                      className={selectedCity === city ? 'bg-accent/10 text-accent' : ''}
-                    >
-                      {city}
-                    </DropdownMenuItem>
-                  ))}
-                </DropdownMenuContent>
-              </DropdownMenu>
+          <div className="bg-card rounded-2xl p-3 shadow-xl max-w-5xl mx-auto animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <div className="flex flex-col md:flex-row gap-2">
+              {/* Industry Selector */}
+              <div className="md:w-[280px]">
+                <IndustrySelector
+                  onSelect={setSelectedCategories}
+                  selectedIds={selectedCategories}
+                />
+              </div>
 
               {/* Search Input */}
               <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
                 <Input
-                  placeholder="Enter keyword (Java, React, Python...)"
+                  placeholder="Job title, keyword or company..."
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-4 pr-4 h-11 border-0 bg-muted/50 focus-visible:ring-accent"
+                  className="pl-10 h-10 border-transparent bg-white shadow-none focus-visible:ring-0"
                 />
               </div>
 
               {/* Search Button */}
-              <Button variant="accent" size="lg" onClick={handleSearch} className="md:w-32">
+              <Button variant="accent" size="lg" onClick={handleSearch} className="md:w-32 h-10 rounded-lg">
                 <Search className="h-4 w-4 mr-2" />
                 Search
               </Button>

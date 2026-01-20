@@ -35,9 +35,9 @@ const ApplicationDetail = () => {
   // Mock timeline steps
   const steps = [
     { id: 'applied', label: 'Applied', date: application.appliedAt, completed: true },
-    { id: 'in_review', label: 'In Review', date: new Date(application.appliedAt.getTime() + 86400000), completed: ['in_review', 'interview', 'offered', 'rejected'].includes(application.status) },
-    { id: 'interview', label: 'Interview', date: new Date(application.appliedAt.getTime() + 86400000 * 3), completed: ['interview', 'offered', 'rejected'].includes(application.status) },
-    { id: 'offered', label: 'Offered', date: new Date(application.appliedAt.getTime() + 86400000 * 7), completed: ['offered'].includes(application.status) },
+    { id: 'in_review', label: 'In Review', date: new Date(application.appliedAt.getTime() + 86400000), completed: ['in_review', 'interview', 'hired', 'rejected'].includes(application.status) },
+    { id: 'interview', label: 'Interview', date: new Date(application.appliedAt.getTime() + 86400000 * 3), completed: ['interview', 'hired', 'rejected'].includes(application.status) },
+    { id: 'hired', label: 'Hired', date: new Date(application.appliedAt.getTime() + 86400000 * 7), completed: ['hired'].includes(application.status) },
     { id: 'rejected', label: 'Rejected', date: new Date(application.appliedAt.getTime() + 86400000 * 7), completed: ['rejected'].includes(application.status) }
   ];
 
