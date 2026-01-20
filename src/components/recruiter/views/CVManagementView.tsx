@@ -30,6 +30,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from '@/components/ui/select';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 
 
@@ -250,7 +254,7 @@ const CVManagementView = ({ jobId }: CVManagementViewProps = {}) => {
                             </SelectContent>
                         </Select>
                     )}
-                    {selectedJob && (
+                    {/* {selectedJob && (
                         <Button
                             variant="outline"
                             onClick={() => setSchedulerOpen(true)}
@@ -258,7 +262,7 @@ const CVManagementView = ({ jobId }: CVManagementViewProps = {}) => {
                             <Calendar className="h-4 w-4 mr-2" />
                             Interview Schedule
                         </Button>
-                    )}
+                    )} */}
                 </div>
             </div>
 
@@ -404,88 +408,202 @@ const CVManagementView = ({ jobId }: CVManagementViewProps = {}) => {
                         </div>
 
                         {/* ATS Analysis Panel - 1/3 width */}
-                        <div className="bg-card p-6 overflow-y-auto h-full space-y-8 relative">
+                        <div className="bg-card p-6 overflow-y-auto h-full relative">
+                            <Tabs defaultValue="ai" className="h-full flex flex-col">
+                                <div className="flex items-center justify-between mb-6 shrink-0">
+                                    <h3 className="text-lg font-semibold">Assessment</h3>
+                                    <TabsList className="grid w-full max-w-[200px] grid-cols-2">
+                                        <TabsTrigger value="ai">AI Analysis</TabsTrigger>
+                                        <TabsTrigger value="manual">Manual</TabsTrigger>
+                                    </TabsList>
+                                </div>
 
-
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">ATS Analysis</h3>
-                                <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-border">
+                                <TabsContent value="ai" className="space-y-8 flex-1 overflow-y-auto pr-2">
                                     <div>
-                                        <div className="text-sm text-muted-foreground">Overall Score</div>
-                                        <div className="text-3xl font-bold text-primary">{viewingCV?.atsScore}%</div>
-                                    </div>
-                                    <div className="h-12 w-12 rounded-full border-4 border-primary flex items-center justify-center text-xs font-bold">
-                                        {viewingCV?.atsScore}
-                                    </div>
-                                </div>
-                            </div>
-
-                            {viewingCV?.atsBreakdown ? (
-                                <>
-                                    <div className="space-y-4">
-                                        <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Score Breakdown</h4>
-                                        <div className="space-y-3">
+                                        {/* ATS Analysis Header removed, as it's now in tabs */}
+                                        <div className="flex items-center justify-between p-4 bg-muted/30 rounded-lg border border-border">
                                             <div>
-                                                <div className="flex justify-between text-sm mb-1">
-                                                    <span>Skills Match</span>
-                                                    <span>{viewingCV.atsBreakdown.skillsMatch}%</span>
-                                                </div>
-                                                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-blue-500 rounded-full"
-                                                        style={{ width: `${viewingCV.atsBreakdown.skillsMatch}%` }}
-                                                    />
-                                                </div>
+                                                <div className="text-sm text-muted-foreground">Overall Score</div>
+                                                {viewingCV?.atsBreakdown && selectedJobData?.weights ? (
+                                                    <div className="text-3xl font-bold text-primary">
+                                                        {Math.round(
+                                                            ((viewingCV.atsBreakdown.skillsMatch || 0) * selectedJobData.weights.skills +
+                                                                (viewingCV.atsBreakdown.requirementsMatch ?? viewingCV.atsBreakdown.keywordsMatch ?? 0) * selectedJobData.weights.requirements +
+                                                                (viewingCV.atsBreakdown.experienceMatch || 0) * selectedJobData.weights.experience +
+                                                                (viewingCV.atsBreakdown.locationMatch || 0) * selectedJobData.weights.location) / 100
+                                                        )}%
+                                                    </div>
+                                                ) : (
+                                                    <div className="text-3xl font-bold text-primary">{viewingCV?.atsScore}%</div>
+                                                )}
                                             </div>
-                                            <div>
-                                                <div className="flex justify-between text-sm mb-1">
-                                                    <span>Keywords Match</span>
-                                                    <span>{viewingCV.atsBreakdown.keywordsMatch}%</span>
-                                                </div>
-                                                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-indigo-500 rounded-full"
-                                                        style={{ width: `${viewingCV.atsBreakdown.keywordsMatch}%` }}
-                                                    />
-                                                </div>
-                                            </div>
-                                            <div>
-                                                <div className="flex justify-between text-sm mb-1">
-                                                    <span>Formatting</span>
-                                                    <span>{viewingCV.atsBreakdown.formattingScore}%</span>
-                                                </div>
-                                                <div className="h-2 bg-muted rounded-full overflow-hidden">
-                                                    <div
-                                                        className="h-full bg-green-500 rounded-full"
-                                                        style={{ width: `${viewingCV.atsBreakdown.formattingScore}%` }}
-                                                    />
-                                                </div>
+                                            <div className="h-12 w-12 rounded-full border-4 border-primary flex items-center justify-center text-xs font-bold">
+                                                {viewingCV?.atsBreakdown && selectedJobData?.weights ? (
+                                                    Math.round(
+                                                        ((viewingCV.atsBreakdown.skillsMatch || 0) * selectedJobData.weights.skills +
+                                                            (viewingCV.atsBreakdown.requirementsMatch ?? viewingCV.atsBreakdown.keywordsMatch ?? 0) * selectedJobData.weights.requirements +
+                                                            (viewingCV.atsBreakdown.experienceMatch || 0) * selectedJobData.weights.experience +
+                                                            (viewingCV.atsBreakdown.locationMatch || 0) * selectedJobData.weights.location) / 100
+                                                    )
+                                                ) : (
+                                                    viewingCV?.atsScore
+                                                )}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="space-y-4">
-                                        <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Analysis Feedback</h4>
+                                    {viewingCV?.atsBreakdown ? (
+                                        <div className="space-y-4">
+                                            <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wider">Score Breakdown & Analysis</h4>
+                                            <div className="space-y-6">
+                                                {/* Skills */}
+                                                <div>
+                                                    <div className="flex justify-between text-sm mb-2">
+                                                        <span className="font-medium">Skills Match {selectedJobData?.weights && <span className="text-muted-foreground text-xs font-normal">({selectedJobData.weights.skills}%)</span>}</span>
+                                                        <span className="font-bold">{viewingCV.atsBreakdown.skillsMatch || 0}%</span>
+                                                    </div>
+                                                    <div className="h-2 bg-muted rounded-full overflow-hidden mb-3">
+                                                        <div
+                                                            className="h-full bg-blue-500 rounded-full"
+                                                            style={{ width: `${viewingCV.atsBreakdown.skillsMatch || 0}%` }}
+                                                        />
+                                                    </div>
+                                                    <div className="bg-muted/50 p-3 rounded-lg border border-border text-xs text-muted-foreground">
+                                                        <ul className="list-disc list-inside space-y-1">
+                                                            {Array.isArray(viewingCV.atsBreakdown.skillsAnalysis) ? (
+                                                                viewingCV.atsBreakdown.skillsAnalysis.map((point, i) => (
+                                                                    <li key={i}>{point}</li>
+                                                                ))
+                                                            ) : (
+                                                                <li>{viewingCV.atsBreakdown.skillsAnalysis || "Candidate's skills align with the job requirements."}</li>
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {/* Requirements */}
+                                                <div>
+                                                    <div className="flex justify-between text-sm mb-2">
+                                                        <span className="font-medium">Requirements Match {selectedJobData?.weights && <span className="text-muted-foreground text-xs font-normal">({selectedJobData.weights.requirements}%)</span>}</span>
+                                                        <span className="font-bold">{viewingCV.atsBreakdown.requirementsMatch ?? viewingCV.atsBreakdown.keywordsMatch ?? 0}%</span>
+                                                    </div>
+                                                    <div className="h-2 bg-muted rounded-full overflow-hidden mb-3">
+                                                        <div
+                                                            className="h-full bg-indigo-500 rounded-full"
+                                                            style={{ width: `${viewingCV.atsBreakdown.requirementsMatch ?? viewingCV.atsBreakdown.keywordsMatch ?? 0}%` }}
+                                                        />
+                                                    </div>
+                                                    <div className="bg-muted/50 p-3 rounded-lg border border-border text-xs text-muted-foreground">
+                                                        <ul className="list-disc list-inside space-y-1">
+                                                            {Array.isArray(viewingCV.atsBreakdown.requirementsAnalysis) ? (
+                                                                viewingCV.atsBreakdown.requirementsAnalysis.map((point, i) => (
+                                                                    <li key={i}>{point}</li>
+                                                                ))
+                                                            ) : (
+                                                                <li>{viewingCV.atsBreakdown.requirementsAnalysis || "Candidate meets the core job requirements."}</li>
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {/* Experience */}
+                                                <div>
+                                                    <div className="flex justify-between text-sm mb-2">
+                                                        <span className="font-medium">Experience Match {selectedJobData?.weights && <span className="text-muted-foreground text-xs font-normal">({selectedJobData.weights.experience}%)</span>}</span>
+                                                        <span className="font-bold">{viewingCV.atsBreakdown.experienceMatch || 0}%</span>
+                                                    </div>
+                                                    <div className="h-2 bg-muted rounded-full overflow-hidden mb-3">
+                                                        <div
+                                                            className="h-full bg-purple-500 rounded-full"
+                                                            style={{ width: `${viewingCV.atsBreakdown.experienceMatch || 0}%` }}
+                                                        />
+                                                    </div>
+                                                    <div className="bg-muted/50 p-3 rounded-lg border border-border text-xs text-muted-foreground">
+                                                        <ul className="list-disc list-inside space-y-1">
+                                                            {Array.isArray(viewingCV.atsBreakdown.experienceAnalysis) ? (
+                                                                viewingCV.atsBreakdown.experienceAnalysis.map((point, i) => (
+                                                                    <li key={i}>{point}</li>
+                                                                ))
+                                                            ) : (
+                                                                <li>{viewingCV.atsBreakdown.experienceAnalysis || "Experience level matches the role description."}</li>
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+
+                                                {/* Location */}
+                                                <div>
+                                                    <div className="flex justify-between text-sm mb-2">
+                                                        <span className="font-medium">Location Match {selectedJobData?.weights && <span className="text-muted-foreground text-xs font-normal">({selectedJobData.weights.location}%)</span>}</span>
+                                                        <span className="font-bold">{viewingCV.atsBreakdown.locationMatch || 0}%</span>
+                                                    </div>
+                                                    <div className="h-2 bg-muted rounded-full overflow-hidden mb-3">
+                                                        <div
+                                                            className="h-full bg-teal-500 rounded-full"
+                                                            style={{ width: `${viewingCV.atsBreakdown.locationMatch || 0}%` }}
+                                                        />
+                                                    </div>
+                                                    <div className="bg-muted/50 p-3 rounded-lg border border-border text-xs text-muted-foreground">
+                                                        <ul className="list-disc list-inside space-y-1">
+                                                            {Array.isArray(viewingCV.atsBreakdown.locationAnalysis) ? (
+                                                                viewingCV.atsBreakdown.locationAnalysis.map((point, i) => (
+                                                                    <li key={i}>{point}</li>
+                                                                ))
+                                                            ) : (
+                                                                <li>{viewingCV.atsBreakdown.locationAnalysis || "Candidate is within a suitable location range."}</li>
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="text-center py-8 text-muted-foreground">
+                                            No detailed analysis available.
+                                        </div>
+                                    )}
+                                </TabsContent>
+
+                                <TabsContent value="manual" className="space-y-6 flex-1 overflow-y-auto pr-2">
+                                    <div className="bg-yellow-500/10 text-yellow-600 p-4 rounded-lg text-sm border border-yellow-500/20">
+                                        Use this section to manually evaluate the candidate if the AI analysis is inaccurate or incomplete.
+                                    </div>
+
+                                    <div className="space-y-6">
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label htmlFor="manual-skills">Skills Score (0-100)</Label>
+                                                <Input id="manual-skills" type="number" min="0" max="100" placeholder="e.g. 85" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="manual-reqs">Requirements Score (0-100)</Label>
+                                                <Input id="manual-reqs" type="number" min="0" max="100" placeholder="e.g. 80" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="manual-exp">Experience Score (0-100)</Label>
+                                                <Input id="manual-exp" type="number" min="0" max="100" placeholder="e.g. 90" />
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label htmlFor="manual-loc">Location Score (0-100)</Label>
+                                                <Input id="manual-loc" type="number" min="0" max="100" placeholder="e.g. 100" />
+                                            </div>
+                                        </div>
+
                                         <div className="space-y-2">
-                                            {viewingCV.atsBreakdown.missingKeywords.length > 0 && (
-                                                <div className="p-3 bg-red-500/10 text-red-600 rounded-lg text-sm">
-                                                    <strong>Missing Keywords:</strong> {viewingCV.atsBreakdown.missingKeywords.join(', ')}
-                                                </div>
-                                            )}
-                                            {viewingCV.atsBreakdown.feedback.map((item, idx) => (
-                                                <div key={idx} className="p-3 bg-blue-500/10 text-blue-600 rounded-lg text-sm flex gap-2">
-                                                    <div className="mt-0.5">•</div>
-                                                    <div>{item}</div>
-                                                </div>
-                                            ))}
+                                            <Label htmlFor="manual-notes">Evaluation Notes</Label>
+                                            <Textarea
+                                                id="manual-notes"
+                                                placeholder="Enter your manual evaluation reasoning here..."
+                                                className="min-h-[150px]"
+                                            />
                                         </div>
+
+                                        <Button className="w-full">
+                                            Save Manual Evaluation
+                                        </Button>
                                     </div>
-                                </>
-                            ) : (
-                                <div className="text-center py-8 text-muted-foreground">
-                                    No detailed analysis available.
-                                </div>
-                            )}
+                                </TabsContent>
+                            </Tabs>
                         </div>
                     </div>
                 </DialogContent>
