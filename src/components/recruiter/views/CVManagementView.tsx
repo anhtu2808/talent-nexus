@@ -404,6 +404,10 @@ const CVManagementView = ({ jobId }: CVManagementViewProps = {}) => {
                                 src="/sample-cv.pdf"
                                 className="w-full h-full"
                                 title="CV Preview"
+                                style={{
+                                    transform: "scale(1)",
+                                    transformOrigin: "0 0",
+                                }}
                             />
                         </div>
 
