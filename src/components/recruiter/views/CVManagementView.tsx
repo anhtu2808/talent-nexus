@@ -33,11 +33,15 @@ import {
 
 
 
-const CVManagementView = () => {
+interface CVManagementViewProps {
+    jobId?: string;
+}
+
+const CVManagementView = ({ jobId }: CVManagementViewProps = {}) => {
     const { user } = useAuth();
     // Initialize with 'all' by default or mockJobs[0]?.id if strict
     const [selectedJob, setSelectedJob] = useState<string>(
-        mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2')[0]?.id || ''
+        jobId || mockJobs.filter(job => job.recruiterId === 'r1' || job.recruiterId === 'r2')[0]?.id || ''
     );
     const [viewMode, setViewMode] = useState<'kanban' | 'list'>('kanban');
     const [applications, setApplications] = useState<Application[]>(mockApplications);
@@ -232,18 +236,20 @@ const CVManagementView = () => {
                     <p className="text-muted-foreground">Track and manage candidate applications</p>
                 </div>
                 <div className="flex items-center gap-3">
-                    <Select value={selectedJob} onValueChange={setSelectedJob}>
-                        <SelectTrigger className="w-[300px]">
-                            <SelectValue placeholder="Select a Job" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {recruiterJobs.map(job => (
-                                <SelectItem key={job.id} value={job.id}>
-                                    {job.title} <span className="text-muted-foreground">({job.isActive ? 'Open' : 'Closed'})</span>
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
+                    {!jobId && (
+                        <Select value={selectedJob} onValueChange={setSelectedJob}>
+                            <SelectTrigger className="w-[300px]">
+                                <SelectValue placeholder="Select a Job" />
+                            </SelectTrigger>
+                            <SelectContent>
+                                {recruiterJobs.map(job => (
+                                    <SelectItem key={job.id} value={job.id}>
+                                        {job.title} <span className="text-muted-foreground">({job.isActive ? 'Open' : 'Closed'})</span>
+                                    </SelectItem>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                    )}
                     {selectedJob && (
                         <Button
                             variant="outline"
