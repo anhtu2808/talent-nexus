@@ -289,9 +289,31 @@ const CVAnalysis = () => {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Link>
-          <Button variant="outline" size="sm" className="h-8 text-xs bg-white hover:bg-slate-50">
-            <Upload className="h-3 w-3 mr-1.5" /> Re-upload
-          </Button>
+          <div>
+            <input
+              type="file"
+              id="reupload-cv"
+              className="hidden"
+              accept=".pdf,.docx"
+              onChange={(e) => {
+                if (e.target.files?.[0]) {
+                  toast.success("Uploading new CV version...");
+                  setTimeout(() => {
+                    toast.success("Analysis updated with new CV!");
+                    // Here we would normally trigger a re-analysis
+                  }, 1500);
+                }
+              }}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 text-xs bg-white hover:bg-slate-50"
+              onClick={() => document.getElementById('reupload-cv')?.click()}
+            >
+              <Upload className="h-3 w-3 mr-1.5" /> Re-upload
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-start">
