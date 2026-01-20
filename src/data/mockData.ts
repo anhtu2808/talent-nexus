@@ -146,6 +146,127 @@ export const mockJobs: Job[] = [
     isActive: true,
     views: 445,
     clickToApply: 38
+  },
+  {
+    id: '7',
+    title: 'Digital Marketing Manager',
+    company: 'Growth Hackers',
+    companyLogo: 'https://ui-avatars.com/api/?name=GH&background=8b5cf6&color=fff&size=100',
+    location: ['Ho Chi Minh City'],
+    salary: '$1,500 - $2,500',
+    type: 'full-time',
+    description: 'We are looking for a creative Digital Marketing Manager to lead our marketing campaigns. You will be responsible for SEO, social media strategy, and content marketing.',
+    requirements: [
+      '3+ years of experience in digital marketing',
+      'Strong knowledge of SEO/SEM',
+      'Experience with Google Analytics and social media tools',
+      'Excellent content writing skills',
+      'Creativity and data-driven mindset'
+    ],
+    skills: ['Marketing', 'SEO', 'Social Media', 'Content Marketing', 'Google Analytics'],
+    postedAt: new Date('2026-01-15'),
+    deadline: new Date('2026-03-01'),
+    recruiterId: 'r3',
+    applicantCount: 42,
+    isActive: true,
+    views: 850,
+    clickToApply: 95
+  },
+  {
+    id: '8',
+    title: 'B2B Sales Representative',
+    company: 'TechVision Corp',
+    companyLogo: 'https://ui-avatars.com/api/?name=TV&background=0F2238&color=fff&size=100',
+    location: ['Ha Noi'],
+    salary: '$1,000 - $2,000 + Commission',
+    type: 'full-time',
+    description: 'Join our dynamic sales team to drive enterprise software sales. You will be identifying new business opportunities and managing client relationships.',
+    requirements: [
+      '2+ years of B2B sales experience',
+      'Strong negotiation and communication skills',
+      'Ability to build and maintain relationships',
+      'Self-motivated and goal-oriented',
+      'Experience in tech sales is a plus'
+    ],
+    skills: ['Sales', 'B2B', 'Negotiation', 'CRM', 'Communication'],
+    postedAt: new Date('2026-01-18'),
+    recruiterId: 'r1',
+    applicantCount: 35,
+    isActive: true,
+    views: 620,
+    clickToApply: 70
+  },
+  {
+    id: '9',
+    title: 'Senior Accountant',
+    company: 'Global Finance',
+    companyLogo: 'https://ui-avatars.com/api/?name=GF&background=10b981&color=fff&size=100',
+    location: ['Ho Chi Minh City'],
+    salary: '$1,800 - $2,800',
+    type: 'full-time',
+    description: 'We are seeking a detail-oriented Senior Accountant to handle financial reporting, tax filings, and general ledger reconciliation.',
+    requirements: [
+      'Bachelor’s degree in Accounting or Finance',
+      'CPA certification is preferred',
+      '5+ years of accounting experience',
+      'Proficiency in SAP or Oracle ERP',
+      'Strong knowledge of tax regulations'
+    ],
+    skills: ['Finance', 'Accounting', 'Taxation', 'SAP', 'Excel'],
+    postedAt: new Date('2026-01-12'),
+    recruiterId: 'r2',
+    applicantCount: 18,
+    isActive: true,
+    views: 450,
+    clickToApply: 30
+  },
+  {
+    id: '10',
+    title: 'HR Specialist',
+    company: 'People First',
+    companyLogo: 'https://ui-avatars.com/api/?name=PF&background=f43f5e&color=fff&size=100',
+    location: ['Da Nang'],
+    salary: '$1,200 - $1,800',
+    type: 'full-time',
+    description: 'Support our HR department in talent acquisition, employee relations, and HR administration. Ensure a positive candidate and employee experience.',
+    requirements: [
+      '2+ years of experience in HR',
+      'Experience with recruitment and onboarding',
+      'Knowledge of labor laws',
+      'Good interpersonal and organizational skills',
+      'Proficiency in HRIS software'
+    ],
+    skills: ['HR', 'Recruitment', 'Talent Acquisition', 'Employee Relations', 'HRIS'],
+    postedAt: new Date('2026-01-14'),
+    recruiterId: 'r3',
+    applicantCount: 55,
+    isActive: true,
+    views: 920,
+    clickToApply: 110
+  },
+  {
+    id: '11',
+    title: 'Graphic Designer',
+    company: 'Creative Studio',
+    companyLogo: 'https://ui-avatars.com/api/?name=CS&background=8b5cf6&color=fff&size=100',
+    location: ['Remote'],
+    salary: '$1,000 - $1,800',
+    type: 'contract',
+    description: 'Create visually stunning graphics for digital and print media. Work with our marketing team to deliver cohesive brand visuals.',
+    requirements: [
+      'Portfolio demonstrating strong design skills',
+      'Proficiency in Adobe Creative Suite (Photoshop, Illustrator)',
+      'Experience with UI/UX design is a plus',
+      'Attention to detail and creativity',
+      'Ability to meet deadlines'
+    ],
+    skills: ['Design', 'Graphic Design', 'Photoshop', 'Illustrator', 'UI/UX'],
+    postedAt: new Date('2026-01-19'),
+    recruiterId: 'r3',
+    applicantCount: 60,
+    isActive: true,
+    views: 1200,
+    clickToApply: 150
   }
 ];
 
@@ -907,7 +1028,7 @@ export const mockCVs: CV[] = [
 ];
 
 export const trendingSkills = [
-  'Java', 'ReactJS', '.NET', 'Tester', 'PHP', 'Business Analysis', 'NodeJS', 'Python', 'DevOps', 'AWS'
+  'Marketing', 'Sales', 'Finance', 'HR', 'Design', 'Accounting', 'Java', 'ReactJS', '.NET', 'Business Analysis'
 ];
 
 export const cities = [
