@@ -42,8 +42,7 @@ const CVAnalysis = () => {
   const navigate = useNavigate();
   const { tier } = useSubscription();
 
-  // State for Overall Score
-  const [overallScore, setOverallScore] = useState(72);
+
 
   // Initial Data with more detailed fixing suggestions
   const initialCategories = [
@@ -76,7 +75,7 @@ const CVAnalysis = () => {
     {
       id: 'ats_friendly',
       label: 'ATS-friendly Format',
-      score: 90,
+      score: 100,
       description: 'Readability score by automated Applicant Tracking Systems.',
       issues: [
         { title: "File Format", status: "success", description: "Standard PDF format with selectable text." },
@@ -164,7 +163,7 @@ const CVAnalysis = () => {
     {
       id: 'professionalism',
       label: 'Professionalism',
-      score: 95,
+      score: 100,
       description: 'Tone, style, and professional appearance.',
       issues: [
         { title: "Spelling", status: "success", description: "No major spelling errors detected." },
@@ -175,7 +174,7 @@ const CVAnalysis = () => {
     {
       id: 'conciseness',
       label: 'Conciseness',
-      score: 85,
+      score: 100,
       description: 'Ability to convey information succinctly.',
       issues: [
         { title: "Page Count", status: "success", description: "1 page is ideal for your current experience level." },
@@ -205,7 +204,7 @@ const CVAnalysis = () => {
     {
       id: 'credibility',
       label: 'Credibility',
-      score: 88,
+      score: 100,
       description: 'Authenticity and trustworthiness of the profile.',
       issues: [
         { title: "Verified Links", status: "success", description: "LinkedIn and GitHub Profile links are active." },
@@ -216,9 +215,14 @@ const CVAnalysis = () => {
 
   const [categories, setCategories] = useState(initialCategories);
 
+  // Derive Overall Score from Categories
+  const overallScore = useMemo(() => {
+    const total = categories.reduce((acc, cat) => acc + cat.score, 0);
+    return Math.round(total / categories.length);
+  }, [categories]);
+
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
-  // Define AI Findings (Keywords to search and highlight)
   // Define AI Findings (Keywords to search and highlight)
   interface Finding {
     keyword: string;
@@ -276,8 +280,6 @@ const CVAnalysis = () => {
     }, 600);
   };
 
-
-
   const handleFixIssue = (catId: string, issueIndex: number) => {
     toast.success("Applying recommended changes...");
 
@@ -292,12 +294,18 @@ const CVAnalysis = () => {
             issue.status = 'success';
             issue.description = issue.fixSuggestion || "Issue resolved successfully.";
 
-            // Boost category score
-            const newScore = Math.min(100, cat.score + 5);
-            cat.score = newScore;
+            // Smart Score Calculation
+            const totalIssues = newIssues.length;
+            const fixedIssues = newIssues.filter(i => i.status === 'success').length;
 
-            // Boost Overall Score
-            setOverallScore(prev => Math.min(100, prev + 2));
+            let newScore = cat.score;
+            if (fixedIssues === totalIssues) {
+              newScore = 100; // Perfect score if all issues fixed
+            } else {
+              // Proportional boost for partial fixes
+              newScore = Math.min(95, cat.score + 15);
+            }
+            cat.score = newScore;
           }
 
           return { ...cat, issues: newIssues };
@@ -412,7 +420,24 @@ const CVAnalysis = () => {
   }, [highlight, aiFindings]);
 
   const handleOptimize = () => {
-    toast.success("Optimizing your CV...");
+    const promise = new Promise((resolve) => setTimeout(resolve, 2000));
+
+    toast.promise(promise, {
+      loading: 'AI is analyzing and optimizing your CV structure...',
+      success: () => {
+        setCategories(prev => prev.map(cat => ({
+          ...cat,
+          score: 100, // Perfect score after optimization
+          issues: cat.issues.map(issue => ({
+            ...issue,
+            status: 'success' as const, // Cast to literal type if needed, though mostly inferred
+            description: issue.fixSuggestion || "Optimized by AI to meet industry standards."
+          }))
+        })));
+        return 'CV Analysis Optimized! All critical issues resolved.';
+      },
+      error: 'Optimization failed'
+    });
   };
 
   return (
@@ -498,7 +523,7 @@ const CVAnalysis = () => {
                     <AlertCircle className="h-3 w-3" />
                     Critical Fixes
                   </div>
-                  {categories.filter(c => c.score < 80).map((cat) => (
+                  {categories.filter(c => c.score < 100).map((cat) => (
                     <div key={cat.id} className="rounded-lg border border-transparent transition-all overflow-hidden">
                       <button
                         onClick={() => setSelectedCategory(selectedCategory?.id === cat.id ? null : cat)}
@@ -604,7 +629,7 @@ const CVAnalysis = () => {
                     <CheckCircle2 className="h-3 w-3" />
                     Passed Checks
                   </div>
-                  {categories.filter(c => c.score >= 80).map((cat) => (
+                  {categories.filter(c => c.score === 100).map((cat) => (
                     <div key={cat.id} className="rounded-lg border border-transparent transition-all overflow-hidden">
                       <button
                         onClick={() => setSelectedCategory(selectedCategory?.id === cat.id ? null : cat)}
