@@ -1,6 +1,6 @@
 export type UserRole = 'candidate' | 'recruiter' | 'admin';
 
-export type ApplicationStatus = 'applied' | 'in_review' | 'interview' | 'offered' | 'rejected';
+export type ApplicationStatus = 'applied' | 'in_review' | 'interview' | 'hired' | 'rejected';
 
 export interface User {
   id: string;
@@ -127,7 +127,7 @@ export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: st
   { key: 'applied', label: 'Applied', color: 'bg-blue-500' },
   { key: 'in_review', label: 'In Review', color: 'bg-purple-500' },
   { key: 'interview', label: 'Interview', color: 'bg-amber-500' },
-  { key: 'offered', label: 'Offered', color: 'bg-emerald-500' },
+  { key: 'hired', label: 'Hired', color: 'bg-emerald-500' },
   { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
 ];
 

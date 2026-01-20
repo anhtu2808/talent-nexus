@@ -420,7 +420,7 @@ export const mockApplications: Application[] = [
     jobId: '1',
     candidateId: 'c8',
     cvId: 'cv8',
-    status: 'offered',
+    status: 'hired',
     appliedAt: new Date('2025-12-05'),
     matchScore: 90,
     viewedAt: new Date('2025-12-06'),
@@ -606,7 +606,7 @@ export const mockApplications: Application[] = [
     jobId: '2',
     candidateId: 'c5',
     cvId: 'cv5',
-    status: 'offered',
+    status: 'hired',
     appliedAt: new Date('2025-12-15'),
     matchScore: 95
   },
@@ -616,7 +616,7 @@ export const mockApplications: Application[] = [
     jobId: '4',
     candidateId: 'c5',
     cvId: 'cv5',
-    status: 'offered',
+    status: 'hired',
     appliedAt: new Date('2025-12-20'),
     matchScore: 98
   },
