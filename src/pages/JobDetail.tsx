@@ -30,7 +30,8 @@ import {
   Phone,
   Mail,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  Copy // Added Copy icon
 } from 'lucide-react';
 
 import {
@@ -74,6 +75,9 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CVMatchAnalysis from '@/components/jobs/CVMatchAnalysis';
 import ApplicantCard from '@/components/recruiter/ApplicantCard';
+import CVManagementView from '@/components/recruiter/views/CVManagementView';
+import ProposedCVsView from '@/components/recruiter/views/ProposedCVsView';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 import { mockCVs, mockJobs, mockApplications, mockCandidateProfiles, cities, trendingSkills } from '@/data/mockData';
 import { Job, ApplicationStatus, CV, CandidateProfile, Application } from '@/types';
@@ -136,12 +140,15 @@ const JobDetail = () => {
     );
   }
 
+
   // Handlers
   const handleEditClick = () => {
     navigate(`/recruiter/jobs/${id}/edit`);
   };
 
-
+  const handleCloneClick = () => {
+    navigate('/recruiter/jobs/post', { state: { cloneData: job } });
+  };
 
   const handleStatusChange = (applicationId: string, newStatus: ApplicationStatus) => {
     setApplications(prev => prev.map(app => {
@@ -238,125 +245,205 @@ const JobDetail = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-2 space-y-8">
-            {/* Job Details Card */}
-            <div className="bg-card rounded-xl border border-border p-8 shadow-sm">
-              <div className="flex items-start justify-between gap-4 mb-6">
-                <div className="flex items-center gap-4">
-                  <img
-                    src={job.companyLogo}
-                    alt={job.company}
-                    className="w-20 h-20 rounded-xl object-cover border border-border"
-                  />
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <h1 className="text-2xl font-bold text-foreground">{job.title}</h1>
-                      {isRecruiterView && (
-                        <Button variant="outline" size="sm" className="h-7 text-xs ml-2" onClick={handleEditClick}>
-                          Edit Job
-                        </Button>
-                      )}
+            {isRecruiterView ? (
+              <Tabs defaultValue="details" className="w-full">
+                <TabsList className="mb-4 w-full justify-start border-b rounded-none h-auto p-0 bg-transparent gap-6">
+                  <TabsTrigger
+                    value="details"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
+                  >
+                    Job Details
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="applicants"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
+                  >
+                    Applicants
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="proposed"
+                    className="rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-0 py-2"
+                  >
+                    Proposed CVs
+                  </TabsTrigger>
+                </TabsList>
+
+                <TabsContent value="details" className="mt-0">
+                  <div className="bg-card rounded-xl border border-border p-8 shadow-sm">
+                    <div className="flex items-start justify-between gap-4 mb-6">
+                      <div className="flex items-center gap-4">
+                        <img
+                          src={job.companyLogo}
+                          alt={job.company}
+                          className="w-20 h-20 rounded-xl object-cover border border-border"
+                        />
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <h1 className="text-2xl font-bold text-foreground">{job.title}</h1>
+                            <div className="flex items-center gap-2 text-muted-foreground">
+                              <Building className="h-4 w-4" />
+                              <span className="font-medium">{job.company}</span>
+                            </div>
+                            <div className="flex gap-2 ml-2">
+                              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleCloneClick}>
+                                <Copy className="h-3 w-3 mr-1" />
+                                Clone Job
+                              </Button>
+                              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleEditClick}>
+                                Edit Job
+                              </Button>
+                            </div>
+                          </div >
+                        </div >
+                      </div>
+                    </div >
+
+                    <div className="flex flex-wrap gap-4 mb-8 pt-6 border-t border-border">
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <MapPin className="h-5 w-5 text-accent" />
+                        <span>{job.location.join(', ')}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <DollarSign className="h-5 w-5 text-accent" />
+                        <span>{job.salary}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Briefcase className="h-5 w-5 text-accent" />
+                        <span className="capitalize">{job.type}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-muted-foreground">
+                        <Clock className="h-5 w-5 text-accent" />
+                        <span>Posted {formatDistanceToNow(job.postedAt)} ago</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Building className="h-4 w-4" />
-                      <span className="font-medium">{job.company}</span>
+
+                    <div className="space-y-6">
+                      <section>
+                        <h3 className="text-lg font-semibold mb-3">About the Role</h3>
+                        <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                          {job.description}
+                        </p>
+                      </section>
+
+                      <section>
+                        <h3 className="text-lg font-semibold mb-3">Requirements</h3>
+                        <ul className="space-y-2">
+                          {job.requirements.map((req, index) => (
+                            <li key={index} className="flex items-start gap-3 text-muted-foreground">
+                              <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                              <span>{req}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+
+                      <section>
+                        <h3 className="text-lg font-semibold mb-3">Skills Required</h3>
+                        <div className="flex flex-wrap gap-2">
+                          {job.skills?.map((skill) => (
+                            <Badge key={skill} variant="secondary" className="px-3 py-1">
+                              {skill}
+                            </Badge>
+                          ))}
+                        </div>
+                      </section>
                     </div>
+                  </div >
+                </TabsContent>
+
+                <TabsContent value="applicants" className="mt-0">
+                  <CVManagementView jobId={id} />
+                </TabsContent>
+
+                <TabsContent value="proposed" className="mt-0">
+                  <ProposedCVsView jobId={id} />
+                </TabsContent>
+              </Tabs>
+            ) : (
+              <div className="bg-card rounded-xl border border-border p-8 shadow-sm">
+                <div className="flex items-start justify-between gap-4 mb-6">
+                  <div className="flex items-center gap-4">
+                    <img
+                      src={job.companyLogo}
+                      alt={job.company}
+                      className="w-20 h-20 rounded-xl object-cover border border-border"
+                    />
+                    <div>
+                      <div className="flex items-center gap-2 mb-1">
+                        <h1 className="text-2xl font-bold text-foreground">{job.title}</h1>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                          <Building className="h-4 w-4" />
+                          <span className="font-medium">{job.company}</span>
+                        </div>
+                      </div >
+                    </div >
+                  </div>
+                  {matchScore !== null && (
+                    <Badge variant="outline" className={cn(
+                      "text-lg px-4 py-1",
+                      matchScore >= 80 ? "border-green-500 text-green-600 bg-green-50" : "border-yellow-500 text-yellow-600 bg-yellow-50"
+                    )}>
+                      {matchScore}% Match
+                    </Badge>
+                  )}
+                </div >
+
+                <div className="flex flex-wrap gap-4 mb-8 pt-6 border-t border-border">
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <MapPin className="h-5 w-5 text-accent" />
+                    <span>{job.location.join(', ')}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <DollarSign className="h-5 w-5 text-accent" />
+                    <span>{job.salary}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Briefcase className="h-5 w-5 text-accent" />
+                    <span className="capitalize">{job.type}</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <Clock className="h-5 w-5 text-accent" />
+                    <span>Posted {formatDistanceToNow(job.postedAt)} ago</span>
                   </div>
                 </div>
-                {!isRecruiterView && matchScore !== null && (
-                  <Badge variant="outline" className={cn(
-                    "text-lg px-4 py-1",
-                    matchScore >= 80 ? "border-green-500 text-green-600 bg-green-50" : "border-yellow-500 text-yellow-600 bg-yellow-50"
-                  )}>
-                    {matchScore}% Match
-                  </Badge>
-                )}
-              </div>
 
-              <div className="flex flex-wrap gap-4 mb-8 pt-6 border-t border-border">
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <MapPin className="h-5 w-5 text-accent" />
-                  <span>{job.location.join(', ')}</span>
+                <div className="space-y-6">
+                  <section>
+                    <h3 className="text-lg font-semibold mb-3">About the Role</h3>
+                    <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
+                      {job.description}
+                    </p>
+                  </section>
+
+                  <section>
+                    <h3 className="text-lg font-semibold mb-3">Requirements</h3>
+                    <ul className="space-y-2">
+                      {job.requirements.map((req, index) => (
+                        <li key={index} className="flex items-start gap-3 text-muted-foreground">
+                          <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                          <span>{req}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section>
+                    <h3 className="text-lg font-semibold mb-3">Skills Required</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {job.skills?.map((skill) => (
+                        <Badge key={skill} variant="secondary" className="px-3 py-1">
+                          {skill}
+                        </Badge>
+                      ))}
+                    </div>
+                  </section>
                 </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <DollarSign className="h-5 w-5 text-accent" />
-                  <span>{job.salary}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Briefcase className="h-5 w-5 text-accent" />
-                  <span className="capitalize">{job.type}</span>
-                </div>
-                <div className="flex items-center gap-2 text-muted-foreground">
-                  <Clock className="h-5 w-5 text-accent" />
-                  <span>Posted {formatDistanceToNow(job.postedAt)} ago</span>
-                </div>
-              </div>
-
-              <div className="space-y-6">
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">About the Role</h3>
-                  <p className="text-muted-foreground leading-relaxed whitespace-pre-wrap">
-                    {job.description}
-                  </p>
-                </section>
-
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">Requirements</h3>
-                  <ul className="space-y-2">
-                    {job.requirements.map((req, index) => (
-                      <li key={index} className="flex items-start gap-3 text-muted-foreground">
-                        <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
-                        <span>{req}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </section>
-
-                <section>
-                  <h3 className="text-lg font-semibold mb-3">Skills Required</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {job.skills?.map((skill) => (
-                      <Badge key={skill} variant="secondary" className="px-3 py-1">
-                        {skill}
-                      </Badge>
-                    ))}
-                  </div>
-                </section>
-              </div>
-            </div>
-
-            {/* Applicants List (Recruiter View) */}
-            {isRecruiterView && (
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-bold">Applicants</h2>
-                  <Badge variant="secondary">{applicants.length}</Badge>
-                </div>
-
-                {applicants.length === 0 ? (
-                  <Card className="p-8 text-center text-muted-foreground">
-                    No applicants yet.
-                  </Card>
-                ) : (
-                  <div className="space-y-4">
-                    {applicants.map(app => (
-                      <ApplicantCard
-                        key={app.id}
-                        application={app}
-                        candidate={app.candidate}
-                        cv={app.cv}
-                        onStatusChange={handleStatusChange}
-                        onAddNote={handleAddNote}
-                        onViewCV={handleViewCV}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
+              </div >
             )}
-          </div>
+          </div >
 
           {/* Sidebar CTA */}
-          <div className="lg:col-span-1">
+          < div className="lg:col-span-1" >
             <div className="sticky top-24 space-y-6">
               {!isRecruiterView ? (
                 <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
@@ -587,13 +674,13 @@ const JobDetail = () => {
                 </div>
               </Card>
             </div>
-          </div>
-        </div>
-      </main>
+          </div >
+        </div >
+      </main >
 
 
       {/* View CV Dialog (Copied from CVManagementView) */}
-      <Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
+      < Dialog open={!!viewingCV} onOpenChange={() => setViewingCV(null)}>
         <DialogContent className="max-w-7xl h-[90vh] p-0 overflow-hidden flex flex-col">
           <div className="flex items-center justify-between px-6 py-4 border-b border-border bg-card shrink-0">
             <div className="flex items-center gap-3">
@@ -709,10 +796,10 @@ const JobDetail = () => {
             </div>
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog >
 
       <Footer />
-    </div>
+    </div >
   );
 };
 

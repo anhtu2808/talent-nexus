@@ -24,7 +24,12 @@ export const mockJobs: Job[] = [
     applicantCount: 45,
     isActive: true,
     views: 1250,
-    clickToApply: 145
+    weights: {
+      skills: 30,
+      requirements: 40,
+      experience: 20,
+      location: 10
+    }
   },
   {
     id: '2',
@@ -49,7 +54,13 @@ export const mockJobs: Job[] = [
     applicantCount: 32,
     isActive: true, // Should be auto-closed
     views: 890,
-    clickToApply: 98
+    clickToApply: 98,
+    weights: {
+      skills: 30,
+      requirements: 30,
+      experience: 30,
+      location: 10
+    }
   },
   {
     id: '3',
@@ -73,7 +84,13 @@ export const mockJobs: Job[] = [
     applicantCount: 28,
     isActive: true,
     views: 756,
-    clickToApply: 67
+    clickToApply: 67,
+    weights: {
+      skills: 40,
+      requirements: 30,
+      experience: 20,
+      location: 10
+    }
   },
   {
     id: '4',
@@ -97,7 +114,13 @@ export const mockJobs: Job[] = [
     applicantCount: 19,
     isActive: true,
     views: 623,
-    clickToApply: 52
+    clickToApply: 52,
+    weights: {
+      skills: 35,
+      requirements: 35,
+      experience: 20,
+      location: 10
+    }
   },
   {
     id: '5',
@@ -121,7 +144,13 @@ export const mockJobs: Job[] = [
     applicantCount: 56,
     isActive: true,
     views: 1100,
-    clickToApply: 120
+    clickToApply: 120,
+    weights: {
+      skills: 25,
+      requirements: 35,
+      experience: 30,
+      location: 10
+    }
   },
   {
     id: '6',
@@ -145,7 +174,13 @@ export const mockJobs: Job[] = [
     applicantCount: 23,
     isActive: true,
     views: 445,
-    clickToApply: 38
+    clickToApply: 38,
+    weights: {
+      skills: 30,
+      requirements: 40,
+      experience: 20,
+      location: 10
+    }
   },
   {
     id: '7',
@@ -791,240 +826,343 @@ export const mockCVs: CV[] = [
     atsBreakdown: {
       skillsMatch: 90,
       keywordsMatch: 85,
+      requirementsMatch: 85,
+      experienceMatch: 80,
+      locationMatch: 100,
+      skillsAnalysis: [
+        'Strong proficiency in core React ecosystem (React, Redux, compiled languages).',
+        'Demonstrates good understanding of backend technologies (Node.js) which is a plus.',
+        'Missing verified experience with GraphQL testing frameworks as requested.',
+        'Experience with state management libraries like Zustand is implied but not explicitly stated.',
+        'Knowledge of modern build tools (Vite, Webpack) is strong.',
+        'Has a good grasp of UI/UX principles based on past project descriptions.'
+      ],
+      requirementsAnalysis: [
+        'Matched 4 out of 5 key technical requirements from the job description.',
+        'Leadership experience is mentioned but lacks specific metric-driven outcomes.',
+        'Good fit for the senior technical constraints.'
+      ],
+      experienceAnalysis: [
+        '5 years total experience aligns perfectly with the Senior level band (5+ years).',
+        'Recent experience at Tech Corp involves leading projects, indicating readiness for senior responsibilities.',
+        'Continuous employment history with no significant gaps.'
+      ],
+      locationAnalysis: [
+        'Candidate resides in Ho Chi Minh City, matching the primary office location.',
+        'No relocation required, allowing for immediate onboarding.',
+        'Commute distance is estimated to be within optimal range.'
+      ],
       formattingScore: 95,
       missingKeywords: ['Redux', 'GraphQL testing'],
       formattingIssues: [],
       feedback: ['Strong match for React roles', 'Consider adding more details on leadership experience']
     }
   },
-  // {
-  //   id: 'cv2',
-  //   candidateId: 'c2',
-  //   fileName: 'tran_thi_b_cv.pdf',
-  //   fileUrl: '/uploads/cv2.pdf',
-  //   uploadedAt: new Date('2025-12-31'),
-  //   atsScore: 88,
-  //   parsedData: {
-  //     name: 'Tran Thi B',
-  //     email: 'tranb@email.com',
-  //     phone: '0912345678',
-  //     skills: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker'],
-  //     experience: [
-  //       {
-  //         title: 'Full Stack Developer',
-  //         company: 'FinTech Corp',
-  //         duration: '2020 - Present',
-  //         description: 'Built scalable microservices for banking platform'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Bachelor of Computer Science',
-  //         institution: 'HUST',
-  //         year: '2020'
-  //       }
-  //     ],
-  //     summary: 'Full stack developer with expertise in Java and React'
-  //   }
-  // },
-  // {
-  //   id: 'cv3',
-  //   candidateId: 'c3',
-  //   fileName: 'le_van_c_resume.pdf',
-  //   fileUrl: '/uploads/cv3.pdf',
-  //   uploadedAt: new Date('2026-01-03'),
-  //   atsScore: 92,
-  //   parsedData: {
-  //     name: 'Le Van C',
-  //     email: 'lec@email.com',
-  //     phone: '0923456789',
-  //     skills: ['Python', 'TensorFlow', 'PyTorch', 'NLP', 'AWS'],
-  //     experience: [
-  //       {
-  //         title: 'Senior ML Engineer',
-  //         company: 'AI Startup',
-  //         duration: '2019 - Present',
-  //         description: 'Developed AI-powered APIs and recommendation systems'
-  //       },
-  //       {
-  //         title: 'Data Scientist',
-  //         company: 'BigData Inc',
-  //         duration: '2017 - 2019',
-  //         description: 'Built NLP models for sentiment analysis'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Master of Computer Science',
-  //         institution: 'HCMUT',
-  //         year: '2017'
-  //       }
-  //     ],
-  //     summary: 'ML specialist with 7+ years experience in AI/ML'
-  //   }
-  // },
-  // {
-  //   id: 'cv4',
-  //   candidateId: 'c4',
-  //   fileName: 'pham_thi_d_cv.pdf',
-  //   fileUrl: '/uploads/cv4.pdf',
-  //   uploadedAt: new Date('2025-12-28'),
-  //   atsScore: 70,
-  //   parsedData: {
-  //     name: 'Pham Thi D',
-  //     email: 'phamd@email.com',
-  //     phone: '0934567890',
-  //     skills: ['React', 'JavaScript', 'CSS', 'HTML', 'Node.js'],
-  //     experience: [
-  //       {
-  //         title: 'Junior Frontend Developer',
-  //         company: 'Web Agency',
-  //         duration: '2022 - Present',
-  //         description: 'Developed responsive websites for clients'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Bachelor of IT',
-  //         institution: 'UIT',
-  //         year: '2022'
-  //       }
-  //     ],
-  //     summary: 'Junior developer eager to learn and grow'
-  //   }
-  // },
-  // {
-  //   id: 'cv5',
-  //   candidateId: 'c5',
-  //   fileName: 'hoang_van_e_resume.pdf',
-  //   fileUrl: '/uploads/cv5.pdf',
-  //   uploadedAt: new Date('2024-01-30'),
-  //   atsScore: 82,
-  //   parsedData: {
-  //     name: 'Hoang Van E',
-  //     email: 'hoange@email.com',
-  //     phone: '0945678901',
-  //     skills: ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'Python'],
-  //     experience: [
-  //       {
-  //         title: 'Senior DevOps Engineer',
-  //         company: 'CloudScale Inc',
-  //         duration: '2020 - Present',
-  //         description: 'Managed cloud infrastructure and CI/CD pipelines'
-  //       },
-  //       {
-  //         title: 'DevOps Engineer',
-  //         company: 'TechOps',
-  //         duration: '2018 - 2020',
-  //         description: 'Implemented containerization strategies'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Bachelor of Computer Science',
-  //         institution: 'PTIT',
-  //         year: '2018'
-  //       }
-  //     ],
-  //     summary: 'DevOps engineer with strong cloud and automation skills'
-  //   }
-  // },
-  // {
-  //   id: 'cv6',
-  //   candidateId: 'c6',
-  //   fileName: 'vu_thi_f_cv.pdf',
-  //   fileUrl: '/uploads/cv6.pdf',
-  //   uploadedAt: new Date('2024-02-01'),
-  //   atsScore: 75,
-  //   parsedData: {
-  //     name: 'Vu Thi F',
-  //     email: 'vuf@email.com',
-  //     phone: '0956789012',
-  //     skills: ['Java', 'Spring Boot', 'Microservices', 'Kafka', 'Redis'],
-  //     experience: [
-  //       {
-  //         title: 'Backend Developer',
-  //         company: 'Enterprise Solutions',
-  //         duration: '2021 - Present',
-  //         description: 'Built microservices for enterprise clients'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Bachelor of Software Engineering',
-  //         institution: 'HCMUT',
-  //         year: '2021'
-  //       }
-  //     ],
-  //     summary: 'Backend developer specializing in microservices'
-  //   }
-  // },
-  // {
-  //   id: 'cv7',
-  //   candidateId: 'c7',
-  //   fileName: 'dinh_van_g_resume.pdf',
-  //   fileUrl: '/uploads/cv7.pdf',
-  //   uploadedAt: new Date('2024-02-05'),
-  //   atsScore: 65,
-  //   parsedData: {
-  //     name: 'Dinh Van G',
-  //     email: 'dingg@email.com',
-  //     phone: '0967890123',
-  //     skills: ['React', 'JavaScript', 'TypeScript', 'Tailwind'],
-  //     experience: [
-  //       {
-  //         title: 'Frontend Developer Intern',
-  //         company: 'Startup ABC',
-  //         duration: '2023 - Present',
-  //         description: 'Assisted in building web applications'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Bachelor of IT',
-  //         institution: 'FPT University',
-  //         year: '2023'
-  //       }
-  //     ],
-  //     summary: 'Fresh graduate with passion for frontend development'
-  //   }
-  // },
-  // {
-  //   id: 'cv8',
-  //   candidateId: 'c8',
-  //   fileName: 'bu_thi_h_cv.pdf',
-  //   fileUrl: '/uploads/cv8.pdf',
-  //   uploadedAt: new Date('2024-02-08'),
-  //   atsScore: 88,
-  //   parsedData: {
-  //     name: 'Bu Thi H',
-  //     email: 'buh@email.com',
-  //     phone: '0978901234',
-  //     skills: ['Selenium', 'Cypress', 'JavaScript', 'API Testing', 'Jest'],
-  //     experience: [
-  //       {
-  //         title: 'Senior QA Engineer',
-  //         company: 'Quality First Ltd',
-  //         duration: '2020 - Present',
-  //         description: 'Led automation testing initiatives'
-  //       },
-  //       {
-  //         title: 'QA Engineer',
-  //         company: 'TestCorp',
-  //         duration: '2018 - 2020',
-  //         description: 'Developed automated test suites'
-  //       }
-  //     ],
-  //     education: [
-  //       {
-  //         degree: 'Bachelor of Computer Science',
-  //         institution: 'Da Nang University',
-  //         year: '2018'
-  //       }
-  //     ],
-  //     summary: 'QA specialist with 5+ years of automation experience'
-  //   }
-  // }
+  {
+    id: 'cv2',
+    candidateId: 'c2',
+    fileName: 'tran_thi_b_cv.pdf',
+    fileUrl: '/uploads/cv2.pdf',
+    uploadedAt: new Date('2025-12-31'),
+    atsScore: 88,
+    parsedData: {
+      name: 'Tran Thi B',
+      email: 'tranb@email.com',
+      phone: '0912345678',
+      skills: ['Java', 'Spring Boot', 'React', 'PostgreSQL', 'Docker'],
+      experience: [
+        {
+          title: 'Full Stack Developer',
+          company: 'FinTech Corp',
+          duration: '2020 - Present',
+          description: 'Built scalable microservices for banking platform'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Computer Science',
+          institution: 'HUST',
+          year: '2020'
+        }
+      ],
+      summary: 'Full stack developer with expertise in Java and React'
+    },
+    atsBreakdown: {
+      skillsMatch: 95,
+      keywordsMatch: 85,
+      requirementsMatch: 85,
+      experienceMatch: 90,
+      locationMatch: 100,
+      formattingScore: 90,
+      missingKeywords: [],
+      formattingIssues: [],
+      feedback: ['Excellent technical match', 'Good project descriptions']
+    }
+  },
+  {
+    id: 'cv3',
+    candidateId: 'c3',
+    fileName: 'le_van_c_resume.pdf',
+    fileUrl: '/uploads/cv3.pdf',
+    uploadedAt: new Date('2026-01-03'),
+    atsScore: 92,
+    parsedData: {
+      name: 'Le Van C',
+      email: 'lec@email.com',
+      phone: '0923456789',
+      skills: ['Python', 'TensorFlow', 'PyTorch', 'NLP', 'AWS'],
+      experience: [
+        {
+          title: 'Senior ML Engineer',
+          company: 'AI Startup',
+          duration: '2019 - Present',
+          description: 'Developed AI-powered APIs and recommendation systems'
+        },
+        {
+          title: 'Data Scientist',
+          company: 'BigData Inc',
+          duration: '2017 - 2019',
+          description: 'Built NLP models for sentiment analysis'
+        }
+      ],
+      education: [
+        {
+          degree: 'Master of Computer Science',
+          institution: 'HCMUT',
+          year: '2017'
+        }
+      ],
+      summary: 'ML specialist with 7+ years experience in AI/ML'
+    },
+    atsBreakdown: {
+      skillsMatch: 95,
+      keywordsMatch: 90,
+      requirementsMatch: 90,
+      experienceMatch: 95,
+      locationMatch: 80,
+      formattingScore: 95,
+      missingKeywords: [],
+      formattingIssues: [],
+      feedback: ['Top candidate for AI roles', 'Impressive academic background']
+    }
+  },
+  {
+    id: 'cv4',
+    candidateId: 'c4',
+    fileName: 'pham_thi_d_cv.pdf',
+    fileUrl: '/uploads/cv4.pdf',
+    uploadedAt: new Date('2025-12-28'),
+    atsScore: 70,
+    parsedData: {
+      name: 'Pham Thi D',
+      email: 'phamd@email.com',
+      phone: '0934567890',
+      skills: ['React', 'JavaScript', 'CSS', 'HTML', 'Node.js'],
+      experience: [
+        {
+          title: 'Junior Frontend Developer',
+          company: 'Web Agency',
+          duration: '2022 - Present',
+          description: 'Developed responsive websites for clients'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of IT',
+          institution: 'UIT',
+          year: '2022'
+        }
+      ],
+      summary: 'Junior developer eager to learn and grow'
+    },
+    atsBreakdown: {
+      skillsMatch: 75,
+      keywordsMatch: 65,
+      requirementsMatch: 65,
+      experienceMatch: 60,
+      locationMatch: 100,
+      formattingScore: 85,
+      missingKeywords: ['TypeScript', 'Testing'],
+      formattingIssues: ['Margins too wide'],
+      feedback: ['Good potential but lacks depth', 'Needs more hands-on experience']
+    }
+  },
+  {
+    id: 'cv5',
+    candidateId: 'c5',
+    fileName: 'hoang_van_e_resume.pdf',
+    fileUrl: '/uploads/cv5.pdf',
+    uploadedAt: new Date('2024-01-30'),
+    atsScore: 82,
+    parsedData: {
+      name: 'Hoang Van E',
+      email: 'hoange@email.com',
+      phone: '0945678901',
+      skills: ['AWS', 'Kubernetes', 'Docker', 'Terraform', 'Python'],
+      experience: [
+        {
+          title: 'Senior DevOps Engineer',
+          company: 'CloudScale Inc',
+          duration: '2020 - Present',
+          description: 'Managed cloud infrastructure and CI/CD pipelines'
+        },
+        {
+          title: 'DevOps Engineer',
+          company: 'TechOps',
+          duration: '2018 - 2020',
+          description: 'Implemented containerization strategies'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Computer Science',
+          institution: 'PTIT',
+          year: '2018'
+        }
+      ],
+      summary: 'DevOps engineer with strong cloud and automation skills'
+    },
+    atsBreakdown: {
+      skillsMatch: 90,
+      keywordsMatch: 80,
+      requirementsMatch: 80,
+      experienceMatch: 85,
+      locationMatch: 70,
+      formattingScore: 90,
+      missingKeywords: ['Azure'],
+      formattingIssues: [],
+      feedback: ['Strong DevOps profile', 'Good toolchain knowledge']
+    }
+  },
+  {
+    id: 'cv6',
+    candidateId: 'c6',
+    fileName: 'vu_thi_f_cv.pdf',
+    fileUrl: '/uploads/cv6.pdf',
+    uploadedAt: new Date('2024-02-01'),
+    atsScore: 75,
+    parsedData: {
+      name: 'Vu Thi F',
+      email: 'vuf@email.com',
+      phone: '0956789012',
+      skills: ['Java', 'Spring Boot', 'Microservices', 'Kafka', 'Redis'],
+      experience: [
+        {
+          title: 'Backend Developer',
+          company: 'Enterprise Solutions',
+          duration: '2021 - Present',
+          description: 'Built microservices for enterprise clients'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Software Engineering',
+          institution: 'HCMUT',
+          year: '2021'
+        }
+      ],
+      summary: 'Backend developer specializing in microservices'
+    },
+    atsBreakdown: {
+      skillsMatch: 80,
+      keywordsMatch: 70,
+      requirementsMatch: 70,
+      experienceMatch: 75,
+      locationMatch: 90,
+      formattingScore: 85,
+      missingKeywords: ['Cloud', 'Docker'],
+      formattingIssues: [],
+      feedback: ['Solid backend skills', 'Could improve on cloud technologies']
+    }
+  },
+  {
+    id: 'cv7',
+    candidateId: 'c7',
+    fileName: 'dinh_van_g_resume.pdf',
+    fileUrl: '/uploads/cv7.pdf',
+    uploadedAt: new Date('2024-02-05'),
+    atsScore: 65,
+    parsedData: {
+      name: 'Dinh Van G',
+      email: 'dingg@email.com',
+      phone: '0967890123',
+      skills: ['React', 'JavaScript', 'TypeScript', 'Tailwind'],
+      experience: [
+        {
+          title: 'Frontend Developer Intern',
+          company: 'Startup ABC',
+          duration: '2023 - Present',
+          description: 'Assisted in building web applications'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of IT',
+          institution: 'FPT University',
+          year: '2023'
+        }
+      ],
+      summary: 'Fresh graduate with passion for frontend development'
+    },
+    atsBreakdown: {
+      skillsMatch: 70,
+      keywordsMatch: 60,
+      requirementsMatch: 60,
+      experienceMatch: 50,
+      locationMatch: 100,
+      formattingScore: 80,
+      missingKeywords: ['Redux', 'Testing'],
+      formattingIssues: ['Font inconsistency'],
+      feedback: ['Good starter portfolio', 'Needs mentoring']
+    }
+  },
+  {
+    id: 'cv8',
+    candidateId: 'c8',
+    fileName: 'bu_thi_h_cv.pdf',
+    fileUrl: '/uploads/cv8.pdf',
+    uploadedAt: new Date('2024-02-08'),
+    atsScore: 88,
+    parsedData: {
+      name: 'Bu Thi H',
+      email: 'buh@email.com',
+      phone: '0978901234',
+      skills: ['Selenium', 'Cypress', 'JavaScript', 'API Testing', 'Jest'],
+      experience: [
+        {
+          title: 'Senior QA Engineer',
+          company: 'Quality First Ltd',
+          duration: '2020 - Present',
+          description: 'Led automation testing initiatives'
+        },
+        {
+          title: 'QA Engineer',
+          company: 'TestCorp',
+          duration: '2018 - 2020',
+          description: 'Developed automated test suites'
+        }
+      ],
+      education: [
+        {
+          degree: 'Bachelor of Computer Science',
+          institution: 'Da Nang University',
+          year: '2018'
+        }
+      ],
+      summary: 'QA specialist with 5+ years of automation experience'
+    },
+    atsBreakdown: {
+      skillsMatch: 90,
+      keywordsMatch: 85,
+      requirementsMatch: 85,
+      experienceMatch: 90,
+      locationMatch: 90,
+      formattingScore: 90,
+      missingKeywords: [],
+      formattingIssues: [],
+      feedback: ['Excellent QA profile', 'Strong automation background']
+    }
+  }
 ];
 
 export const trendingSkills = [

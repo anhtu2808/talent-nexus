@@ -31,7 +31,11 @@ interface ProposedMatch {
     type: 'skill_match' | 'high_potential';
 }
 
-const ProposedCVsView = () => {
+interface ProposedCVsViewProps {
+    jobId?: string;
+}
+
+const ProposedCVsView = ({ jobId }: ProposedCVsViewProps = {}) => {
     // Create instance of default layout plugin
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
@@ -41,7 +45,11 @@ const ProposedCVsView = () => {
 
     const proposedMatches = useMemo(() => {
         const matches: ProposedMatch[] = [];
-        const activeJobs = mockJobs.filter(j => j.isActive);
+        let activeJobs = mockJobs.filter(j => j.isActive);
+
+        if (jobId) {
+            activeJobs = activeJobs.filter(j => j.id === jobId);
+        }
 
         // helper to check if applied
         const hasApplied = (candidateId: string, jobId: string) => {
@@ -115,7 +123,7 @@ const ProposedCVsView = () => {
         });
 
         return matches.sort((a, b) => b.score - a.score);
-    }, []); // Remove tier dependency
+    }, [jobId]); // Remove tier dependency
 
     const handleInvite = (matchId: string) => {
         setInvitedMatches(prev => [...prev, matchId]);

@@ -8,6 +8,8 @@ import SettingsView from '@/components/recruiter/views/SettingsView';
 import PlansView from '@/components/recruiter/views/PlansView';
 import ProposedCVsView from '@/components/recruiter/views/ProposedCVsView';
 import TeamManagementView from '@/components/recruiter/views/TeamManagementView';
+import CompanyInfoView from '@/components/recruiter/views/CompanyInfoView';
+import BillingView from '@/components/recruiter/views/BillingView';
 import { useAuth } from '@/contexts/AuthContext';
 
 const RecruiterDashboard = () => {
@@ -29,6 +31,10 @@ const RecruiterDashboard = () => {
         return <PlansView />;
       case 'team':
         return <TeamManagementView />;
+      case 'company-info':
+        return <CompanyInfoView />;
+      case 'billing':
+        return <BillingView />;
       default:
         return <ReportsView />;
     }

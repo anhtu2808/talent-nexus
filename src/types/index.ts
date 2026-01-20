@@ -46,6 +46,12 @@ export interface Job {
   isActive: boolean;
   views?: number;
   clickToApply?: number;
+  weights?: {
+    skills: number;
+    requirements: number;
+    experience: number;
+    location: number;
+  };
 }
 
 export interface ApplicationNote {
@@ -74,7 +80,14 @@ export interface Application {
 
 export interface ATSBreakdown {
   skillsMatch: number;
-  keywordsMatch: number;
+  keywordsMatch: number; // Keeping for backward compatibility, mapped to requirements
+  requirementsMatch: number; // New field
+  experienceMatch: number; // New field
+  locationMatch: number;
+  skillsAnalysis?: string[];
+  requirementsAnalysis?: string[];
+  experienceAnalysis?: string[];
+  locationAnalysis?: string[];
   formattingScore: number;
   missingKeywords: string[];
   formattingIssues: string[];

@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import {
     BarChart,
     Briefcase,
+    Building, /* Import Building icon */
     CreditCard,
     FileText,
     Home,
@@ -44,11 +45,18 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
             label: 'CVs',
             icon: FileText,
         },
-        {
-            id: 'proposed',
-            label: 'Proposed CVs',
-            icon: Sparkles,
-        },
+        // Only show Company Profile for managers
+        ...(user?.subRole === 'manager' ? [{
+            id: 'company-info',
+            label: 'Company Profile',
+            icon: Building,
+        }] : []),
+        // Only show Billing for managers (assuming sensitive info)
+        ...(user?.subRole === 'manager' ? [{
+            id: 'billing',
+            label: 'Billing & Credits',
+            icon: CreditCard,
+        }] : []),
         {
             id: 'settings',
             label: 'Account Settings',

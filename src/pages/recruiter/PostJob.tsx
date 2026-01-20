@@ -1,10 +1,13 @@
+
 import { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Slider } from "@/components/ui/slider";
+import { Progress } from "@/components/ui/progress";
 import {
     Select,
     SelectContent,
@@ -25,7 +28,17 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover";
-import { ArrowLeft, Building, MapPin, DollarSign, Briefcase, Clock, Check, ChevronsUpDown, X, Plus } from 'lucide-react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { ArrowLeft, Building, MapPin, DollarSign, Briefcase, Clock, Check, ChevronsUpDown, X, Plus, User, TrendingUp } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import { toast } from 'sonner';
 import { mockJobs, cities, trendingSkills } from '@/data/mockData';
@@ -35,6 +48,8 @@ import { cn } from "@/lib/utils";
 const PostJob = () => {
     const navigate = useNavigate();
     const { id } = useParams();
+    const location = useLocation();
+    const cloneData = location.state?.cloneData;
     const isEditing = !!id;
 
     const [loading, setLoading] = useState(false);
@@ -48,12 +63,78 @@ const PostJob = () => {
     const [requirements, setRequirements] = useState(''); // Text area for now, split by newlines
     const [skills, setSkills] = useState<string[]>([]);
 
+    // New Fields
+    const [level, setLevel] = useState('Middle');
+    const [experience, setExperience] = useState('1-3 years');
+    const [workingTime, setWorkingTime] = useState('Standard Office Hours (Mon-Fri)');
+    const [benefits, setBenefits] = useState<string[]>([]);
+
+    const [weights, setWeights] = useState({
+        requirements: 40,
+        skills: 30,
+        experience: 20,
+        location: 10
+    });
+    const totalWeight = weights.requirements + weights.skills + weights.experience + weights.location;
+
+    // AI Match Settings
+    const [matchThreshold, setMatchThreshold] = useState(70);
+    const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+
     // UI States
     const [locationOpen, setLocationOpen] = useState(false);
     const [skillsOpen, setSkillsOpen] = useState(false);
     const [skillSearch, setSkillSearch] = useState("");
+    const [benefitsOpen, setBenefitsOpen] = useState(false);
+    const [benefitSearch, setBenefitSearch] = useState("");
+    const [workingTimeOpen, setWorkingTimeOpen] = useState(false);
+    const [workingTimeSearch, setWorkingTimeSearch] = useState("");
 
-    // Load data if editing
+    // Mock Data Constants
+    // In a real app, these might come from an API or the company's profile
+    const COMPANY_ADDRESS = "123 Tech Park, Innovation Way, Silicon Valley, CA";
+
+    const EXPERIENCE_RANGES = [
+        "No experience",
+        "Less than 1 year",
+        "1-3 years",
+        "3-5 years",
+        "5-10 years",
+        "More than 10 years"
+    ];
+
+    const JOB_LEVELS = [
+        "Intern",
+        "Fresher",
+        "Junior",
+        "Middle",
+        "Senior",
+        "Team Leader",
+        "Manager",
+        "Director"
+    ];
+
+    const WORKING_TIMES = [
+        "Standard Office Hours (Mon-Fri)",
+        "Flexible Hours",
+        "Shift Work",
+        "Remote",
+        "Hybrid"
+    ];
+
+    const SUGGESTED_BENEFITS = [
+        "Health Insurance",
+        "13th Month Salary",
+        "Performance Bonus",
+        "Laptop Provided",
+        "Remote Work",
+        "Training & Development",
+        "Travel Opportunities",
+        "Team Building Activities",
+        "Free Snacks & Drinks"
+    ];
+
+    // Load data if editing OR cloning
     useEffect(() => {
         if (isEditing && id) {
             const job = mockJobs.find(j => j.id === id);
@@ -65,12 +146,25 @@ const PostJob = () => {
                 setDescription(job.description);
                 setRequirements(job.requirements.join('\n'));
                 setSkills(job.skills || []);
+                // Mock mapping for new fields if they existed on job object, otherwise default
+                // For now, these default or stay as initialized
             } else {
                 toast.error("Job not found");
                 navigate('/recruiter/dashboard');
             }
+        } else if (cloneData) {
+            // Pre-fill from cloned job
+            setTitle(`${cloneData.title} (Copy)`); // Optional: append copy
+            setType(cloneData.type);
+            setSalary(cloneData.salary);
+            setLocationList(cloneData.location);
+            setDescription(cloneData.description);
+            setRequirements(cloneData.requirements.join('\n'));
+            setSkills(cloneData.skills || []);
+            // New fields would be copied here too if they existed on data
+            toast.info("Job details cloned. Review and publish.");
         }
-    }, [isEditing, id, navigate]);
+    }, [isEditing, id, navigate, cloneData]);
 
     const handleSave = () => {
         if (!title || !salary || !description || locationList.length === 0) {
@@ -78,31 +172,47 @@ const PostJob = () => {
             return;
         }
 
+        if (totalWeight !== 100) {
+            toast.error(`AI Match Weights must total 100%. Current: ${totalWeight}%`);
+            return;
+        }
+
+        // If editing, show confirmation dialog
+        if (isEditing) {
+            setShowConfirmDialog(true);
+            return;
+        }
+
+        performSave();
+    };
+
+    const handleConfirmSave = () => {
+        setShowConfirmDialog(false);
+        performSave();
+    };
+
+    const performSave = () => {
         setLoading(true);
 
         // Simulate API call
         setTimeout(() => {
             setLoading(false);
             if (isEditing) {
-                toast.success("Job updated successfully!");
+                toast.success("Job closed and cloned successfully!");
             } else {
                 toast.success("Job posted successfully!");
             }
-            navigate('/recruiter/dashboard'); // Go back to jobs list (which is default view in dashboard for now, or we can go to /jobs)
-            // Ideally we navigate to the specific Jobs tab in dashboard, but dashboard route defaults to first tab or uses state. 
-            // For now, let's assume we want to go back to wherever the jobs list is. 
-            // Since JobsView is a component inside Dashboard, we might need to rely on Dashboard default or context.
-            // Or arguably, if this is a "page", maybe we want to go to /recruiter/dashboard?tab=jobs? 
-            // The dashboard doesn't use query params for tabs yet, but defaults to 'overview'. 
-            // Users will find their way.
+            navigate('/recruiter/dashboard');
         }, 1000);
     };
 
     return (
         <div className="min-h-screen flex flex-col bg-muted/30">
+            {/* ... existing header/main ... */}
             <Header />
 
             <main className="flex-1 container py-8">
+                {/* ... Back button ... */}
                 <button
                     type="button"
                     onClick={() => navigate(-1)}
@@ -139,101 +249,220 @@ const PostJob = () => {
                                 </div>
                             </div>
 
-                            {/* Key Details Row */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8 pt-6 border-t border-border">
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <MapPin className="h-4 w-4 text-accent" />
-                                        Location
-                                    </Label>
-                                    <Popover open={locationOpen} onOpenChange={setLocationOpen}>
-                                        <PopoverTrigger asChild>
+                            {/* Group 1: Role Definition (Location, Position, Experience) */}
+                            <div className="space-y-6 pt-6 border-t border-border">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                    <MapPin className="h-5 w-5 text-accent" />
+                                    Role Definition
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Location */}
+                                    <div className="space-y-2 md:col-span-2">
+                                        <div className="flex items-center justify-between">
+                                            <Label className="flex items-center gap-2 text-muted-foreground">
+                                                Location
+                                            </Label>
                                             <Button
-                                                variant="outline"
-                                                role="combobox"
-                                                aria-expanded={locationOpen}
-                                                className="w-full justify-between"
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-6 text-xs text-primary hover:text-primary/80"
+                                                onClick={() => setLocationList([COMPANY_ADDRESS])}
+                                                type="button"
                                             >
-                                                {locationList.length > 0
-                                                    ? <span className="truncate">{locationList.join(', ')}</span>
-                                                    : "Select locations..."}
-                                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                Use Company Address
                                             </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-[300px] p-0" align="start">
-                                            <Command>
-                                                <CommandInput placeholder="Search location..." />
-                                                <CommandList>
-                                                    <CommandEmpty>No location found.</CommandEmpty>
-                                                    <CommandGroup>
-                                                        {cities.map((city) => (
-                                                            <CommandItem
-                                                                key={city}
-                                                                value={city}
-                                                                onSelect={(currentValue) => {
-                                                                    if (locationList.includes(currentValue)) {
-                                                                        setLocationList(locationList.filter(l => l !== currentValue));
-                                                                    } else {
-                                                                        setLocationList([...locationList, currentValue]);
-                                                                    }
-                                                                }}
-                                                            >
-                                                                <Check
-                                                                    className={cn(
-                                                                        "mr-2 h-4 w-4",
-                                                                        locationList.includes(city) ? "opacity-100" : "opacity-0"
-                                                                    )}
-                                                                />
-                                                                {city}
-                                                            </CommandItem>
-                                                        ))}
-                                                    </CommandGroup>
-                                                </CommandList>
-                                            </Command>
-                                        </PopoverContent>
-                                    </Popover>
-                                </div>
+                                        </div>
+                                        <Popover open={locationOpen} onOpenChange={setLocationOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={locationOpen}
+                                                    className="w-full justify-between"
+                                                >
+                                                    {locationList.length > 0
+                                                        ? <span className="truncate">{locationList.join(', ')}</span>
+                                                        : "Select locations..."}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[400px] p-0" align="start">
+                                                <Command>
+                                                    <CommandInput placeholder="Search location..." />
+                                                    <CommandList>
+                                                        <CommandEmpty>No location found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {cities.map((city) => (
+                                                                <CommandItem
+                                                                    key={city}
+                                                                    value={city}
+                                                                    onSelect={(currentValue) => {
+                                                                        if (locationList.includes(currentValue)) {
+                                                                            setLocationList(locationList.filter(l => l !== currentValue));
+                                                                        } else {
+                                                                            setLocationList([...locationList, currentValue]);
+                                                                        }
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            locationList.includes(city) ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {city}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
 
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <DollarSign className="h-4 w-4 text-accent" />
-                                        Salary Range
-                                    </Label>
-                                    <Input
-                                        value={salary}
-                                        onChange={(e) => setSalary(e.target.value)}
-                                        placeholder="e.g. $2,000 - $4,000"
-                                    />
-                                </div>
+                                    {/* Job Level */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Job Position
+                                        </Label>
+                                        <Select value={level} onValueChange={setLevel}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {JOB_LEVELS.map(lvl => (
+                                                    <SelectItem key={lvl} value={lvl}>{lvl}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
 
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <Briefcase className="h-4 w-4 text-accent" />
-                                        Employment Type
-                                    </Label>
-                                    <Select value={type} onValueChange={setType}>
-                                        <SelectTrigger>
-                                            <SelectValue />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="full-time">Full-time</SelectItem>
-                                            <SelectItem value="part-time">Part-time</SelectItem>
-                                            <SelectItem value="contract">Contract</SelectItem>
-                                            <SelectItem value="remote">Remote</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label className="flex items-center gap-2 text-muted-foreground">
-                                        <Clock className="h-4 w-4 text-accent" />
-                                        Posted
-                                    </Label>
-                                    <Input disabled value="Just now" className="bg-muted" />
+                                    {/* Experience */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Experience
+                                        </Label>
+                                        <Select value={experience} onValueChange={setExperience}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {EXPERIENCE_RANGES.map(exp => (
+                                                    <SelectItem key={exp} value={exp}>{exp}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="space-y-8">
+                            {/* Group 2: Compensation & Schedule (Salary, Type, Time) */}
+                            <div className="space-y-6 pt-6 border-t border-border">
+                                <h3 className="text-lg font-semibold flex items-center gap-2">
+                                    <Briefcase className="h-5 w-5 text-accent" />
+                                    Work & Compensation
+                                </h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {/* Salary Range */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Salary Range
+                                        </Label>
+                                        <Input
+                                            value={salary}
+                                            onChange={(e) => setSalary(e.target.value)}
+                                            placeholder="e.g. $2,000 - $4,000"
+                                        />
+                                    </div>
+
+                                    {/* Employment Type */}
+                                    <div className="space-y-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Employment Type
+                                        </Label>
+                                        <Select value={type} onValueChange={setType}>
+                                            <SelectTrigger>
+                                                <SelectValue />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectItem value="full-time">Full-time</SelectItem>
+                                                <SelectItem value="part-time">Part-time</SelectItem>
+                                                <SelectItem value="contract">Contract</SelectItem>
+                                                <SelectItem value="remote">Remote</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
+
+                                    {/* Working Time */}
+                                    <div className="space-y-2 md:col-span-2">
+                                        <Label className="flex items-center gap-2 text-muted-foreground">
+                                            Working Time
+                                        </Label>
+                                        <Popover open={workingTimeOpen} onOpenChange={setWorkingTimeOpen}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={workingTimeOpen}
+                                                    className="w-full justify-between"
+                                                >
+                                                    {workingTime || "Select working time..."}
+                                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-[400px] p-0">
+                                                <Command>
+                                                    <CommandInput
+                                                        placeholder="Search or enter custom time..."
+                                                        value={workingTimeSearch}
+                                                        onValueChange={setWorkingTimeSearch}
+                                                    />
+                                                    <CommandList>
+                                                        <CommandEmpty>
+                                                            <button
+                                                                className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
+                                                                onClick={(e) => {
+                                                                    e.preventDefault();
+                                                                    setWorkingTime(workingTimeSearch);
+                                                                    setWorkingTimeSearch("");
+                                                                    setWorkingTimeOpen(false);
+                                                                }}
+                                                            >
+                                                                Use custom: "{workingTimeSearch}"
+                                                            </button>
+                                                        </CommandEmpty>
+                                                        <CommandGroup>
+                                                            {WORKING_TIMES.map((wt) => (
+                                                                <CommandItem
+                                                                    key={wt}
+                                                                    value={wt}
+                                                                    onSelect={(currentValue) => {
+                                                                        setWorkingTime(currentValue);
+                                                                        setWorkingTimeOpen(false);
+                                                                    }}
+                                                                >
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "mr-2 h-4 w-4",
+                                                                            workingTime === wt ? "opacity-100" : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                    {wt}
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <div className="space-y-8 pt-6 border-t border-border">
                                 <section className="space-y-3">
                                     <Label className="text-lg font-semibold">About the Role</Label>
                                     <Textarea
@@ -253,6 +482,83 @@ const PostJob = () => {
                                         placeholder="- 3+ years of experience&#10;- Strong knowledge of React&#10;- Good communication skills"
                                         className="min-h-[150px]"
                                     />
+                                </section>
+
+                                <section className="space-y-3">
+                                    <Label className="text-lg font-semibold">Benefits</Label>
+                                    <Popover open={benefitsOpen} onOpenChange={setBenefitsOpen}>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                aria-expanded={benefitsOpen}
+                                                className="w-full justify-between h-auto min-h-[40px]"
+                                            >
+                                                {benefits.length > 0 ? (
+                                                    <div className="flex flex-wrap gap-1 py-1">
+                                                        {benefits.map((benefit) => (
+                                                            <Badge variant="secondary" key={benefit} className="mr-1">
+                                                                {benefit}
+                                                            </Badge>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <span className="text-muted-foreground">Select benefits...</span>
+                                                )}
+                                                <Plus className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[400px] p-0" align="start">
+                                            <Command>
+                                                <CommandInput
+                                                    placeholder="Search benefits..."
+                                                    value={benefitSearch}
+                                                    onValueChange={setBenefitSearch}
+                                                />
+                                                <CommandList>
+                                                    <CommandEmpty>
+                                                        <button
+                                                            className="w-full text-left p-2 text-sm text-accent hover:bg-accent/10 rounded-sm"
+                                                            onClick={(e) => {
+                                                                e.preventDefault();
+                                                                if (benefitSearch && !benefits.includes(benefitSearch)) {
+                                                                    setBenefits([...benefits, benefitSearch]);
+                                                                    setBenefitSearch("");
+                                                                }
+                                                            }}
+                                                        >
+                                                            Create "{benefitSearch}"
+                                                        </button>
+                                                    </CommandEmpty>
+                                                    <CommandGroup heading="Suggestions">
+                                                        {SUGGESTED_BENEFITS.map((benefit) => (
+                                                            <CommandItem
+                                                                key={benefit}
+                                                                value={benefit}
+                                                                onSelect={(currentValue) => {
+                                                                    // CommandItem lowercases values, so we match original or use current
+                                                                    const actualValue = SUGGESTED_BENEFITS.find(b => b.toLowerCase() === currentValue.toLowerCase()) || currentValue;
+                                                                    if (benefits.includes(actualValue)) {
+                                                                        setBenefits(benefits.filter(b => b !== actualValue));
+                                                                    } else {
+                                                                        setBenefits([...benefits, actualValue]);
+                                                                    }
+                                                                }}
+                                                            >
+                                                                <Check
+                                                                    className={cn(
+                                                                        "mr-2 h-4 w-4",
+                                                                        benefits.includes(benefit) ? "opacity-100" : "opacity-0"
+                                                                    )}
+                                                                />
+                                                                {benefit}
+                                                            </CommandItem>
+                                                        ))}
+                                                    </CommandGroup>
+                                                </CommandList>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
                                 </section>
 
                                 <section className="space-y-3">
@@ -365,6 +671,98 @@ const PostJob = () => {
                                 </div>
                             </div>
 
+                            {/* AI Match Settings */}
+                            <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
+                                <div className="flex items-center justify-between mb-4">
+                                    <h4 className="font-semibold flex items-center gap-2">
+                                        <TrendingUp className="h-4 w-4 text-accent" />
+                                        AI Match Settings
+                                    </h4>
+                                    <Badge variant={totalWeight === 100 ? "default" : "destructive"} className="text-xs">
+                                        {totalWeight}%
+                                    </Badge>
+                                </div>
+
+                                {/* Threshold Filter */}
+                                <div className="space-y-3 mb-6 p-3 bg-muted/30 rounded-lg">
+                                    <div className="flex justify-between items-center">
+                                        <Label className="text-sm">Match Threshold</Label>
+                                        <span className="text-sm font-medium text-accent">{matchThreshold}%</span>
+                                    </div>
+                                    <Slider
+                                        value={[matchThreshold]}
+                                        min={0}
+                                        max={100}
+                                        step={5}
+                                        onValueChange={(val) => setMatchThreshold(val[0])}
+                                    />
+                                    <p className="text-xs text-muted-foreground">
+                                        Only show candidates with match score ≥ {matchThreshold}%
+                                    </p>
+                                </div>
+
+                                {/* Scoring Weights */}
+                                <div className="space-y-4">
+                                    <p className="text-xs text-muted-foreground">
+                                        Configure scoring weights (total must equal 100%):
+                                    </p>
+                                    <div className="space-y-3">
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Requirements</Label>
+                                                <span className="text-xs font-medium">{weights.requirements}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.requirements]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, requirements: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Skills</Label>
+                                                <span className="text-xs font-medium">{weights.skills}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.skills]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, skills: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Experience</Label>
+                                                <span className="text-xs font-medium">{weights.experience}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.experience]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, experience: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                        <div className="space-y-1">
+                                            <div className="flex justify-between items-center">
+                                                <Label className="text-xs">Location</Label>
+                                                <span className="text-xs font-medium">{weights.location}%</span>
+                                            </div>
+                                            <Slider
+                                                value={[weights.location]}
+                                                max={100}
+                                                step={5}
+                                                onValueChange={(val) => setWeights(prev => ({ ...prev, location: val[0] }))}
+                                                className="h-2"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div className="bg-muted/50 rounded-xl p-6">
                                 <h4 className="font-medium mb-2">Pro Tips</h4>
                                 <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
@@ -377,6 +775,24 @@ const PostJob = () => {
                     </div>
                 </div>
             </main>
+
+            {/* Confirmation Dialog for Edit Mode */}
+            <AlertDialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Xác nhận cập nhật</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Job này sẽ được close và clone ra 1 bản mới. Bạn có đồng ý hay không?
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Hủy</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleConfirmSave}>
+                            Đồng ý
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };
