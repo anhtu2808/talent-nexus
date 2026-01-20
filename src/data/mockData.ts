@@ -1177,3 +1177,39 @@ export const mockCompanies = [
     introduction: 'Shopee is the leading e-commerce platform in Southeast Asia and Taiwan. We provide a secure, fast, and enjoyable online shopping experience for millions of users.'
   }
 ];
+
+export const mockJobInvitations: import('@/types').JobInvitation[] = [
+  {
+    id: 'inv1',
+    jobId: '1',
+    candidateId: 'c1',
+    recruiterId: 'r1',
+    companyName: 'TechVision Corp',
+    jobTitle: 'Senior React Developer',
+    message: 'Hi Nguyen, I was impressed by your profile and experience with React. We have an opening that I think would be a great fit for you.',
+    sentAt: new Date('2026-01-18'),
+    status: 'pending'
+  },
+  {
+    id: 'inv2',
+    jobId: '3',
+    candidateId: 'c1',
+    recruiterId: 'r1',
+    companyName: 'AI Dynamics',
+    jobTitle: 'AI/ML Engineer',
+    message: 'Hello, we are looking for someone with your background in AI. improving our recommendation engine.',
+    sentAt: new Date('2026-01-15'),
+    status: 'pending'
+  },
+  {
+    id: 'inv3',
+    jobId: '2',
+    candidateId: 'c1',
+    recruiterId: 'r2',
+    companyName: 'FinTech Solutions',
+    jobTitle: 'Full Stack Java Developer',
+    message: 'Greetings! Your skills in Java and React caught our eye. We would love to chat with you.',
+    sentAt: new Date('2026-01-10'),
+    status: 'declined'
+  }
+];

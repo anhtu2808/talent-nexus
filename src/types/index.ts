@@ -123,3 +123,17 @@ export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: st
   { key: 'offered', label: 'Offered', color: 'bg-emerald-500' },
   { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
 ];
+
+export type InvitationStatus = 'pending' | 'accepted' | 'declined';
+
+export interface JobInvitation {
+  id: string;
+  jobId: string;
+  candidateId: string;
+  recruiterId: string;
+  companyName: string;
+  jobTitle: string;
+  message: string;
+  sentAt: Date;
+  status: InvitationStatus;
+}
