@@ -10,7 +10,18 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
+    DialogFooter,
 } from '@/components/ui/dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { mockJobs, mockCandidates, mockApplications, mockCVs } from '@/data/mockData';
 import { Job, CandidateProfile, CV } from '@/types';
 import { Sparkles, Briefcase, Star, UserCheck, ArrowRight, Mail, FileText, User } from 'lucide-react';
@@ -39,9 +50,16 @@ const ProposedCVsView = ({ jobId }: ProposedCVsViewProps = {}) => {
     // Create instance of default layout plugin
     const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
-    // Local state for "invited" candidates to simulate action
     const [invitedMatches, setInvitedMatches] = useState<string[]>([]);
     const [selectedMatch, setSelectedMatch] = useState<ProposedMatch | null>(null);
+    const [isCreditConfirmOpen, setIsCreditConfirmOpen] = useState(false);
+
+    // Mock handler for finding matches with credits
+    const handleFindMatches = () => {
+        setIsCreditConfirmOpen(false);
+        toast.success("Used 10 credits to find new matches!");
+        // Logic to refresh or fetch matches would go here
+    };
 
     const proposedMatches = useMemo(() => {
         const matches: ProposedMatch[] = [];
@@ -138,14 +156,23 @@ const ProposedCVsView = ({ jobId }: ProposedCVsViewProps = {}) => {
 
     return (
         <div className="space-y-6">
-            <div>
-                <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
-                    <Sparkles className="h-6 w-6 text-yellow-500" />
-                    Proposed Candidates
-                </h2>
-                <p className="text-muted-foreground">
-                    Top candidates matched for your jobs (&gt;70%).
-                </p>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                    <h2 className="text-2xl font-bold tracking-tight flex items-center gap-2">
+                        <Sparkles className="h-6 w-6 text-yellow-500" />
+                        Proposed Candidates
+                    </h2>
+                    <p className="text-muted-foreground">
+                        Top candidates matched for your jobs (&gt;70%).
+                    </p>
+                </div>
+                <Button
+                    onClick={() => setIsCreditConfirmOpen(true)}
+                    className="bg-gradient-to-r from-yellow-500 to-amber-600 hover:from-yellow-600 hover:to-amber-700 text-white border-0 shadow-md"
+                >
+                    <Sparkles className="mr-2 h-4 w-4" />
+                    Find Candidates
+                </Button>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -349,7 +376,24 @@ const ProposedCVsView = ({ jobId }: ProposedCVsViewProps = {}) => {
                     </div>
                 </DialogContent>
             </Dialog>
-        </div>
+
+            <AlertDialog open={isCreditConfirmOpen} onOpenChange={setIsCreditConfirmOpen}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Use Credits to Find Candidates?</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            This action will use <span className="font-bold text-foreground">10 credits</span> to scour our database for the best matching candidates for this job.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction onClick={handleFindMatches} className="bg-gradient-to-r from-yellow-500 to-amber-600 text-white border-0">
+                            Confirm & Use Credits
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+        </div >
     );
 };
 
