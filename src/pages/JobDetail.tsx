@@ -244,9 +244,34 @@ const JobDetail = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-8">
+          {isRecruiterView && (
+            <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <Card className="p-4 flex flex-col justify-center items-center text-center">
+                <span className="text-sm text-muted-foreground mb-1">Views</span>
+                <span className="text-2xl font-bold">{job.views}</span>
+              </Card>
+              <Card className="p-4 flex flex-col justify-center items-center text-center">
+                <span className="text-sm text-muted-foreground mb-1">CTR</span>
+                <span className="text-2xl font-bold text-green-600">
+                  {job.clickToApply && job.views ? ((job.clickToApply / job.views) * 100).toFixed(1) : 0}%
+                </span>
+              </Card>
+              <Card className="p-4 flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                    HR
+                  </div>
+                  <div className="text-left">
+                    <p className="font-medium text-sm">HR Team</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          )}
+          {/* Main Content */}
+          <div className={cn("space-y-8", isRecruiterView ? "lg:col-span-3" : "lg:col-span-2")}>
             {isRecruiterView ? (
-              <Tabs defaultValue="details" className="w-full">
+              <Tabs defaultValue="applicants" className="w-full">
                 <TabsList className="mb-4 w-full justify-start border-b rounded-none h-auto p-0 bg-transparent gap-6">
                   <TabsTrigger
                     value="details"
@@ -288,9 +313,6 @@ const JobDetail = () => {
                               <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleCloneClick}>
                                 <Copy className="h-3 w-3 mr-1" />
                                 Clone Job
-                              </Button>
-                              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleEditClick}>
-                                Edit Job
                               </Button>
                             </div>
                           </div >
@@ -443,9 +465,9 @@ const JobDetail = () => {
           </div >
 
           {/* Sidebar CTA */}
-          < div className="lg:col-span-1" >
-            <div className="sticky top-24 space-y-6">
-              {!isRecruiterView ? (
+          {!isRecruiterView && (
+            <div className="lg:col-span-1" >
+              <div className="sticky top-24 space-y-6">
                 <div className="bg-card rounded-xl border border-border p-6 shadow-sm">
                   <h3 className="font-semibold text-lg mb-4">Interested in this job?</h3>
                   <p className="text-muted-foreground text-sm mb-6">
@@ -638,43 +660,9 @@ const JobDetail = () => {
                     </DialogContent>
                   </Dialog>
                 </div>
-              ) : (
-                // For recruiter, show quick stats or something else in the sidebar
-                <Card className="p-6">
-                  <h3 className="font-semibold mb-4">Quick Stats</h3>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Views</span>
-                      <span className="font-medium">{job.views}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">Clicks to Apply</span>
-                      <span className="font-medium">{job.clickToApply}</span>
-                    </div>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">CTR</span>
-                      <span className="font-medium">
-                        {job.clickToApply && job.views ? ((job.clickToApply / job.views) * 100).toFixed(1) : 0}%
-                      </span>
-                    </div>
-                  </div>
-                </Card>
-              )}
-
-              <Card className="p-6">
-                <h3 className="font-semibold mb-4">Recruiter Info</h3>
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
-                    HR
-                  </div>
-                  <div>
-                    <p className="font-medium text-sm">Talent Acquisition Team</p>
-                    <p className="text-xs text-muted-foreground">Active 2 hours ago</p>
-                  </div>
-                </div>
-              </Card>
+              </div>
             </div>
-          </div >
+          )}
         </div >
       </main >
 

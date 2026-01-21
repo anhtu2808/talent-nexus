@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
   ChevronLeft, Building2, MapPin, Briefcase, Calendar, 
-  Users, Globe, Mail, ShieldCheck, CheckCircle2, 
+  Users, Globe, Mail, ShieldCheck, CheckCircle2, Sparkles,
   AlertCircle, Trash2, ExternalLink, Phone, FileCheck, XCircle, Ban, FileText,
   UserCircle2, Fingerprint, UserPlus
 } from "lucide-react";
@@ -24,6 +24,7 @@ const mockCompanies = [
     website: "https://techcorp.io", 
     location: "Palo Alto, California", 
     status: "Verified", 
+    aiBalance: 1250,
     jobCount: 45, 
     joined: "Nov 15, 2024",
     logo: "https://api.dicebear.com/7.x/initials/svg?seed=TC",
@@ -55,6 +56,7 @@ const mockCompanies = [
     taxCode: "0312987654",
     email: "hr@startupxyz.com", 
     paymentStatus: "Unpaid",
+    aiBalance: 0,
     website: "https://startupxyz.com", 
     location: "London, UK", 
     status: "Pending", 
@@ -152,6 +154,23 @@ export default function AdminCompanyDetail() {
                     <AccountField icon={<Phone size={14}/>} label="Contact Phone" value={company.requestedAccount.contactPhone} />
                     <AccountField icon={<Users size={14}/>} label={isPending ? "Requested Seats" : "Active Seats"} value={`${company.requestedAccount.requestedSeats} Seats`} isHighlight={!isPending} // Chỉ xanh khi đã Verify
                       />
+                      {/* FIELD MỚI: AI CREDIT BALANCE  */}
+                    <div className="flex items-center justify-between group">
+                      <div className="flex items-center gap-3">
+                        <div className={cn("transition-colors", !isPending ? "text-[#38B65F]" : "text-slate-500")}>
+                          <Sparkles size={14} />
+                        </div>
+                        <div className="min-w-0 text-left">
+                          <p className="text-[9px] font-black uppercase text-slate-500 tracking-tighter">AI Usage Balance</p>
+                          <p className={cn("text-sm font-black tracking-tight", !isPending ? "text-[#38B65F]" : "text-slate-400 italic")}>
+                            {!isPending ? `${company.aiBalance?.toLocaleString()} Credits` : "Awaiting Allocation"}
+                          </p>
+                        </div>
+                      </div>
+                      {!isPending && (
+                        <Badge variant="outline" className="text-[8px] border-green-500/30 text-[#38B65F] uppercase px-1.5 h-4">Active</Badge>
+                      )}
+                    </div>
                       
                       {/* Bổ sung Badge trạng thái thanh toán */}
                       <div className="flex items-center justify-between">

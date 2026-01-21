@@ -893,6 +893,28 @@ export const mockCVs: CV[] = [
       requirementsMatch: 85,
       experienceMatch: 90,
       locationMatch: 100,
+      skillsAnalysis: [
+        'Expert-level proficiency in Java and Spring Boot ecosystem.',
+        'Strong database design skills with PostgreSQL.',
+        'Experience with Docker ensures smooth deployment workflows.',
+        'Good understanding of frontend technologies (React) for full-stack collaboration.',
+        'Demonstrates ability to design scalable microservices architectures.'
+      ],
+      requirementsAnalysis: [
+        'Exceeds technical requirements for the Full Stack Java Developer role.',
+        'Fintech background is a significant advantage for our domain.',
+        'Proven track record of delivering secure banking solutions.'
+      ],
+      experienceAnalysis: [
+        '4 years of relevant experience fits well within the mid-to-senior range.',
+        'Consistent history in the fintech sector shows domain expertise.',
+        'Project descriptions highlight responsibility and impact.'
+      ],
+      locationAnalysis: [
+        'Located in Ha Noi, matching one of our key office locations.',
+        'Willingness to work on-site is aligned with team preferences.',
+        'No relocation required.'
+      ],
       formattingScore: 90,
       missingKeywords: [],
       formattingIssues: [],
@@ -940,6 +962,28 @@ export const mockCVs: CV[] = [
       requirementsMatch: 90,
       experienceMatch: 95,
       locationMatch: 80,
+      skillsAnalysis: [
+        'Exceptional command of Python and ML libraries (TensorFlow, PyTorch).',
+        'Strong background in NLP matches the specific needs of our AI projects.',
+        'Experience with AWS indicates ability to deploy models in cloud environments.',
+        'Publication record suggests a deep theoretical understanding.',
+        'Fluent English is a strong asset for international research collaboration.'
+      ],
+      requirementsAnalysis: [
+        'Perfectly matches the requirement for an AI/ML Engineer.',
+        'Educational background (Master of Computer Science) is highly relevant.',
+        'Experience with recommendation systems is a direct value add.'
+      ],
+      experienceAnalysis: [
+        '7+ years of experience puts this candidate at a Senior/Lead level.',
+        'History of working with both startups and established data firms.',
+        'Clear progression in role complexity and responsibility.'
+      ],
+      locationAnalysis: [
+        'Currently in Da Nang, which matches the job location.',
+        'Nearby candidates are preferred for team collaboration.',
+        'No relocation concerns.'
+      ],
       formattingScore: 95,
       missingKeywords: [],
       formattingIssues: [],
@@ -981,6 +1025,27 @@ export const mockCVs: CV[] = [
       requirementsMatch: 65,
       experienceMatch: 60,
       locationMatch: 100,
+      skillsAnalysis: [
+        'Solid foundation in core web technologies (HTML, CSS, JS).',
+        'React skills are present but may need further development for complex apps.',
+        'Node.js experience provides a good starting point for full-stack work.',
+        'Lack of TypeScript and Testing experience is a gap for our current stack.',
+        'Good potential for growth given the right mentorship.'
+      ],
+      requirementsAnalysis: [
+        'Meets basic requirements for a Junior/Entry-level role.',
+        'Missing some advanced requirements requested for the Senior position.',
+        'Portfolio shows promise with responsive design implementations.'
+      ],
+      experienceAnalysis: [
+        '2 years of experience allows for immediate contribution to smaller tasks.',
+        'Experience at Web Agency suggests versatility and speed.',
+        'May need time to adjust to large-scale product development workflows.'
+      ],
+      locationAnalysis: [
+        'Based in Ho Chi Minh City, ideal for on-site collaboration.',
+        'Local candidate, ready to start.'
+      ],
       formattingScore: 85,
       missingKeywords: ['TypeScript', 'Testing'],
       formattingIssues: ['Margins too wide'],
@@ -1028,6 +1093,27 @@ export const mockCVs: CV[] = [
       requirementsMatch: 80,
       experienceMatch: 85,
       locationMatch: 70,
+      skillsAnalysis: [
+        'Top-tier DevOps skillset including AWS, Kubernetes, and Docker.',
+        'Terraform expertise ensures strong Infrastructure as Code (IaC) practices.',
+        'Python scripting ability allows for effective automation.',
+        'Missing specific Azure experience, but likely transferrable from AWS.',
+        'Strong understanding of CI/CD pipelines.'
+      ],
+      requirementsAnalysis: [
+        'Highly aligned with the DevOps Engineer role requirements.',
+        'Experience with containerization strategies is exactly what we need.',
+        'Cloud infrastructure management experience is robust.'
+      ],
+      experienceAnalysis: [
+        '6 years of experience indicates a Senior level of competency.',
+        'Proven stability and progression in previous roles.',
+        'Experience with high-scale environments at CloudScale Inc.'
+      ],
+      locationAnalysis: [
+        'Candidate location (Ha Noi/Remote) works for our distributed team.',
+        'Flexible working arrangements are compatible.'
+      ],
       formattingScore: 90,
       missingKeywords: ['Azure'],
       formattingIssues: [],
@@ -1069,6 +1155,27 @@ export const mockCVs: CV[] = [
       requirementsMatch: 70,
       experienceMatch: 75,
       locationMatch: 90,
+      skillsAnalysis: [
+        'Strong backend development skills with Java and Spring Boot.',
+        'Practical experience with Microservices architecture and Kafka.',
+        'Redis knowledge adds value for performance optimization tasks.',
+        'Could benefit from more exposure to Cloud platforms (AWS/GCP).',
+        'Solid understanding of enterprise-grade software development.'
+      ],
+      requirementsAnalysis: [
+        'Well-suited for the Backend Developer role.',
+        'Matches the need for microservices experience.',
+        'Missing some containerization skills (Docker) listed in "nice-to-haves".'
+      ],
+      experienceAnalysis: [
+        '3 years of experience places candidate in the strong Mid-level category.',
+        'Focused experience on enterprise solutions.',
+        'Steady career growth.'
+      ],
+      locationAnalysis: [
+        'Remote working set up is already established.',
+        'Candidate is adaptable to distributed team workflows.'
+      ],
       formattingScore: 85,
       missingKeywords: ['Cloud', 'Docker'],
       formattingIssues: [],
@@ -1110,6 +1217,27 @@ export const mockCVs: CV[] = [
       requirementsMatch: 60,
       experienceMatch: 50,
       locationMatch: 100,
+      skillsAnalysis: [
+        'Basic proficiency in React and Tailwind CSS.',
+        'Good grasp of modern JavaScript/TypeScript.',
+        'Lacks experience with state management libraries like Redux.',
+        'Testing experience is minimal, which is an area for growth.',
+        'Enthusiastic learner with a good foundation.'
+      ],
+      requirementsAnalysis: [
+        'Appropriate for an entry-level or junior position.',
+        'Does not yet meet the requirements for independent senior work.',
+        'Shows ability to contribute to UI tasks immediately.'
+      ],
+      experienceAnalysis: [
+        '1 year of internship experience suggests familiarity with dev workflows.',
+        'Recent graduate, eager to start a full-time career.',
+        'Needs mentoring to bridge the gap to professional production standards.'
+      ],
+      locationAnalysis: [
+        'Located in Ho Chi Minh City, perfect for mentorship and on-site transitions.',
+        'Commute is convenient.'
+      ],
       formattingScore: 80,
       missingKeywords: ['Redux', 'Testing'],
       formattingIssues: ['Font inconsistency'],
@@ -1157,6 +1285,27 @@ export const mockCVs: CV[] = [
       requirementsMatch: 85,
       experienceMatch: 90,
       locationMatch: 90,
+      skillsAnalysis: [
+        'Comprehensive skillset in QA Automation (Selenium, Cypress).',
+        'Strong JavaScript scripting capabilities for test scripts.',
+        'Experience with API Testing ensures backend quality coverage.',
+        'Jest knowledge is great for unit testing contexts.',
+        'Demonstrates a quality-first mindset.'
+      ],
+      requirementsAnalysis: [
+        'Perfect match for the QA Automation Engineer role.',
+        'Meets all core requirements for automation tools and frameworks.',
+        'Leadership experience in QA initiatives is a bonus.'
+      ],
+      experienceAnalysis: [
+        '5+ years total experience fits the Senior QA profile.',
+        'History of leading automation initiatives at Quality First Ltd.',
+        'Consistent track record in the QA domain.'
+      ],
+      locationAnalysis: [
+        'Based in Da Nang, aligning with the job location.',
+        'No relocation required.'
+      ],
       formattingScore: 90,
       missingKeywords: [],
       formattingIssues: [],
