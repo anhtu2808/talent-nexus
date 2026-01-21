@@ -42,26 +42,40 @@ const CVAnalysis = () => {
   const navigate = useNavigate();
   const { tier } = useSubscription();
 
-  // Mock Data mimicking "Resume Worded" structure
-  const overallScore = 72;
 
 
-  const categories = [
+  // Initial Data with more detailed fixing suggestions
+  const initialCategories = [
     {
       id: 'completeness',
       label: 'Completeness',
       score: 85,
       description: 'Evaluates the completeness of all CV sections.',
       issues: [
-        { title: "Contact Information", status: "success", description: "Email, phone number, and LinkedIn link are present." },
-        { title: "Education Section", status: "success", description: "Degrees and institutions are clearly listed." },
-        { title: "Personal Projects", status: "warning", description: "Consider adding links to Demos or Repositories for your projects." }
+        {
+          title: "Contact Information",
+          status: "success",
+          description: "Email, phone number, and LinkedIn link are present.",
+          fixSuggestion: "Ensure all contact details are up-to-date."
+        },
+        {
+          title: "Education Section",
+          status: "success",
+          description: "Degrees and institutions are clearly listed.",
+          fixSuggestion: "Add relevant coursework or honors if applicable."
+        },
+        {
+          title: "Personal Projects",
+          status: "warning",
+          description: "Consider adding links to Demos or Repositories for your projects.",
+          fixSuggestion: "Include GitHub links and live demo URLs for each project."
+        }
       ]
     },
     {
       id: 'ats_friendly',
       label: 'ATS-friendly Format',
-      score: 90,
+      score: 100,
       description: 'Readability score by automated Applicant Tracking Systems.',
       issues: [
         { title: "File Format", status: "success", description: "Standard PDF format with selectable text." },
@@ -75,7 +89,12 @@ const CVAnalysis = () => {
       score: 75,
       description: 'The reading experience for a human recruiter.',
       issues: [
-        { title: "Line Length", status: "warning", description: "Some bullet points are too long (> 2 lines). Try splitting them." },
+        {
+          title: "Line Length",
+          status: "warning",
+          description: "Some bullet points are too long (> 2 lines). Try splitting them.",
+          fixSuggestion: "Break down long sentences into concise 1-line bullet points."
+        },
         { title: "White Space", status: "success", description: "Good distribution of white space, not cluttered." },
         { title: "Bullet Points", status: "success", description: "Lists are presented clearly." }
       ]
@@ -86,9 +105,19 @@ const CVAnalysis = () => {
       score: 65,
       description: 'Depth and relevance of work experience descriptions.',
       issues: [
-        { title: "Action Verbs", status: "warning", description: "Start each point with a strong action verb. Avoid 'Responsible for...'." },
+        {
+          title: "Action Verbs",
+          status: "warning",
+          description: "Start each point with a strong action verb. Avoid 'Responsible for...'.",
+          fixSuggestion: "Replace passive phrases with strong verbs like 'Led', 'Developed', 'Optimized'."
+        },
         { title: "Job Details", status: "success", description: "Technologies used are described in good detail." },
-        { title: "Results/Achievements", status: "error", description: "Missing specific results (achievements) in past projects." }
+        {
+          title: "Results/Achievements",
+          status: "error",
+          description: "Missing specific results (achievements) in past projects.",
+          fixSuggestion: "Add specific metrics (e.g., 'Increased efficiency by 20%') to demonstrate impact."
+        }
       ]
     },
     {
@@ -97,8 +126,17 @@ const CVAnalysis = () => {
       score: 80,
       description: 'Uniformity in formatting and content flow.',
       issues: [
-        { title: "Date Formatting", status: "success", description: "Consistent MM/YYYY format throughout the document." },
-        { title: "Punctuation", status: "warning", description: "Check ending punctuation of bullet points (inconsistent periods)." }
+        {
+          title: "Date Formatting",
+          status: "success",
+          description: "Consistent MM/YYYY format throughout the document."
+        },
+        {
+          title: "Punctuation",
+          status: "warning",
+          description: "Check ending punctuation of bullet points (inconsistent periods).",
+          fixSuggestion: "Ensure all bullet points end either with or without a period consistently."
+        }
       ]
     },
     {
@@ -108,14 +146,24 @@ const CVAnalysis = () => {
       description: 'How technical skills are organized and highlighted.',
       issues: [
         { title: "Skill Grouping", status: "success", description: "Frontend and Backend skills are clearly separated." },
-        { title: "Relevance", status: "warning", description: "Move the most critical skills to the top of the list." },
-        { title: "Keywords", status: "error", description: "Missing key JD keywords (e.g., Docker, CI/CD)." }
+        {
+          title: "Relevance",
+          status: "warning",
+          description: "Move the most critical skills to the top of the list.",
+          fixSuggestion: "Reorder skills to prioritize those mentioned in the job description."
+        },
+        {
+          title: "Keywords",
+          status: "error",
+          description: "Missing key JD keywords (e.g., Docker, CI/CD).",
+          fixSuggestion: "Integrate keywords like 'Docker', 'Kubernetes', and 'CI/CD' into your skills section."
+        }
       ]
     },
     {
       id: 'professionalism',
       label: 'Professionalism',
-      score: 95,
+      score: 100,
       description: 'Tone, style, and professional appearance.',
       issues: [
         { title: "Spelling", status: "success", description: "No major spelling errors detected." },
@@ -126,7 +174,7 @@ const CVAnalysis = () => {
     {
       id: 'conciseness',
       label: 'Conciseness',
-      score: 85,
+      score: 100,
       description: 'Ability to convey information succinctly.',
       issues: [
         { title: "Page Count", status: "success", description: "1 page is ideal for your current experience level." },
@@ -139,14 +187,24 @@ const CVAnalysis = () => {
       score: 45,
       description: 'Demonstrating capability through metrics and awards.',
       issues: [
-        { title: "Quantified Metrics", status: "error", description: "Only 10% of experience bullets have numbers. Aim for at least 30%." },
-        { title: "Awards/Recognition", status: "warning", description: "No notable awards or special recognition section found." }
+        {
+          title: "Quantified Metrics",
+          status: "error",
+          description: "Only 10% of experience bullets have numbers. Aim for at least 30%.",
+          fixSuggestion: "Quantify your achievements using numbers, percentages, and dollar amounts."
+        },
+        {
+          title: "Awards/Recognition",
+          status: "warning",
+          description: "No notable awards or special recognition section found.",
+          fixSuggestion: "Add an 'Awards & Honors' section to highlight your achievements."
+        }
       ]
     },
     {
       id: 'credibility',
       label: 'Credibility',
-      score: 88,
+      score: 100,
       description: 'Authenticity and trustworthiness of the profile.',
       issues: [
         { title: "Verified Links", status: "success", description: "LinkedIn and GitHub Profile links are active." },
@@ -155,26 +213,109 @@ const CVAnalysis = () => {
     }
   ];
 
+  const [categories, setCategories] = useState(initialCategories);
+
+  // Derive Overall Score from Categories
+  const overallScore = useMemo(() => {
+    const total = categories.reduce((acc, cat) => acc + cat.score, 0);
+    return Math.round(total / categories.length);
+  }, [categories]);
+
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
 
   // Define AI Findings (Keywords to search and highlight)
-  const aiFindings = useMemo(() => [
+  interface Finding {
+    keyword: string;
+    type: 'warning' | 'success' | 'info';
+    message: string;
+    suggestions?: string[];
+    currentSuggestionIndex?: number;
+  }
+
+  const [aiFindings, setAiFindings] = useState<Finding[]>([
     {
       keyword: "Software Engineer",
-      type: 'warning' as const,
-      message: "Consider being more specific. Try 'Full-Stack Software Engineer' to match JD."
+      type: 'warning',
+      message: "Consider being more specific. Try 'Full-Stack Software Engineer' to match JD.",
+      suggestions: [
+        "Consider being more specific. Try 'Full-Stack Software Engineer' to match JD.",
+        "Alternatively, use 'Senior Software Engineer' if you have 5+ years experience.",
+        "Match the job description by using 'Backend Developer' as your title."
+      ],
+      currentSuggestionIndex: 0
     },
     {
       keyword: "ReactJS",
-      type: 'success' as const,
+      type: 'success',
       message: "Great! This is a high-demand skill in the current market."
     },
     {
       keyword: "Java",
-      type: 'info' as const,
-      message: "Consider adding specific frameworks you know (e.g., Spring Boot)."
+      type: 'info',
+      message: "Consider adding specific frameworks you know (e.g., Spring Boot).",
+      suggestions: [
+        "Consider adding specific frameworks you know (e.g., Spring Boot).",
+        "Mention specific versions like 'Java 17' or 'Java 21'.",
+        "List related ecosystem tools like 'Maven' or 'Gradle'."
+      ],
+      currentSuggestionIndex: 0
     }
-  ], []);
+  ]);
+
+  const handleRegenerate = (keyword: string) => {
+    toast.success("Regenerating AI suggestion...");
+    setTimeout(() => {
+      setAiFindings(prev => prev.map(f => {
+        if (f.keyword === keyword && f.suggestions) {
+          const nextIndex = ((f.currentSuggestionIndex || 0) + 1) % f.suggestions.length;
+          return {
+            ...f,
+            currentSuggestionIndex: nextIndex,
+            message: f.suggestions[nextIndex]
+          };
+        }
+        return f;
+      }));
+      toast.success("New suggestion generated!");
+    }, 600);
+  };
+
+  const handleFixIssue = (catId: string, issueIndex: number) => {
+    toast.success("Applying recommended changes...");
+
+    setTimeout(() => {
+      setCategories(prevCats => prevCats.map(cat => {
+        if (cat.id === catId) {
+          const newIssues = [...cat.issues];
+          const issue = newIssues[issueIndex];
+
+          // Only update if not already fixed
+          if (issue.status !== 'success') {
+            issue.status = 'success';
+            issue.description = issue.fixSuggestion || "Issue resolved successfully.";
+
+            // Smart Score Calculation
+            const totalIssues = newIssues.length;
+            const fixedIssues = newIssues.filter(i => i.status === 'success').length;
+
+            let newScore = cat.score;
+            if (fixedIssues === totalIssues) {
+              newScore = 100; // Perfect score if all issues fixed
+            } else {
+              // Proportional boost for partial fixes
+              newScore = Math.min(95, cat.score + 15);
+            }
+            cat.score = newScore;
+          }
+
+          return { ...cat, issues: newIssues };
+        }
+        return cat;
+      }));
+
+      toast.success("Issue fixed! Score updated.");
+    }, 800);
+  };
 
   // Create instance of default layout plugin
   const defaultLayoutPluginInstance = defaultLayoutPlugin();
@@ -240,11 +381,19 @@ const CVAnalysis = () => {
                         </div>
                       ) : (
                         <>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-sm text-muted-foreground transition-all duration-300">
                             {finding.message}
                           </p>
                           <div className="flex items-center pt-2">
-                            <Button size="sm" variant="outline" className="h-7 text-xs">Fixed (Re-generated)</Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              className="h-7 text-xs"
+                              onClick={() => handleRegenerate(finding.keyword)}
+                              disabled={!finding.suggestions}
+                            >
+                              Fixed (Re-generated)
+                            </Button>
                           </div>
                         </>
                       )}
@@ -271,7 +420,24 @@ const CVAnalysis = () => {
   }, [highlight, aiFindings]);
 
   const handleOptimize = () => {
-    toast.success("Optimizing your CV...");
+    const promise = new Promise((resolve) => setTimeout(resolve, 2000));
+
+    toast.promise(promise, {
+      loading: 'AI is analyzing and optimizing your CV structure...',
+      success: () => {
+        setCategories(prev => prev.map(cat => ({
+          ...cat,
+          score: 100, // Perfect score after optimization
+          issues: cat.issues.map(issue => ({
+            ...issue,
+            status: 'success' as const, // Cast to literal type if needed, though mostly inferred
+            description: issue.fixSuggestion || "Optimized by AI to meet industry standards."
+          }))
+        })));
+        return 'CV Analysis Optimized! All critical issues resolved.';
+      },
+      error: 'Optimization failed'
+    });
   };
 
   return (
@@ -289,9 +455,31 @@ const CVAnalysis = () => {
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back
           </Link>
-          <Button variant="outline" size="sm" className="h-8 text-xs bg-white hover:bg-slate-50">
-            <Upload className="h-3 w-3 mr-1.5" /> Re-upload
-          </Button>
+          <div>
+            <input
+              type="file"
+              id="reupload-cv"
+              className="hidden"
+              accept=".pdf,.docx"
+              onChange={(e) => {
+                if (e.target.files?.[0]) {
+                  toast.success("Uploading new CV version...");
+                  setTimeout(() => {
+                    toast.success("Analysis updated with new CV!");
+                    // Here we would normally trigger a re-analysis
+                  }, 1500);
+                }
+              }}
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              className="h-8 text-xs bg-white hover:bg-slate-50"
+              onClick={() => document.getElementById('reupload-cv')?.click()}
+            >
+              <Upload className="h-3 w-3 mr-1.5" /> Re-upload
+            </Button>
+          </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-full items-start">
@@ -335,7 +523,7 @@ const CVAnalysis = () => {
                     <AlertCircle className="h-3 w-3" />
                     Critical Fixes
                   </div>
-                  {categories.filter(c => c.score < 80).map((cat) => (
+                  {categories.filter(c => c.score < 100).map((cat) => (
                     <div key={cat.id} className="rounded-lg border border-transparent transition-all overflow-hidden">
                       <button
                         onClick={() => setSelectedCategory(selectedCategory?.id === cat.id ? null : cat)}
@@ -417,7 +605,9 @@ const CVAnalysis = () => {
                                       </p>
 
                                       <div className="flex justify-start">
-                                        <Button variant="outline" size="sm" className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50">
+                                        <Button variant="outline" size="sm" className="h-7 text-xs px-3 text-blue-600 border-blue-200 hover:text-blue-700 hover:bg-blue-50"
+                                          onClick={() => handleFixIssue(cat.id, idx)}
+                                        >
                                           Fix this issue <ChevronDown className="h-3 w-3 ml-1" />
                                         </Button>
                                       </div>
@@ -439,7 +629,7 @@ const CVAnalysis = () => {
                     <CheckCircle2 className="h-3 w-3" />
                     Passed Checks
                   </div>
-                  {categories.filter(c => c.score >= 80).map((cat) => (
+                  {categories.filter(c => c.score === 100).map((cat) => (
                     <div key={cat.id} className="rounded-lg border border-transparent transition-all overflow-hidden">
                       <button
                         onClick={() => setSelectedCategory(selectedCategory?.id === cat.id ? null : cat)}
