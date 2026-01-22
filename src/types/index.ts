@@ -16,6 +16,9 @@ export interface Recruiter extends User {
   companyId: string;
   subRole: 'manager' | 'member';
   status: 'active' | 'inactive';
+  hasPurchasedPackage?: boolean;
+  currentPlan?: string;
+  planExpiresAt?: Date;
 }
 
 export interface CandidateProfile extends User {

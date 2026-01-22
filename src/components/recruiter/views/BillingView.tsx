@@ -1,76 +1,103 @@
-import { CreditCard, Sparkles, Check, Zap } from 'lucide-react';
+import { useState } from 'react';
+import { CreditCard, Zap, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { useAuth } from '@/contexts/AuthContext';
+import { Recruiter } from '@/types';
+import { format } from 'date-fns';
 
 const BillingView = () => {
+    const { user, updateUser } = useAuth();
+    const recruiterUser = user as Recruiter;
+
     // Mock data
     const aiCredits = 850;
-    const maxCredits = 1000; // Assuming a max for the progress bar
+    const maxCredits = 1000;
     const creditPercentage = (aiCredits / maxCredits) * 100;
 
     const basePrice = 2000000;
+    const creditPrice = 1000; // 1 credit = 1000 VND
 
-    // Package definitions
+    // State for modals and inputs
+    const [isTopUpOpen, setIsTopUpOpen] = useState(false);
+    const [topUpAmount, setTopUpAmount] = useState<number>(100);
+
     const packages = [
         {
             duration: "1 Month",
+            durationMonths: 1,
             price: basePrice,
             label: "Monthly",
             description: "Flexible, short-term commitment",
             features: [
-                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
-                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
-                "Được sử dụng các tính năng AI như: matching score, proposed CV"
+                "Full management of job listings: post, close, edit",
+                "Manage applications: view CVs, change candidate status",
+                "Access AI features: matching score, proposed CV"
             ]
         },
         {
             duration: "3 Months",
-            price: basePrice * 3 * 0.95, // 5% discount for example, or just flat. Let's keep it simple or slightly discounted.
+            durationMonths: 3,
+            price: basePrice * 3 * 0.95,
             label: "Quarterly",
             description: "Perfect for seasonal hiring",
             features: [
-                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
-                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
-                "Được sử dụng các tính năng AI như: matching score, proposed CV"
-            ],
-            // highlight: true
+                "Full management of job listings: post, close, edit",
+                "Manage applications: view CVs, change candidate status",
+                "Access AI features: matching score, proposed CV"
+            ]
         },
         {
             duration: "6 Months",
-            price: basePrice * 6 * 0.90, // 10% discount
+            durationMonths: 6,
+            price: basePrice * 6 * 0.90,
             label: "Biannual",
             description: "Great value for growing teams",
             features: [
-                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
-                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
-                "Được sử dụng các tính năng AI như: matching score, proposed CV"
+                "Full management of job listings: post, close, edit",
+                "Manage applications: view CVs, change candidate status",
+                "Access AI features: matching score, proposed CV"
             ]
         },
         {
             duration: "12 Months",
-            price: basePrice * 12 * 0.85, // 15% discount
+            durationMonths: 12,
+            price: basePrice * 12 * 0.85,
             label: "Annual",
             description: "Best ROI for long-term hiring",
             features: [
-                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
-                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
-                "Được sử dụng các tính năng AI như: matching score, proposed CV"
+                "Full management of job listings: post, close, edit",
+                "Manage applications: view CVs, change candidate status",
+                "Access AI features: matching score, proposed CV"
             ]
         }
     ];
 
-    const handleTopUp = () => {
-        alert("Top up credits functionality would open here.");
+    const handleTopUpConfirm = () => {
+        // Logic to process payment would go here
+        alert(`Successfully topped up ${topUpAmount} credits for ${(topUpAmount * creditPrice).toLocaleString('vi-VN')} ₫`);
+        setIsTopUpOpen(false);
     };
 
-    const handleManageSubscription = () => {
-        alert("Manage subscription functionality would open here.");
+    const handleChoosePlan = (pkg: typeof packages[0]) => {
+        const now = new Date();
+        const expiresAt = new Date(now.setMonth(now.getMonth() + pkg.durationMonths));
+
+        // Update user state
+        updateUser({
+            hasPurchasedPackage: true,
+            currentPlan: pkg.label,
+            planExpiresAt: expiresAt
+        } as any);
+
+        alert(`You have successfully subscribed to the ${pkg.label} plan.`);
     };
 
-    const handleChoosePlan = (planDuration: string) => {
-        alert(`You selected the ${planDuration} plan.`);
-    };
+    const currentPlanName = recruiterUser?.currentPlan || "Free Plan";
+    const expiryDate = recruiterUser?.planExpiresAt ? format(new Date(recruiterUser.planExpiresAt), 'dd/MM/yyyy') : null;
 
     return (
         <div className="space-y-8">
@@ -88,18 +115,21 @@ const BillingView = () => {
                                 <Zap className="h-6 w-6 text-white" />
                             </div>
                         </div>
-                        <CardTitle className="text-xl">You're on Free Plan</CardTitle>
-                        <CardDescription>Upgrade to unlock full features</CardDescription>
+                        <CardTitle className="text-xl">
+                            {recruiterUser?.hasPurchasedPackage ? (
+                                <>You're on {currentPlanName}</>
+                            ) : (
+                                "You're on Free Plan"
+                            )}
+                        </CardTitle>
+                        <CardDescription>
+                            {expiryDate ? (
+                                <>Expires on {expiryDate}</>
+                            ) : (
+                                "Upgrade to unlock full features"
+                            )}
+                        </CardDescription>
                     </CardHeader>
-                    <CardFooter>
-                        <Button
-                            variant="outline"
-                            className="bg-white"
-                            onClick={handleManageSubscription}
-                        >
-                            Manage Subscription
-                        </Button>
-                    </CardFooter>
                 </Card>
 
                 {/* Credits Card */}
@@ -129,7 +159,7 @@ const BillingView = () => {
                     <CardFooter>
                         <Button
                             className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
-                            onClick={handleTopUp}
+                            onClick={() => setIsTopUpOpen(true)}
                         >
                             Top Up Credits
                         </Button>
@@ -140,7 +170,7 @@ const BillingView = () => {
             {/* Packages Grid */}
             <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
                 {packages.map((pkg, index) => (
-                    <Card key={index} className={`flex flex-col ${index === 3 ? 'border-primary/50 ring-1 ring-primary/20' : ''}`}>
+                    <Card key={index} className={`flex flex-col ${recruiterUser?.currentPlan === pkg.label ? 'border-primary ring-2 ring-primary/20' : ''}`}>
                         <CardHeader>
                             <CardTitle className="text-xl">{pkg.duration}</CardTitle>
                             <CardDescription className="min-h-[40px]">{pkg.description}</CardDescription>
@@ -152,10 +182,11 @@ const BillingView = () => {
                         <CardContent className="flex-1">
                             <Button
                                 className="w-full mb-6"
-                                variant={index === 3 ? "default" : "outline"}
-                                onClick={() => handleChoosePlan(pkg.duration)}
+                                variant={recruiterUser?.currentPlan === pkg.label ? "secondary" : "default"}
+                                onClick={() => handleChoosePlan(pkg)}
+                                disabled={recruiterUser?.currentPlan === pkg.label}
                             >
-                                Choose Plan
+                                {recruiterUser?.currentPlan === pkg.label ? "Current Plan" : "Choose Plan"}
                             </Button>
                             <div className="space-y-3">
                                 {pkg.features.map((feature, idx) => (
@@ -169,6 +200,42 @@ const BillingView = () => {
                     </Card>
                 ))}
             </div>
+
+            {/* Top Up Modal */}
+            <Dialog open={isTopUpOpen} onOpenChange={setIsTopUpOpen}>
+                <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Top Up AI Credits</DialogTitle>
+                        <DialogDescription>
+                            Purchase additional credits for AI features. 1 Credit = 1.000 ₫
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label htmlFor="amount" className="text-right">
+                                Amount
+                            </Label>
+                            <Input
+                                id="amount"
+                                type="number"
+                                value={topUpAmount}
+                                onChange={(e) => setTopUpAmount(Number(e.target.value))}
+                                className="col-span-3"
+                                min={10}
+                            />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                            <Label className="text-right">Total Price</Label>
+                            <div className="col-span-3 font-semibold text-lg">
+                                {(topUpAmount * creditPrice).toLocaleString('vi-VN')} ₫
+                            </div>
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <Button type="submit" onClick={handleTopUpConfirm}>Confirm Purchase</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div>
     );
 };

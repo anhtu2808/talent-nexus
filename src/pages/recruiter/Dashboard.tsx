@@ -12,8 +12,21 @@ import CompanyInfoView from '@/components/recruiter/views/CompanyInfoView';
 import BillingView from '@/components/recruiter/views/BillingView';
 import { useAuth } from '@/contexts/AuthContext';
 
+import { Recruiter } from '@/types';
+
 const RecruiterDashboard = () => {
+  const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('reports');
+
+  // Check if user is a manager and hasn't purchased a package
+  const isRestricted = user?.role === 'recruiter' &&
+    user?.subRole === 'manager' &&
+    !(user as Recruiter).hasPurchasedPackage;
+
+  // Force active tab to billing if restricted
+  if (isRestricted && activeTab !== 'billing') {
+    setActiveTab('billing');
+  }
 
   const renderContent = () => {
     switch (activeTab) {
@@ -45,7 +58,7 @@ const RecruiterDashboard = () => {
       <Header />
 
       <div className="flex flex-1 container max-w-screen-2xl p-0">
-        <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+        <DashboardSidebar activeTab={activeTab} setActiveTab={setActiveTab} restricted={isRestricted} />
 
         <main className="flex-1 p-8 overflow-y-auto h-[calc(100vh-64px)]">
           {renderContent()}
