@@ -5,6 +5,7 @@ interface AuthContextType extends AuthState {
   login: (email: string, password: string, role: UserRole, subRole?: 'manager' | 'member') => Promise<void>;
   register: (email: string, password: string, name: string, role: UserRole) => Promise<void>;
   logout: () => void;
+  updateUser: (updates: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -76,6 +77,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('smartrecruit_user');
   }, []);
 
+  const updateUser = useCallback((updates: Partial<User>) => {
+    setAuthState(prev => {
+      if (!prev.user) return prev;
+      const updatedUser = { ...prev.user, ...updates };
+      localStorage.setItem('smartrecruit_user', JSON.stringify(updatedUser)); // Persist to local storage
+      return {
+        ...prev,
+        user: updatedUser
+      };
+    });
+  }, []);
+
   // Check for existing session on mount
   React.useEffect(() => {
     const storedUser = localStorage.getItem('smartrecruit_user');
@@ -94,7 +107,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ ...authState, login, register, logout }}>
+    <AuthContext.Provider value={{ ...authState, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

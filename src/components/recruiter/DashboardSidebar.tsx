@@ -18,11 +18,20 @@ import { useAuth } from '@/contexts/AuthContext';
 interface SidebarProps {
     activeTab: string;
     setActiveTab: (tab: string) => void;
+    restricted?: boolean;
 }
 
-export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
-    const { user } = useAuth();
+export const DashboardSidebar = ({ activeTab, setActiveTab, restricted = false }: SidebarProps) => {
+    const { user, updateUser } = useAuth();
     const navigate = useNavigate();
+
+    const togglePackageStatus = () => {
+        if (user && user.role === 'recruiter') {
+            // Cast to any to access custom Recruiter properties if TS complains, or rely on the updated type
+            updateUser({ hasPurchasedPackage: !(user as any).hasPurchasedPackage } as any);
+        }
+    };
+
     const menuItems = [
         {
             id: 'reports',
@@ -71,6 +80,7 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
                     variant="ghost"
                     className="w-full justify-start mb-4 text-muted-foreground hover:text-foreground"
                     onClick={() => navigate('/')}
+                    disabled={restricted}
                 >
                     <Home className="h-4 w-4 mr-2" />
                     Home
@@ -81,13 +91,25 @@ export const DashboardSidebar = ({ activeTab, setActiveTab }: SidebarProps) => {
                         variant={activeTab === item.id ? 'secondary' : 'ghost'}
                         className={`w-full justify-start mb-1 ${activeTab === item.id ? 'bg-accent/10 text-accent font-medium' : 'text-muted-foreground'}`}
                         onClick={() => setActiveTab(item.id)}
+                        disabled={restricted && item.id !== 'billing' && item.id !== 'settings'}
                     >
                         <item.icon className="h-4 w-4 mr-2" />
                         {item.label}
                     </Button>
                 ))}
             </div>
-            <div className="p-4 border-t border-border mt-auto">
+            <div className="p-4 border-t border-border mt-auto space-y-2">
+                {/* Debug Toggle for Package Status */}
+                {user?.subRole === 'manager' && (
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full text-xs border-dashed"
+                        onClick={togglePackageStatus}
+                    >
+                        {(user as any).hasPurchasedPackage ? 'Set Unpurchased' : 'Set Purchased'}
+                    </Button>
+                )}
 
                 <Button variant="ghost" className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50">
                     <LogOut className="h-4 w-4 mr-2" />
