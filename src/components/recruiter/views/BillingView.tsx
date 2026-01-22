@@ -19,11 +19,9 @@ const BillingView = () => {
             label: "Monthly",
             description: "Flexible, short-term commitment",
             features: [
-                "Full Access to Talent Pool",
-                "Unlimited Job Postings",
-                "AI Candidate Matching",
-                "Priority Support",
-                "Advanced Analytics"
+                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
+                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
+                "Được sử dụng các tính năng AI như: matching score, proposed CV"
             ]
         },
         {
@@ -32,11 +30,9 @@ const BillingView = () => {
             label: "Quarterly",
             description: "Perfect for seasonal hiring",
             features: [
-                "Full Access to Talent Pool",
-                "Unlimited Job Postings",
-                "AI Candidate Matching",
-                "Priority Support",
-                "Advanced Analytics"
+                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
+                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
+                "Được sử dụng các tính năng AI như: matching score, proposed CV"
             ],
             // highlight: true
         },
@@ -46,11 +42,9 @@ const BillingView = () => {
             label: "Biannual",
             description: "Great value for growing teams",
             features: [
-                "Full Access to Talent Pool",
-                "Unlimited Job Postings",
-                "AI Candidate Matching",
-                "Priority Support",
-                "Advanced Analytics"
+                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
+                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
+                "Được sử dụng các tính năng AI như: matching score, proposed CV"
             ]
         },
         {
@@ -59,14 +53,24 @@ const BillingView = () => {
             label: "Annual",
             description: "Best ROI for long-term hiring",
             features: [
-                "Full Access to Talent Pool",
-                "Unlimited Job Postings",
-                "AI Candidate Matching",
-                "Priority Support",
-                "Advanced Analytics"
+                "Được mọi quyền quản lý job listing: đăng, đóng, sửa",
+                "Được quản lý các application đã apply vào job: xem CV ứng viên, chuyển trạng thái ứng viên",
+                "Được sử dụng các tính năng AI như: matching score, proposed CV"
             ]
         }
     ];
+
+    const handleTopUp = () => {
+        alert("Top up credits functionality would open here.");
+    };
+
+    const handleManageSubscription = () => {
+        alert("Manage subscription functionality would open here.");
+    };
+
+    const handleChoosePlan = (planDuration: string) => {
+        alert(`You selected the ${planDuration} plan.`);
+    };
 
     return (
         <div className="space-y-8">
@@ -88,7 +92,13 @@ const BillingView = () => {
                         <CardDescription>Upgrade to unlock full features</CardDescription>
                     </CardHeader>
                     <CardFooter>
-                        <Button variant="outline" className="bg-white">Manage Subscription</Button>
+                        <Button
+                            variant="outline"
+                            className="bg-white"
+                            onClick={handleManageSubscription}
+                        >
+                            Manage Subscription
+                        </Button>
                     </CardFooter>
                 </Card>
 
@@ -117,7 +127,12 @@ const BillingView = () => {
                         </div>
                     </CardContent>
                     <CardFooter>
-                        <Button className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700">Top Up Credits</Button>
+                        <Button
+                            className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
+                            onClick={handleTopUp}
+                        >
+                            Top Up Credits
+                        </Button>
                     </CardFooter>
                 </Card>
             </div>
@@ -135,7 +150,11 @@ const BillingView = () => {
                             </div>
                         </CardHeader>
                         <CardContent className="flex-1">
-                            <Button className="w-full mb-6" variant={index === 3 ? "default" : "outline"}>
+                            <Button
+                                className="w-full mb-6"
+                                variant={index === 3 ? "default" : "outline"}
+                                onClick={() => handleChoosePlan(pkg.duration)}
+                            >
                                 Choose Plan
                             </Button>
                             <div className="space-y-3">
