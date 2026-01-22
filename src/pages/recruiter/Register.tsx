@@ -67,7 +67,7 @@ const RecruiterRegister = () => {
             // (company, phone, etc.)
 
             toast.success('Account created! Please select a subscription plan.');
-            navigate('/recruiter/package-selection', {
+            navigate('/recruiter/pending-approval', {
                 state: {
                     hrAccountCount: formData.hrAccountCount,
                     email: formData.email
