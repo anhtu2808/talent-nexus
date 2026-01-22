@@ -157,3 +157,21 @@ export interface JobInvitation {
   sentAt: Date;
   status: InvitationStatus;
 }
+
+export type TargetRole = "candidate" | "recruiter";
+export type RecruiterPlanType = "seat" | "ai_quota";
+
+export interface PricingPlan {
+  id: number;
+  name: string;
+  salePrice: number;
+  target: TargetRole;
+  recruiterPlanType?: RecruiterPlanType;
+  userSeats?: number;
+  aiCredits: number;
+  isUnlimitedScoring: boolean;
+  atsScoringLimit?: number;
+  duration: number;
+  status: "Active" | "Inactive";
+  description: string;
+}

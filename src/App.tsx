@@ -36,6 +36,8 @@ import Jobs from "./pages/Jobs";
 import NotFound from "./pages/NotFound";
 import RecruiterDashboard from "./pages/recruiter/Dashboard";
 import RecruiterRegister from "./pages/recruiter/Register";
+import PackageSelection from "./pages/recruiter/PackageSelection";
+import RegistrationPending from "./pages/recruiter/RegistrationPending";
 import TeamManagement from "./pages/recruiter/TeamManagement";
 import RecruiterVerification from "./pages/recruiter/Verification";
 import VerifyCompany from "./pages/recruiter/VerifyCompany";
@@ -84,6 +86,8 @@ const App = () => (
                 <Route path="/recruiter/dashboard" element={<RecruiterDashboard />} />
                 <Route path="/recruiter/team" element={<TeamManagement />} />
                 <Route path="/recruiter/register" element={<RecruiterRegister />} />
+                <Route path="/recruiter/package-selection" element={<PackageSelection />} />
+                <Route path="/recruiter/pending-approval" element={<RegistrationPending />} />
                 <Route path="/recruiter/verify" element={<RecruiterVerification />} />
                 <Route path="/recruiter/verify/phone" element={<VerifyPhone />} />
                 <Route path="/recruiter/verify/company" element={<VerifyCompany />} />

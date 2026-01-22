@@ -66,8 +66,13 @@ const RecruiterRegister = () => {
             // Here we would ideally make a second API call to save the recruiter profile details 
             // (company, phone, etc.)
 
-            toast.success('Recruiter account created successfully! Please complete your company profile.');
-            navigate('/recruiter/verify');
+            toast.success('Account created! Please select a subscription plan.');
+            navigate('/recruiter/package-selection', {
+                state: {
+                    hrAccountCount: formData.hrAccountCount,
+                    email: formData.email
+                }
+            });
         } catch (error) {
             toast.error('Registration failed. Please try again.');
         }
