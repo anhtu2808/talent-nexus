@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { 
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter 
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -11,53 +11,32 @@ import {
   SelectContent,
   SelectItem,
   SelectTrigger,
-  SelectValue, 
+  SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
+import {
   Plus, Edit2, Trash2, Sparkles, Search, User, Building2, Users, Zap, CheckCircle2, Briefcase
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-// 1. Định nghĩa Type rõ ràng để xóa lỗi 'any'
-type TargetRole = "candidate" | "recruiter";
-type RecruiterPlanType = "seat" | "ai_quota";
+import { PricingPlan, RecruiterPlanType, TargetRole } from "@/types";
+import { initialPlans } from "@/data/pricingPlans";
 
-interface PricingPlan {
-  id: number;
-  name: string;
-  salePrice: number;
-  target: TargetRole;
-  recruiterPlanType?: RecruiterPlanType; 
-  userSeats?: number; 
-  aiCredits: number;
-  isUnlimitedScoring: boolean; 
-  atsScoringLimit?: number;    
-  duration: number; 
-  status: "Active" | "Inactive";
-  description: string; 
-}
-
-const initialPlans: PricingPlan[] = [
-  { id: 1, name: "Premium Candidate", salePrice: 199000, target: "candidate", aiCredits: 100, isUnlimitedScoring: true, duration: 30, status: "Active", description: "Không giới hạn ATS Scoring, Matching Scoring và có 100 credits AI hàng tháng. " },
-  { id: 2, name: "Standard Seat License", salePrice: 500000, target: "recruiter", recruiterPlanType: "seat", userSeats: 1, aiCredits: 0, isUnlimitedScoring: true, duration: 30, status: "Active", description: "Phí duy trì cho 01 tài khoản nhà tuyển dụng con trong hệ thống. " },
-  { id: 3, name: "AI Power Pack (1000)", salePrice: 1000000, target: "recruiter", recruiterPlanType: "ai_quota", aiCredits: 1000, userSeats: 0, isUnlimitedScoring: true, duration: 0, status: "Active", description: "Gói nạp AI credits dùng cho tính năng JD-CV Matching và AI Recommend. " },
-];
 
 export default function PricingManagement() {
   const [plans, setPlans] = useState<PricingPlan[]>(initialPlans);
   const [open, setOpen] = useState<boolean>(false);
   const [activeMainTab, setActiveMainTab] = useState<string>("candidate");
   const [activeRecruiterTab, setActiveRecruiterTab] = useState<string>("seat");
-  
+
   const [pricePerMonth, setPricePerMonth] = useState<number>(0);
   const [months, setMonths] = useState<number>(1);
   const [totalPrice, setTotalPrice] = useState<number>(0);
-  
+
   // States cho Form
   const [targetRole, setTargetRole] = useState<TargetRole>("candidate");
   const [recType, setRecType] = useState<RecruiterPlanType>("seat");
@@ -81,7 +60,7 @@ export default function PricingManagement() {
     return plans.filter(p => p.target === "recruiter" && p.recruiterPlanType === activeRecruiterTab);
   };
 
-  
+
 
   return (
     <div className="space-y-6 text-left animate-in fade-in duration-500">
@@ -98,10 +77,10 @@ export default function PricingManagement() {
       <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="w-full">
         <TabsList className="bg-slate-100/50 p-1 rounded-xl border border-slate-200 mb-8">
           <TabsTrigger value="candidate" className="rounded-lg font-bold px-8 data-[state=active]:bg-white data-[state=active]:text-blue-600">
-            <User size={16} className="mr-2"/> Candidate (B2C)
+            <User size={16} className="mr-2" /> Candidate (B2C)
           </TabsTrigger>
           <TabsTrigger value="recruiter" className="rounded-lg font-bold px-8 data-[state=active]:bg-white data-[state=active]:text-purple-600">
-            <Building2 size={16} className="mr-2"/> Recruiter (B2B)
+            <Building2 size={16} className="mr-2" /> Recruiter (B2B)
           </TabsTrigger>
         </TabsList>
 
@@ -114,11 +93,11 @@ export default function PricingManagement() {
         <TabsContent value="recruiter" className="space-y-6">
           <Tabs value={activeRecruiterTab} onValueChange={setActiveRecruiterTab} className="w-full">
             <div className="flex items-center gap-3 mb-6">
-                <TabsList className="bg-transparent p-0 gap-2 text-left">
-                    <TabsTrigger value="seat" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">1. Seat Subscriptions</TabsTrigger>
-                    <TabsTrigger value="ai_quota" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">2. AI Usage Quota</TabsTrigger>
-                </TabsList>
-                <div className="h-[1px] flex-1 bg-slate-100" />
+              <TabsList className="bg-transparent p-0 gap-2 text-left">
+                <TabsTrigger value="seat" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">1. Seat Subscriptions</TabsTrigger>
+                <TabsTrigger value="ai_quota" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">2. AI Usage Quota</TabsTrigger>
+              </TabsList>
+              <div className="h-[1px] flex-1 bg-slate-100" />
             </div>
 
             <TabsContent value="seat" className="space-y-4">
@@ -137,172 +116,172 @@ export default function PricingManagement() {
       </Tabs>
 
       {/* CRUD DIALOG */}
-          <Dialog open={open} onOpenChange={setOpen}>
-  <DialogContent className="sm:max-w-[750px] max-h-[90vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl flex flex-col">
-    <DialogHeader className="p-8 pb-4 bg-slate-50/50 text-left shrink-0">
-      <DialogTitle className="text-2xl font-black text-[#0F2238]">Thiết lập Gói dịch vụ</DialogTitle>
-    </DialogHeader>
-    
-    <ScrollArea className="flex-1 overflow-y-auto">
-      <div className="px-8 py-4 space-y-6 text-left">
-        {/* 1. Thông tin chung (Giữ nguyên) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="space-y-2">
-            <Label className="font-bold text-slate-700">Tên gói dịch vụ</Label>
-            <Input placeholder="VD: Premium Candidate" className="rounded-xl h-11" />
-          </div>
-          <div className="space-y-2">
-            <Label className="font-bold text-slate-700">Đối tượng mục tiêu</Label>
-            <Select defaultValue="candidate" onValueChange={(v: TargetRole) => setTargetRole(v)}>
-              <SelectTrigger className="h-11 rounded-xl"><SelectValue /></SelectTrigger>
-              <SelectContent>
-                <SelectItem value="candidate">Candidate (B2C)</SelectItem>
-                <SelectItem value="recruiter">Recruiter (B2B)</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          {targetRole === "recruiter" && (
-            <div className="space-y-2 animate-in slide-in-from-top-2">
-              <Label className="font-bold text-slate-700">Loại hình thu phí</Label>
-              <Select defaultValue="seat" onValueChange={(v: RecruiterPlanType) => setRecType(v)}>
-                <SelectTrigger className="h-11 rounded-xl font-bold"><SelectValue /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="seat">Subscription (Theo Seat)</SelectItem>
-                  <SelectItem value="ai_quota">Usage (Nạp AI Credit)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-        </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-[750px] max-h-[90vh] rounded-3xl p-0 overflow-hidden border-none shadow-2xl flex flex-col">
+          <DialogHeader className="p-8 pb-4 bg-slate-50/50 text-left shrink-0">
+            <DialogTitle className="text-2xl font-black text-[#0F2238]">Thiết lập Gói dịch vụ</DialogTitle>
+          </DialogHeader>
 
-        <div className="space-y-2">
-          <Label className="font-bold text-slate-700">Mô tả quyền lợi (Description)</Label>
-          <Textarea placeholder="Nêu rõ các tính năng nâng cao..." className="rounded-xl min-h-[80px] bg-white border-slate-200 resize-none" />
-        </div>
-
-        {/* 2. Định mức tài nguyên (Giữ nguyên logic) */}
-        <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-6">
-          <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cấu hình định mức (Allocation)</h4>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {targetRole === "recruiter" && recType === "seat" ? (
-              <div className="col-span-2 py-2 border-b border-slate-200/60 pb-4">
-                <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-100 font-bold mb-2">
-                  <Users size={12} className="mr-1.5"/> Seat Subscription Model
-                </Badge>
-                <p className="text-xs text-slate-500 italic">Gói thuê bao định kỳ cho nhân sự sử dụng hệ thống.</p>
-              </div>
-            ) : targetRole === "recruiter" && recType === "ai_quota" ? (
-              <div className="space-y-2 col-span-2">
-                <Label className="text-xs font-bold text-blue-600 flex items-center gap-2">
-                  <Sparkles size={14}/> Số lượng AI Credits nạp thêm
-                </Label>
-                <Input type="number" placeholder="1000" className="rounded-xl h-10 bg-white border-blue-100" />
-              </div>
-            ) : (
-              <>
+          <ScrollArea className="flex-1 overflow-y-auto">
+            <div className="px-8 py-4 space-y-6 text-left">
+              {/* 1. Thông tin chung (Giữ nguyên) */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold flex items-center gap-2"><Briefcase size={14}/> Lượt ATS/Matching Scoring</Label>
-                  <Input type="number" placeholder="3" className="rounded-xl h-10 bg-white" />
+                  <Label className="font-bold text-slate-700">Tên gói dịch vụ</Label>
+                  <Input placeholder="VD: Premium Candidate" className="rounded-xl h-11" />
                 </div>
                 <div className="space-y-2">
-                  <Label className="text-xs font-bold text-blue-600 flex items-center gap-2"><Sparkles size={14}/> AI Credits mỗi tháng</Label>
-                  <Input type="number" placeholder="100" className="rounded-xl h-10 bg-white border-blue-100" />
+                  <Label className="font-bold text-slate-700">Đối tượng mục tiêu</Label>
+                  <Select defaultValue="candidate" onValueChange={(v: TargetRole) => setTargetRole(v)}>
+                    <SelectTrigger className="h-11 rounded-xl"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="candidate">Candidate (B2C)</SelectItem>
+                      <SelectItem value="recruiter">Recruiter (B2B)</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              </>
-            )}
-          </div>
-
-          {targetRole === "candidate" && (
-            <div className="flex items-center justify-between py-4 border-t border-slate-200">
-              <div className="space-y-0.5">
-                <Label className="text-sm font-bold">Kích hoạt Unlimited Scoring</Label>
-                <p className="text-[10px] text-slate-400 uppercase font-bold tracking-tighter">Bỏ qua các giới hạn chấm điểm</p>
+                {targetRole === "recruiter" && (
+                  <div className="space-y-2 animate-in slide-in-from-top-2">
+                    <Label className="font-bold text-slate-700">Loại hình thu phí</Label>
+                    <Select defaultValue="seat" onValueChange={(v: RecruiterPlanType) => setRecType(v)}>
+                      <SelectTrigger className="h-11 rounded-xl font-bold"><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="seat">Subscription (Theo Seat)</SelectItem>
+                        <SelectItem value="ai_quota">Usage (Nạp AI Credit)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
               </div>
-              <Switch />
-            </div>
-          )}
-        </div>
 
-        {/* 3. Phần Thiết lập Giá - CHỈ THAY ĐỔI TẠI ĐÂY */}
-        {targetRole === "recruiter" && recType === "seat" ? (
-          /* FORM GIÁ RIÊNG CHO SEAT: Có tính toán Total */
-          <div className="bg-white rounded-3xl p-6 space-y-6 animate-in zoom-in-95 duration-300 border border-purple-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
-  {/* Hiệu ứng trang trí góc */}
-  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50/50 rounded-full -mr-16 -mt-16 blur-3xl" />
-  
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
-    <div className="space-y-2">
-      <Label className="font-bold text-slate-500 text-[10px] uppercase tracking-[0.12em] leading-none ml-1">
-        Đơn giá (VNĐ/Seat/Tháng)
-      </Label>
-      <div className="relative group">
-        <Input 
-          type="number" 
-          placeholder="0"
-          className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-purple-600 focus-visible:ring-purple-500 focus-visible:border-purple-500 transition-all pl-5 text-lg shadow-none group-hover:border-purple-200" 
-          onChange={(e) => setPricePerMonth(Number(e.target.value))}
-        />
-      </div>
-    </div>
-    <div className="space-y-2">
-      <Label className="font-bold text-slate-500 text-[10px] uppercase tracking-[0.12em] leading-none ml-1">
-        Chu kỳ đăng ký (Tháng)
-      </Label>
-      <div className="relative group">
-        <Input 
-          type="number" 
-          defaultValue={1}
-          className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-[#0F2238] focus-visible:ring-purple-500 transition-all pl-5 text-lg shadow-none group-hover:border-purple-200" 
-          onChange={(e) => setMonths(Number(e.target.value))}
-        />
-      </div>
-    </div>
-  </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-slate-700">Mô tả quyền lợi (Description)</Label>
+                <Textarea placeholder="Nêu rõ các tính năng nâng cao..." className="rounded-xl min-h-[80px] bg-white border-slate-200 resize-none" />
+              </div>
 
-  <div className="pt-6 border-t border-purple-50 flex justify-between items-center relative z-10">
-    <div>
-      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">
-        Thành tiền dự kiến (Total Amount)
-      </p>
-      <div className="flex items-baseline gap-2">
-        <p className="text-3xl font-black text-purple-600 tracking-tighter">
-          {formatCurrency(totalPrice)}
-        </p>
-        <span className="text-[10px] font-bold text-slate-400 uppercase italic">/ trọn gói</span>
-      </div>
-    </div>
-    
-    <div className="flex flex-col items-end gap-2">
-        <Badge className="bg-purple-600 text-white border-none font-black px-4 py-1.5 rounded-xl uppercase text-[9px] tracking-widest shadow-md shadow-purple-200">
-          Auto Computed
-        </Badge>
-        <p className="text-[9px] text-slate-400 font-medium italic">Bao gồm thuế và phí seat </p>
-    </div>
-  </div>
-</div>
-        ) : (
-          /* GIỮ NGUYÊN FORM GIÁ CŨ CHO CÁC LOẠI GÓI KHÁC */
-          <div className="grid grid-cols-2 gap-6">
-            <div className="space-y-2">
-              <Label className="font-bold text-slate-700 text-sm">Giá bán (VNĐ)</Label>
-              <Input type="number" placeholder="0" className="rounded-xl h-11 font-black text-[#38B65F]" />
-            </div>
-            <div className="space-y-2">
-              <Label className="font-bold text-slate-700 text-sm">Chu kỳ (Tháng)</Label>
-              <Input type="number" placeholder="1" className="rounded-xl h-11" />
-              <p className="text-[10px] text-slate-400 italic leading-none">* Nhập 0 nếu gói không hết hạn</p>
-            </div>
-          </div>
-        )}
-      </div>
-    </ScrollArea>
+              {/* 2. Định mức tài nguyên (Giữ nguyên logic) */}
+              <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-6">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cấu hình định mức (Allocation)</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {targetRole === "recruiter" && recType === "seat" ? (
+                    <div className="col-span-2 py-2 border-b border-slate-200/60 pb-4">
+                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-100 font-bold mb-2">
+                        <Users size={12} className="mr-1.5" /> Seat Subscription Model
+                      </Badge>
+                      <p className="text-xs text-slate-500 italic">Gói thuê bao định kỳ cho nhân sự sử dụng hệ thống.</p>
+                    </div>
+                  ) : targetRole === "recruiter" && recType === "ai_quota" ? (
+                    <div className="space-y-2 col-span-2">
+                      <Label className="text-xs font-bold text-blue-600 flex items-center gap-2">
+                        <Sparkles size={14} /> Số lượng AI Credits nạp thêm
+                      </Label>
+                      <Input type="number" placeholder="1000" className="rounded-xl h-10 bg-white border-blue-100" />
+                    </div>
+                  ) : (
+                    <>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-bold flex items-center gap-2"><Briefcase size={14} /> Lượt ATS/Matching Scoring</Label>
+                        <Input type="number" placeholder="3" className="rounded-xl h-10 bg-white" />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-xs font-bold text-blue-600 flex items-center gap-2"><Sparkles size={14} /> AI Credits mỗi tháng</Label>
+                        <Input type="number" placeholder="100" className="rounded-xl h-10 bg-white border-blue-100" />
+                      </div>
+                    </>
+                  )}
+                </div>
 
-    <DialogFooter className="p-8 pt-4 bg-slate-50/30 border-t border-slate-100 shrink-0">
-      <Button variant="ghost" onClick={() => setOpen(false)} className="font-bold text-slate-400 uppercase text-[11px]">Hủy bỏ</Button>
-      <Button className="bg-[#0F2238] text-white font-black rounded-xl px-10 h-11 shadow-lg">Lưu cấu hình gói</Button>
-    </DialogFooter>
-  </DialogContent>
-</Dialog>
+                {targetRole === "candidate" && (
+                  <div className="flex items-center justify-between py-4 border-t border-slate-200">
+                    <div className="space-y-0.5">
+                      <Label className="text-sm font-bold">Kích hoạt Unlimited Scoring</Label>
+                      <p className="text-[10px] text-slate-400 uppercase font-bold tracking-tighter">Bỏ qua các giới hạn chấm điểm</p>
+                    </div>
+                    <Switch />
+                  </div>
+                )}
+              </div>
+
+              {/* 3. Phần Thiết lập Giá - CHỈ THAY ĐỔI TẠI ĐÂY */}
+              {targetRole === "recruiter" && recType === "seat" ? (
+                /* FORM GIÁ RIÊNG CHO SEAT: Có tính toán Total */
+                <div className="bg-white rounded-3xl p-6 space-y-6 animate-in zoom-in-95 duration-300 border border-purple-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+                  {/* Hiệu ứng trang trí góc */}
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50/50 rounded-full -mr-16 -mt-16 blur-3xl" />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
+                    <div className="space-y-2">
+                      <Label className="font-bold text-slate-500 text-[10px] uppercase tracking-[0.12em] leading-none ml-1">
+                        Đơn giá (VNĐ/Seat/Tháng)
+                      </Label>
+                      <div className="relative group">
+                        <Input
+                          type="number"
+                          placeholder="0"
+                          className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-purple-600 focus-visible:ring-purple-500 focus-visible:border-purple-500 transition-all pl-5 text-lg shadow-none group-hover:border-purple-200"
+                          onChange={(e) => setPricePerMonth(Number(e.target.value))}
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="font-bold text-slate-500 text-[10px] uppercase tracking-[0.12em] leading-none ml-1">
+                        Chu kỳ đăng ký (Tháng)
+                      </Label>
+                      <div className="relative group">
+                        <Input
+                          type="number"
+                          defaultValue={1}
+                          className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-[#0F2238] focus-visible:ring-purple-500 transition-all pl-5 text-lg shadow-none group-hover:border-purple-200"
+                          onChange={(e) => setMonths(Number(e.target.value))}
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t border-purple-50 flex justify-between items-center relative z-10">
+                    <div>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">
+                        Thành tiền dự kiến (Total Amount)
+                      </p>
+                      <div className="flex items-baseline gap-2">
+                        <p className="text-3xl font-black text-purple-600 tracking-tighter">
+                          {formatCurrency(totalPrice)}
+                        </p>
+                        <span className="text-[10px] font-bold text-slate-400 uppercase italic">/ trọn gói</span>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-2">
+                      <Badge className="bg-purple-600 text-white border-none font-black px-4 py-1.5 rounded-xl uppercase text-[9px] tracking-widest shadow-md shadow-purple-200">
+                        Auto Computed
+                      </Badge>
+                      <p className="text-[9px] text-slate-400 font-medium italic">Bao gồm thuế và phí seat </p>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* GIỮ NGUYÊN FORM GIÁ CŨ CHO CÁC LOẠI GÓI KHÁC */
+                <div className="grid grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <Label className="font-bold text-slate-700 text-sm">Giá bán (VNĐ)</Label>
+                    <Input type="number" placeholder="0" className="rounded-xl h-11 font-black text-[#38B65F]" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label className="font-bold text-slate-700 text-sm">Chu kỳ (Tháng)</Label>
+                    <Input type="number" placeholder="1" className="rounded-xl h-11" />
+                    <p className="text-[10px] text-slate-400 italic leading-none">* Nhập 0 nếu gói không hết hạn</p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+
+          <DialogFooter className="p-8 pt-4 bg-slate-50/30 border-t border-slate-100 shrink-0">
+            <Button variant="ghost" onClick={() => setOpen(false)} className="font-bold text-slate-400 uppercase text-[11px]">Hủy bỏ</Button>
+            <Button className="bg-[#0F2238] text-white font-black rounded-xl px-10 h-11 shadow-lg">Lưu cấu hình gói</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -322,21 +301,21 @@ function PlanCard({ plan, onDelete, formatCurrency }: { plan: PricingPlan, onDel
             <div className="flex items-center gap-3 mb-1 text-left">
               <h3 className="font-black text-lg text-[#0F2238]">{plan.name}</h3>
               <Badge variant="outline" className="text-[9px] uppercase font-black tracking-tighter bg-slate-50">
-                  {plan.target === "recruiter" ? (plan.recruiterPlanType === "seat" ? "B2B Subscription" : "B2B Usage") : "B2C Premium"}
+                {plan.target === "recruiter" ? (plan.recruiterPlanType === "seat" ? "B2B Subscription" : "B2B Usage") : "B2C Premium"}
               </Badge>
             </div>
             <p className="text-xs text-slate-400 mb-3 line-clamp-1 max-w-xl text-left">{plan.description}</p>
             <div className="flex flex-wrap gap-4 items-center text-left">
               <span className="font-black text-[#38B65F] text-sm">{formatCurrency(plan.salePrice)}</span>
-              {plan.userSeats && plan.userSeats > 0 && <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><Users size={12}/> {plan.userSeats} Seats</span>}
-              {plan.aiCredits > 0 && <span className="text-xs font-bold text-blue-600 flex items-center gap-1.5"><Sparkles size={12}/> {plan.aiCredits} Credits</span>}
-              {plan.isUnlimitedScoring && <span className="text-[10px] font-black text-green-600 uppercase flex items-center gap-1"><CheckCircle2 size={12}/> Unlimited Scoring</span>}
+              {plan.userSeats && plan.userSeats > 0 && <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><Users size={12} /> {plan.userSeats} Seats</span>}
+              {plan.aiCredits > 0 && <span className="text-xs font-bold text-blue-600 flex items-center gap-1.5"><Sparkles size={12} /> {plan.aiCredits} Credits</span>}
+              {plan.isUnlimitedScoring && <span className="text-[10px] font-black text-green-600 uppercase flex items-center gap-1"><CheckCircle2 size={12} /> Unlimited Scoring</span>}
             </div>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="rounded-xl border-slate-200 font-bold hover:bg-slate-50"><Edit2 size={14} className="mr-2"/>Edit</Button>
-          <Button variant="outline" size="icon" onClick={onDelete} className="rounded-xl border-slate-200 hover:bg-red-50 hover:text-red-500 text-slate-400"><Trash2 size={16}/></Button>
+          <Button variant="outline" size="sm" className="rounded-xl border-slate-200 font-bold hover:bg-slate-50"><Edit2 size={14} className="mr-2" />Edit</Button>
+          <Button variant="outline" size="icon" onClick={onDelete} className="rounded-xl border-slate-200 hover:bg-red-50 hover:text-red-500 text-slate-400"><Trash2 size={16} /></Button>
         </div>
       </CardContent>
     </Card>
