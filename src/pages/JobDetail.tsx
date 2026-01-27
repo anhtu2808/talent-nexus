@@ -314,6 +314,9 @@ const JobDetail = () => {
                                 <Copy className="h-3 w-3 mr-1" />
                                 Clone Job
                               </Button>
+                              <Button variant="outline" size="sm" className="h-7 text-xs" onClick={handleEditClick}>
+                                Edit Job
+                              </Button>
                             </div>
                           </div >
                         </div >

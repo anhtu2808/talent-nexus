@@ -65,7 +65,7 @@ const ReportsView = () => {
             return jobCounts;
         } else {
             // Group by Status for specific job
-            const statuses = ['new', 'screening', 'interviewing', 'negotiating', 'hired', 'rejected'];
+            const statuses = ['applied', 'viewed', 'shortlisted', 'auto_rejected', 'not_suitable'];
             return statuses.map(status => ({
                 name: status.charAt(0).toUpperCase() + status.slice(1),
                 applications: filteredApplications.filter(app => app.status === status).length

@@ -1,6 +1,6 @@
 export type UserRole = 'candidate' | 'recruiter' | 'admin';
 
-export type ApplicationStatus = 'applied' | 'in_review' | 'interview' | 'hired' | 'rejected';
+export type ApplicationStatus = 'applied' | 'viewed' | 'shortlisted' | 'auto_rejected' | 'not_suitable';
 
 export interface User {
   id: string;
@@ -141,10 +141,10 @@ export interface AuthState {
 // Pipeline stage configuration - Extended with new stages
 export const PIPELINE_STAGES: { key: ApplicationStatus; label: string; color: string }[] = [
   { key: 'applied', label: 'Applied', color: 'bg-blue-500' },
-  { key: 'in_review', label: 'In Review', color: 'bg-purple-500' },
-  { key: 'interview', label: 'Interview', color: 'bg-amber-500' },
-  { key: 'hired', label: 'Hired', color: 'bg-emerald-500' },
-  { key: 'rejected', label: 'Rejected', color: 'bg-red-500' },
+  { key: 'viewed', label: 'Viewed', color: 'bg-purple-500' },
+  { key: 'shortlisted', label: 'Shortlisted', color: 'bg-emerald-500' },
+  { key: 'auto_rejected', label: 'Auto-Rejected', color: 'bg-red-500' },
+  { key: 'not_suitable', label: 'Not-Suitable', color: 'bg-amber-500' },
 ];
 
 export type InvitationStatus = 'pending' | 'accepted' | 'declined';

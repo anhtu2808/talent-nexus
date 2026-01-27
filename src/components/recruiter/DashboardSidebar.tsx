@@ -43,29 +43,26 @@ export const DashboardSidebar = ({ activeTab, setActiveTab, restricted = false }
             label: 'Jobs',
             icon: Briefcase,
         },
-        // Only show Team tab for managers
-        ...(user?.subRole === 'manager' ? [{
-            id: 'team',
-            label: 'Team',
+        {
+            id: 'talent-pool',
+            label: 'Talent Pool',
             icon: Users,
-        }] : []),
+        },
         {
             id: 'cvs',
             label: 'CVs',
             icon: FileText,
         },
-        // Only show Company Profile for managers
-        ...(user?.subRole === 'manager' ? [{
+        {
             id: 'company-info',
             label: 'Company Profile',
             icon: Building,
-        }] : []),
-        // Only show Billing for managers (assuming sensitive info)
-        ...(user?.subRole === 'manager' ? [{
+        },
+        {
             id: 'billing',
             label: 'Billing & Credits',
             icon: CreditCard,
-        }] : []),
+        },
         {
             id: 'settings',
             label: 'Account Settings',

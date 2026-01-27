@@ -7,9 +7,9 @@ import ReportsView from '@/components/recruiter/views/ReportsView';
 import SettingsView from '@/components/recruiter/views/SettingsView';
 import PlansView from '@/components/recruiter/views/PlansView';
 import ProposedCVsView from '@/components/recruiter/views/ProposedCVsView';
-import TeamManagementView from '@/components/recruiter/views/TeamManagementView';
 import CompanyInfoView from '@/components/recruiter/views/CompanyInfoView';
 import BillingView from '@/components/recruiter/views/BillingView';
+import TalentPoolView from '@/components/recruiter/views/TalentPoolView';
 import { useAuth } from '@/contexts/AuthContext';
 
 import { Recruiter } from '@/types';
@@ -18,9 +18,10 @@ const RecruiterDashboard = () => {
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('reports');
 
-  // Check if user is a manager and hasn't purchased a package
+  // Check if user hasn't purchased a package (Role check simplified as requested)
+  // Logic: All recruiters now see everything, but maybe package restriction still applies?
+  // "Nếu chưa chọn gói sẽ bị navig" logic from older tasks might still apply but simply check for package.
   const isRestricted = user?.role === 'recruiter' &&
-    user?.subRole === 'manager' &&
     !(user as Recruiter).hasPurchasedPackage;
 
   // Force active tab to billing if restricted
@@ -34,6 +35,8 @@ const RecruiterDashboard = () => {
         return <ReportsView />;
       case 'jobs':
         return <JobsView />;
+      case 'talent-pool':
+        return <TalentPoolView />;
       case 'cvs':
         return <CVManagementView />;
       case 'proposed':
@@ -42,8 +45,6 @@ const RecruiterDashboard = () => {
         return <SettingsView />;
       case 'plans':
         return <PlansView />;
-      case 'team':
-        return <TeamManagementView />;
       case 'company-info':
         return <CompanyInfoView />;
       case 'billing':
