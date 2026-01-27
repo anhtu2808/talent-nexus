@@ -162,7 +162,7 @@ export interface JobInvitation {
 }
 
 export type TargetRole = "candidate" | "recruiter";
-export type RecruiterPlanType = "seat" | "ai_quota";
+export type RecruiterPlanType = "job_post" | "ai_quota";
 
 export interface PricingPlan {
   id: number;
@@ -170,11 +170,11 @@ export interface PricingPlan {
   salePrice: number;
   target: TargetRole;
   recruiterPlanType?: RecruiterPlanType;
-  userSeats?: number;
-  aiCredits: number;
-  isUnlimitedScoring: boolean;
-  atsScoringLimit?: number;
-  duration: number;
+  jobLimit?: number; // Giới hạn tin đăng cho gói recruiter [cite: 211]
+  aiCredits: number; // Credits hàng tháng hoặc nạp thêm [cite: 9, 28, 228]
+  isUnlimitedScoring: boolean; // Đặc quyền Premium Candidate [cite: 228]
+  atsScoringLimit?: number; 
+  duration: number; 
   status: "Active" | "Inactive";
   description: string;
 }
