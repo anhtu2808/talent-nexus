@@ -109,7 +109,7 @@ export default function AdminJobs() {
                   <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400">Job Opportunity</th>
                   <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400">Organization</th>
                   <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400 text-center">Status</th>
-                  <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400 text-center">Pipeline</th>
+                  <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400 text-center">Applicants</th>
                   <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400">Posted</th>
                   <th className="py-4 px-6 text-[11px] uppercase tracking-wider font-bold text-slate-400 text-right">Actions</th>
                 </tr>

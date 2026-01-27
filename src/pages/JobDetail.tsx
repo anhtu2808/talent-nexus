@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { Link, useParams, useLocation, useNavigate } from 'react-router-dom';
 import { formatDistanceToNow, format } from 'date-fns';
 import { toast } from 'sonner';
@@ -75,6 +75,7 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import CVMatchAnalysis from '@/components/jobs/CVMatchAnalysis';
 import ApplicantCard from '@/components/recruiter/ApplicantCard';
+import JobCard from '@/components/jobs/JobCard';
 import CVManagementView from '@/components/recruiter/views/CVManagementView';
 import ProposedCVsView from '@/components/recruiter/views/ProposedCVsView';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -94,6 +95,13 @@ const JobDetail = () => {
   // Use local state for job to allow editing
   const [job, setJob] = useState<Job | undefined>(() => mockJobs.find(j => j.id === id));
   const isRecruiterView = location.state?.role === 'recruiter';
+
+  const relatedJobs = useMemo(() => {
+    return mockJobs
+      .filter(j => j.id !== id)
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
+  }, [id]);
 
 
 
@@ -662,6 +670,21 @@ const JobDetail = () => {
                       )}
                     </DialogContent>
                   </Dialog>
+                </div>
+
+                {/* Related Jobs Section */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg">Related Jobs</h3>
+                  <div className="space-y-4">
+                    {relatedJobs.map(job => (
+                      <JobCard
+                        key={job.id}
+                        job={job}
+                        variant="compact"
+                        showApply={false}
+                      />
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>

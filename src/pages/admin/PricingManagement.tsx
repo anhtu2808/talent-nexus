@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  Plus, Edit2, Trash2, Sparkles, Search, User, Building2, Users, Zap, CheckCircle2, Briefcase
+  Plus, Edit2, Trash2, Sparkles, FileText, Search, User, Building2, Users, Zap, CheckCircle2, Briefcase
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -31,7 +31,7 @@ export default function PricingManagement() {
   const [plans, setPlans] = useState<PricingPlan[]>(initialPlans);
   const [open, setOpen] = useState<boolean>(false);
   const [activeMainTab, setActiveMainTab] = useState<string>("candidate");
-  const [activeRecruiterTab, setActiveRecruiterTab] = useState<string>("seat");
+  const [activeRecruiterTab, setActiveRecruiterTab] = useState<string>("job_post");
 
   const [pricePerMonth, setPricePerMonth] = useState<number>(0);
   const [months, setMonths] = useState<number>(1);
@@ -39,7 +39,7 @@ export default function PricingManagement() {
 
   // States cho Form
   const [targetRole, setTargetRole] = useState<TargetRole>("candidate");
-  const [recType, setRecType] = useState<RecruiterPlanType>("seat");
+  const [recType, setRecType] = useState<RecruiterPlanType>("job_post");
 
   useEffect(() => {
     setTotalPrice(pricePerMonth * months * 1.1); // Tính cả thuế 10%
@@ -94,13 +94,13 @@ export default function PricingManagement() {
           <Tabs value={activeRecruiterTab} onValueChange={setActiveRecruiterTab} className="w-full">
             <div className="flex items-center gap-3 mb-6">
               <TabsList className="bg-transparent p-0 gap-2 text-left">
-                <TabsTrigger value="seat" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">1. Seat Subscriptions</TabsTrigger>
+                <TabsTrigger value="job_post" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-purple-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">1. Job post Subscriptions</TabsTrigger>
                 <TabsTrigger value="ai_quota" className="rounded-full px-5 border border-slate-200 data-[state=active]:bg-blue-600 data-[state=active]:text-white font-bold text-[10px] uppercase tracking-widest">2. AI Usage Quota</TabsTrigger>
               </TabsList>
               <div className="h-[1px] flex-1 bg-slate-100" />
             </div>
 
-            <TabsContent value="seat" className="space-y-4">
+            <TabsContent value="job_post" className="space-y-4">
               {getFilteredPlans().map((plan) => (
                 <PlanCard key={plan.id} plan={plan} onDelete={() => handleDelete(plan.id)} formatCurrency={formatCurrency} />
               ))}
@@ -142,12 +142,15 @@ export default function PricingManagement() {
                 </div>
                 {targetRole === "recruiter" && (
                   <div className="space-y-2 animate-in slide-in-from-top-2">
-                    <Label className="font-bold text-slate-700">Loại hình thu phí</Label>
-                    <Select defaultValue="seat" onValueChange={(v: RecruiterPlanType) => setRecType(v)}>
-                      <SelectTrigger className="h-11 rounded-xl font-bold"><SelectValue /></SelectTrigger>
+                    <Label className="font-bold text-slate-700">Loại gói dịch vụ</Label>
+                    <Select defaultValue="job_post" onValueChange={(v: RecruiterPlanType) => setRecType(v)}>
+                      <SelectTrigger className="h-11 rounded-xl font-bold">
+                        <SelectValue />
+                      </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="seat">Subscription (Theo Seat)</SelectItem>
-                        <SelectItem value="ai_quota">Usage (Nạp AI Credit)</SelectItem>
+                        {/* Đổi nhãn từ Seat sang Gói đăng bài  */}
+                        <SelectItem value="job_post">Gói Đăng bài & Tính năng</SelectItem>
+                        <SelectItem value="ai_quota">Gói Nạp AI Credit</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -163,14 +166,19 @@ export default function PricingManagement() {
               <div className="bg-slate-50 rounded-2xl p-6 border border-slate-100 space-y-6">
                 <h4 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Cấu hình định mức (Allocation)</h4>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {targetRole === "recruiter" && recType === "seat" ? (
-                    <div className="col-span-2 py-2 border-b border-slate-200/60 pb-4">
-                      <Badge variant="outline" className="bg-purple-50 text-purple-700 border-purple-100 font-bold mb-2">
-                        <Users size={12} className="mr-1.5" /> Seat Subscription Model
-                      </Badge>
-                      <p className="text-xs text-slate-500 italic">Gói thuê bao định kỳ cho nhân sự sử dụng hệ thống.</p>
-                    </div>
-                  ) : targetRole === "recruiter" && recType === "ai_quota" ? (
+                    {targetRole === "recruiter" && recType === "job_post" ? (
+                      <div className="col-span-2 py-4 px-6 bg-purple-50/50 rounded-2xl border border-purple-100">
+                        <div className="flex items-center gap-3 mb-4">
+                          <Briefcase className="text-purple-600" size={20} />
+                          <p className="text-sm font-bold text-purple-900 uppercase tracking-tight">Cấu hình Gói đăng bài</p>
+                        </div>
+                        <div className="space-y-3">
+                          <Label className="text-xs font-bold text-slate-600">Giới hạn số lượng tin đăng (Job Listings)</Label>
+                          <Input type="number" placeholder="VD: 10 tin/gói" className="rounded-xl h-10 bg-white border-purple-100" />
+                          <p className="text-[10px] text-slate-500 italic">* Hệ thống sẽ tự đóng tin khi hết hạn hoặc đủ số lượng.</p>
+                        </div>
+                      </div>
+                    ) : recType === "ai_quota" ? (
                     <div className="space-y-2 col-span-2">
                       <Label className="text-xs font-bold text-blue-600 flex items-center gap-2">
                         <Sparkles size={14} /> Số lượng AI Credits nạp thêm
@@ -203,60 +211,46 @@ export default function PricingManagement() {
               </div>
 
               {/* 3. Phần Thiết lập Giá - CHỈ THAY ĐỔI TẠI ĐÂY */}
-              {targetRole === "recruiter" && recType === "seat" ? (
-                /* FORM GIÁ RIÊNG CHO SEAT: Có tính toán Total */
-                <div className="bg-white rounded-3xl p-6 space-y-6 animate-in zoom-in-95 duration-300 border border-purple-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
-                  {/* Hiệu ứng trang trí góc */}
+              {targetRole === "recruiter" && recType === "job_post" ? (
+                <div className="bg-white rounded-3xl p-6 space-y-6 border border-purple-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-purple-50/50 rounded-full -mr-16 -mt-16 blur-3xl" />
-
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 relative z-10">
                     <div className="space-y-2">
                       <Label className="font-bold text-slate-500 text-[10px] uppercase tracking-[0.12em] leading-none ml-1">
-                        Đơn giá (VNĐ/Seat/Tháng)
+                        Giá trọn gói (VNĐ/Gói)
                       </Label>
-                      <div className="relative group">
-                        <Input
-                          type="number"
-                          placeholder="0"
-                          className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-purple-600 focus-visible:ring-purple-500 focus-visible:border-purple-500 transition-all pl-5 text-lg shadow-none group-hover:border-purple-200"
-                          onChange={(e) => setPricePerMonth(Number(e.target.value))}
-                        />
-                      </div>
+                      <Input 
+                        type="number" 
+                        placeholder="0"
+                        className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-purple-600 text-lg" 
+                        onChange={(e) => setPricePerMonth(Number(e.target.value))} 
+                      />
                     </div>
                     <div className="space-y-2">
                       <Label className="font-bold text-slate-500 text-[10px] uppercase tracking-[0.12em] leading-none ml-1">
-                        Chu kỳ đăng ký (Tháng)
+                        Thời hạn sử dụng (Tháng)
                       </Label>
-                      <div className="relative group">
-                        <Input
-                          type="number"
-                          defaultValue={1}
-                          className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-[#0F2238] focus-visible:ring-purple-500 transition-all pl-5 text-lg shadow-none group-hover:border-purple-200"
-                          onChange={(e) => setMonths(Number(e.target.value))}
-                        />
-                      </div>
+                      <Input 
+                        type="number" 
+                        defaultValue={1}
+                        className="rounded-2xl h-12 bg-slate-50/50 border-slate-200 font-black text-[#0F2238] text-lg" 
+                        onChange={(e) => setMonths(Number(e.target.value))} 
+                      />
                     </div>
                   </div>
 
                   <div className="pt-6 border-t border-purple-50 flex justify-between items-center relative z-10">
                     <div>
-                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-2">
-                        Thành tiền dự kiến (Total Amount)
-                      </p>
+                      <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">Doanh thu dự kiến</p>
                       <div className="flex items-baseline gap-2">
-                        <p className="text-3xl font-black text-purple-600 tracking-tighter">
-                          {formatCurrency(totalPrice)}
-                        </p>
+                        {/* Đối với gói đăng bài, chúng ta thường tính giá gói cố định cho chu kỳ  */}
+                        <p className="text-3xl font-black text-purple-600 tracking-tighter">{formatCurrency(totalPrice)}</p>
                         <span className="text-[10px] font-bold text-slate-400 uppercase italic">/ trọn gói</span>
                       </div>
                     </div>
-
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge className="bg-purple-600 text-white border-none font-black px-4 py-1.5 rounded-xl uppercase text-[9px] tracking-widest shadow-md shadow-purple-200">
-                        Auto Computed
-                      </Badge>
-                      <p className="text-[9px] text-slate-400 font-medium italic">Bao gồm thuế và phí seat </p>
-                    </div>
+                    <Badge className="bg-purple-600 text-white border-none font-black px-4 py-1.5 rounded-xl uppercase text-[9px]">
+                      Feature Subscription
+                    </Badge>
                   </div>
                 </div>
               ) : (
@@ -293,23 +287,39 @@ function PlanCard({ plan, onDelete, formatCurrency }: { plan: PricingPlan, onDel
         <div className="flex items-center gap-5 text-left">
           <div className={cn(
             "w-14 h-14 rounded-2xl flex items-center justify-center shadow-inner",
-            plan.target === "candidate" ? "bg-blue-50 text-blue-500" : plan.recruiterPlanType === "seat" ? "bg-purple-50 text-purple-500" : "bg-amber-50 text-amber-500"
+            plan.target === "candidate" ? "bg-blue-50 text-blue-500" : plan.recruiterPlanType === "job_post" ? "bg-purple-50 text-purple-500" : "bg-amber-50 text-amber-500"
           )}>
-            {plan.target === "candidate" ? <Zap size={28} /> : plan.recruiterPlanType === "seat" ? <Users size={28} /> : <Sparkles size={28} />}
+            {plan.target === "candidate" ? <Zap size={28} /> : plan.recruiterPlanType === "job_post" ? <Briefcase size={28} /> : <Sparkles size={28} />}
           </div>
           <div className="text-left flex-1">
             <div className="flex items-center gap-3 mb-1 text-left">
               <h3 className="font-black text-lg text-[#0F2238]">{plan.name}</h3>
               <Badge variant="outline" className="text-[9px] uppercase font-black tracking-tighter bg-slate-50">
-                {plan.target === "recruiter" ? (plan.recruiterPlanType === "seat" ? "B2B Subscription" : "B2B Usage") : "B2C Premium"}
+                  {plan.target === "recruiter" ? (plan.recruiterPlanType === "job_post" ? "B2B Subscription" : "B2B Usage") : "B2C Premium"}
               </Badge>
             </div>
             <p className="text-xs text-slate-400 mb-3 line-clamp-1 max-w-xl text-left">{plan.description}</p>
             <div className="flex flex-wrap gap-4 items-center text-left">
               <span className="font-black text-[#38B65F] text-sm">{formatCurrency(plan.salePrice)}</span>
-              {plan.userSeats && plan.userSeats > 0 && <span className="text-xs font-bold text-slate-500 flex items-center gap-1.5"><Users size={12} /> {plan.userSeats} Seats</span>}
-              {plan.aiCredits > 0 && <span className="text-xs font-bold text-blue-600 flex items-center gap-1.5"><Sparkles size={12} /> {plan.aiCredits} Credits</span>}
-              {plan.isUnlimitedScoring && <span className="text-[10px] font-black text-green-600 uppercase flex items-center gap-1"><CheckCircle2 size={12} /> Unlimited Scoring</span>}
+              
+              {/* SỬA TẠI ĐÂY: Hiển thị giới hạn tin đăng thay vì seat */}
+              {plan.jobLimit && plan.jobLimit > 0 && (
+                <span className="text-xs font-bold text-purple-600 flex items-center gap-1.5 bg-purple-50 px-2 py-0.5 rounded-lg">
+                  <FileText size={12} /> {plan.jobLimit} Tin đăng
+                </span>
+              )}
+
+              {plan.aiCredits > 0 && (
+                <span className="text-xs font-bold text-blue-600 flex items-center gap-1.5 bg-blue-50 px-2 py-0.5 rounded-lg">
+                  <Sparkles size={12} /> {plan.aiCredits} Credits
+                </span>
+              )}
+              
+              {plan.isUnlimitedScoring && (
+                <span className="text-[10px] font-black text-green-600 uppercase flex items-center gap-1">
+                  <CheckCircle2 size={12} /> Unlimited Scoring
+                </span>
+              )}
             </div>
           </div>
         </div>

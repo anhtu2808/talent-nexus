@@ -26,6 +26,17 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Plus } from "lucide-react";
 
 const users = [
   { id: 1, name: "John Smith", email: "john@example.com", role: "Candidate", status: "Active", cvCount: 3, applications: 12, joined: "Dec 1, 2024" },
@@ -37,6 +48,7 @@ const users = [
 ];
 
 export default function UserManagement() {
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeTab, setActiveTab] = useState("all");
   const navigate = useNavigate();
@@ -49,7 +61,79 @@ export default function UserManagement() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-left animate-in fade-in duration-500">
+      {/* 1. Header & Create Button */}
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-black text-[#0F2238] tracking-tight">User Directory</h1>
+          <p className="text-sm text-slate-500 font-medium">Manage platform access and member profiles</p>
+        </div>
+
+        <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+          <DialogTrigger asChild>
+            <Button className="bg-[#38B65F] hover:bg-[#2D914C] text-white font-black rounded-xl h-11 px-6 shadow-lg shadow-green-500/20">
+              <Plus size={20} className="mr-2" /> Add New User
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[450px] rounded-3xl border-none shadow-2xl p-0 overflow-hidden">
+            <DialogHeader className="p-8 pb-0">
+              <DialogTitle className="text-2xl font-black text-[#0F2238]">Create Account</DialogTitle>
+              <p className="text-sm text-slate-500 font-medium">Manual member registration for the platform</p>
+            </DialogHeader>
+            
+            <div className="p-8 space-y-5">
+              <div className="space-y-2">
+                <Label className="font-bold text-slate-700 ml-1">Full Name</Label>
+                <Input placeholder="e.g. Nguyen Van A" className="rounded-xl h-11 bg-slate-50/50 border-slate-200" />
+              </div>
+              <div className="space-y-2">
+                <Label className="font-bold text-slate-700 ml-1">Email Address</Label>
+                <Input type="email" placeholder="name@example.com" className="rounded-xl h-11 bg-slate-50/50 border-slate-200" />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="font-bold text-slate-700 ml-1">Account Role</Label>
+                  <Select defaultValue="candidate">
+                    <SelectTrigger className="rounded-xl h-11 bg-slate-50/50">
+                      <SelectValue placeholder="Select role" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="candidate">Candidate</SelectItem>
+                      <SelectItem value="recruiter">Recruiter</SelectItem>
+                      <SelectItem value="admin">Administrator</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label className="font-bold text-slate-700 ml-1">Initial Status</Label>
+                  <Select defaultValue="active">
+                    <SelectTrigger className="rounded-xl h-11 bg-slate-50/50">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="pending">Pending</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="pt-2">
+                <div className="flex items-center gap-2 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                  <Mail size={16} className="text-blue-500" />
+                  <p className="text-[10px] text-blue-700 font-medium italic">
+                    A temporary password and verification link will be sent to this email.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <DialogFooter className="p-8 pt-0 flex gap-3">
+              <Button variant="ghost" onClick={() => setIsCreateDialogOpen(false)} className="font-bold text-slate-400 uppercase text-[11px]">Cancel</Button>
+              <Button className="bg-[#0F2238] text-white font-black rounded-xl px-8 h-11 shadow-lg">Confirm & Create</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
       {/* 1. Stat Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-left">
         <StatCard label="Total Users" value="12,847" color="text-[#0F2238]" icon={<Users className="w-5 h-5" />} />
